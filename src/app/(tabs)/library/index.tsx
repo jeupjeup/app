@@ -9,17 +9,23 @@ import { colors, fonts } from "@/modules/theme";
 import { useUserData } from "@/modules/userData";
 
 // L-01: 162:1541, 259:6831, 259:6907, 241:5497.
-export default function Library() {
-    const params = useLocalSearchParams<{ q?: string; collection?: string }>();
-    return (
-        <LibraryContent
-            key={`${params.q ?? ""}:${params.collection ?? ""}`}
-            initialQuery={params.q ?? ""}
-            initialCollection={params.collection || "전체"}
-        />
-    );
+export default function Page() {
+    const params = useLocalSearchParams<{ q?: string; collection?: string; }>();
+
+    return <LibraryContent
+        key={`${params.q ?? ""}:${params.collection ?? ""}`}
+        initialQuery={params.q ?? ""}
+        initialCollection={params.collection || "전체"}
+    />;
 }
-function LibraryContent({ initialQuery, initialCollection }: { initialQuery: string; initialCollection: string }) {
+
+type LibraryContentProps = {
+    initialQuery: string;
+    initialCollection: string;
+};
+
+function LibraryContent(props: LibraryContentProps) {
+    const { initialQuery, initialCollection } = props;
     const { data } = useUserData();
     const [query, setQuery] = useState(initialQuery);
     const [search, setSearch] = useState(initialQuery);
@@ -45,8 +51,8 @@ function LibraryContent({ initialQuery, initialCollection }: { initialQuery: str
                     sort === "최신순"
                         ? Date.parse(b.savedAt) - Date.parse(a.savedAt)
                         : sort === "오래된 순"
-                          ? Date.parse(a.savedAt) - Date.parse(b.savedAt)
-                          : 0
+                            ? Date.parse(a.savedAt) - Date.parse(b.savedAt)
+                            : 0
                 ),
         [data.contents, type, collection, sort, search]
     );
@@ -54,8 +60,8 @@ function LibraryContent({ initialQuery, initialCollection }: { initialQuery: str
         sheet === "유형"
             ? ["전체", "영상", "이미지", "텍스트", "기타"]
             : sheet === "컬렉션"
-              ? ["전체", ...collections.map((c) => c.name)]
-              : ["기본", "최신순", "오래된 순"];
+                ? ["전체", ...collections.map((c) => c.name)]
+                : ["기본", "최신순", "오래된 순"];
     const value = sheet === "유형" ? type : sheet === "컬렉션" ? collection : sort;
     const reset = () => {
         setType("전체");
@@ -64,97 +70,104 @@ function LibraryContent({ initialQuery, initialCollection }: { initialQuery: str
         setQuery("");
         setSearch("");
     };
-    return (
-        <>
-            <Screen orange line={false} scroll={false}>
-                <FlatList
-                    data={items}
-                    keyExtractor={(item) => item.id}
-                    keyboardShouldPersistTaps="handled"
-                    contentContainerStyle={{ padding: 16, gap: 20, flexGrow: 1 }}
-                    ListHeaderComponent={
-                        <View style={{ gap: 20 }}>
-                            <Text style={[ui.title, { lineHeight: 33 }]}>지금까지 저장한 목록</Text>
-                            <SearchField
-                                archive
-                                value={query}
-                                onChangeText={(v) => {
-                                    setQuery(v);
-                                    if (!v) setSearch("");
-                                }}
-                                onSubmit={() => setSearch(query)}
-                            />
-                            <View>
-                                <Pressable
-                                    accessibilityRole="button"
-                                    onPress={reset}
-                                    style={{ alignSelf: "flex-end", marginBottom: 8 }}
-                                >
-                                    <Text style={{ fontSize: 12, color: colors.primary, lineHeight: 20 }}>
-                                        필터 초기화
-                                    </Text>
-                                </Pressable>
-                                <View style={styles.filters}>
-                                    {(["유형", "컬렉션", "정렬"] as const).map((name) => (
-                                        <Pressable
-                                            key={name}
-                                            accessibilityRole="button"
-                                            onPress={() => setSheet(name)}
-                                            style={styles.filter}
-                                        >
-                                            <Text style={styles.filterText}>
-                                                {name === "유형"
-                                                    ? type === "전체"
-                                                        ? "유형"
-                                                        : type
-                                                    : name === "컬렉션"
-                                                      ? collection === "전체"
-                                                          ? "컬렉션"
-                                                          : collection
-                                                      : sort}
-                                            </Text>
-                                            <View style={{ transform: [{ rotate: "-90deg" }] }}>
-                                                <Icon name="filterArrow" width={7} height={11.89} />
-                                            </View>
-                                        </Pressable>
-                                    ))}
-                                </View>
+
+    return <>
+        <Screen orange line={false} scroll={false}>
+            <FlatList
+                data={items}
+                keyExtractor={(item) => item.id}
+                keyboardShouldPersistTaps="handled"
+                contentContainerStyle={{ "padding": 16, "gap": 20, "flexGrow": 1 }}
+                ListHeaderComponent={
+                    <View style={{ "gap": 20 }}>
+                        <Text style={[ui.title, { "lineHeight": 33 }]}>지금까지 저장한 목록</Text>
+                        <SearchField
+                            archive
+                            value={query}
+                            onChangeText={(v) => {
+                                setQuery(v);
+                                if (!v) setSearch("");
+                            }}
+                            onSubmit={() => setSearch(query)}
+                        />
+                        <View>
+                            <Pressable
+                                accessibilityRole="button"
+                                onPress={reset}
+                                style={{ "alignSelf": "flex-end", "marginBottom": 8 }}
+                            >
+                                <Text style={{ "fontSize": 12, "color": colors.primary, "lineHeight": 20 }}>
+                                    필터 초기화
+                                </Text>
+                            </Pressable>
+                            <View style={styles.filters}>
+                                {(["유형", "컬렉션", "정렬"] as const).map((name) => (
+                                    <Pressable
+                                        key={name}
+                                        accessibilityRole="button"
+                                        onPress={() => setSheet(name)}
+                                        style={styles.filter}
+                                    >
+                                        <Text style={styles.filterText}>
+                                            {name === "유형"
+                                                ? type === "전체"
+                                                    ? "유형"
+                                                    : type
+                                                : name === "컬렉션"
+                                                    ? collection === "전체"
+                                                        ? "컬렉션"
+                                                        : collection
+                                                    : sort}
+                                        </Text>
+                                        <View style={{ "transform": [{ "rotate": "-90deg" }] }}>
+                                            <Icon name="filterArrow" width={7} height={11.89} />
+                                        </View>
+                                    </Pressable>
+                                ))}
                             </View>
                         </View>
-                    }
-                    renderItem={({ item }) => <ContentCard item={item} />}
-                    ListEmptyComponent={
-                        <View style={{ paddingTop: 90 }}>
-                            <EmptyState icon="emptyArchive">
-                                {active.length ? "다른 필터로 다시 검색해보세요" : "아직 저장된 정보가 없어요"}
-                            </EmptyState>
-                        </View>
-                    }
-                />
-            </Screen>
-            <FilterSheet
-                title={sheet}
-                options={options}
-                value={value}
-                onClose={() => setSheet(null)}
-                onSelect={sheet === "유형" ? setType : sheet === "컬렉션" ? setCollection : setSort}
+                    </View>
+                }
+                renderItem={({ item }) => <ContentCard item={item} />}
+                ListEmptyComponent={
+                    <View style={{ "paddingTop": 90 }}>
+                        <EmptyState icon="emptyArchive">
+                            {active.length ? "다른 필터로 다시 검색해보세요" : "아직 저장된 정보가 없어요"}
+                        </EmptyState>
+                    </View>
+                }
             />
-        </>
-    );
+        </Screen>
+        <FilterSheet
+            title={sheet}
+            options={options}
+            value={value}
+            onClose={() => setSheet(null)}
+            onSelect={sheet === "유형" ? setType : sheet === "컬렉션" ? setCollection : setSort}
+        />
+    </>;
 }
+
 const styles = StyleSheet.create({
-    filters: { flexDirection: "row", gap: 20 },
-    filter: {
-        flex: 1,
-        minHeight: 33,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        paddingHorizontal: 20,
-        borderRadius: 20,
-        backgroundColor: "#EAE9E7",
-        borderWidth: 1,
-        borderColor: "#D7D6D4"
+    "filters": {
+        "flexDirection": "row",
+        "gap": 20
     },
-    filterText: { fontFamily: fonts.semibold, fontSize: 14, letterSpacing: -0.5 }
+    "filter": {
+        "flex": 1,
+        "minHeight": 33,
+        "flexDirection": "row",
+        "alignItems": "center",
+        "justifyContent": "space-between",
+        "paddingHorizontal": 20,
+        "borderRadius": 20,
+        "backgroundColor": "#EAE9E7",
+        "borderWidth": 1,
+        "borderColor": "#D7D6D4"
+    },
+    "filterText": {
+        "fontFamily": fonts.semibold,
+        "fontSize": 14,
+        "letterSpacing": -0.5
+    }
 });

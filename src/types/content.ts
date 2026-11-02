@@ -1,9 +1,12 @@
 import type { AssetName } from "@/modules/assets";
 
 export type Collection = "장소" | "여행" | "음식" | "의류" | "제품" | "회사";
+
 export type ContentType = "영상" | "이미지" | "텍스트" | "기타";
+
 export type ContentStatus = "ready" | "analyzing" | "failed" | "unavailable";
-export interface SavedContent {
+
+export type SavedContent = {
     id: string;
     title: string;
     url: string;
@@ -19,9 +22,9 @@ export interface SavedContent {
     deletedAt?: string;
     viewedAt?: string;
     pendingSync?: boolean;
-}
+};
 
-export interface Notice {
+export type Notice = {
     id: string;
     title: string;
     description: string;
@@ -29,4 +32,4 @@ export interface Notice {
     read: boolean;
     error?: boolean;
     collection?: Collection;
-}
+};
