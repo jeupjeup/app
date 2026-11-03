@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { StyleSheet, View } from "react-native";
+import { Alert, Linking, StyleSheet, View } from "react-native";
 import { Header, Screen, Text, ui } from "@/components/ui";
 import { ProfileRow, ServiceRow } from "@/components/ProfileRow";
 import { colors, fonts } from "@/modules/theme";
@@ -17,7 +17,7 @@ export default function Page() {
             <View style={{ "flexDirection": "row", "gap": 12 }}>
                 {[
                     { "title": "지금까지 저장한 개수", "value": `${data.savedCount}개` },
-                    { "title": "총 컬렉션 수", "value": `${data.contents.some((c) => !c.deletedAt) ? 6 : 0}개` }
+                    { "title": "총 컬렉션 수", "value": `${new Set(data.contents.filter(c => !c.deletedAt && c.collection).map(c => c.collection)).size}개` }
                 ].map((stat) => (
                     <View key={stat.title} style={styles.stat}>
                         <Text style={styles.statLabel}>{stat.title}</Text>
@@ -28,7 +28,7 @@ export default function Page() {
             <Text style={ui.subtitle}>서비스 관리</Text>
         </View>
         <View style={{ "marginTop": 20 }}>
-            <ServiceRow icon="support" title="고객센터" />
+            <ServiceRow icon="support" title="고객센터" onPress={() => { const url = process.env.EXPO_PUBLIC_SUPPORT_URL; if (url) void Linking.openURL(url).catch(() => Alert.alert("연결 실패", "고객센터를 열 수 없습니다.")); else Alert.alert("고객센터 준비 중", "고객센터 주소가 아직 등록되지 않았습니다."); }} />
             <ServiceRow
                 icon="computer"
                 title="앱 이용 방법"

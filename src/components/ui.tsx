@@ -7,6 +7,7 @@ import {
     Platform,
     Pressable,
     ScrollView,
+    RefreshControl,
     StyleSheet,
     Text as NativeText,
     TextInput,
@@ -19,6 +20,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { assets, type AssetName } from "@/modules/assets";
+import { useUserData } from "@/modules/userData";
 import { colors, fonts } from "@/modules/theme";
 
 export function Text({ style, ...props }: TextProps) {
@@ -103,6 +105,7 @@ type ScreenProps = {
 
 export function Screen(props: ScreenProps) {
     const { children, scroll = true, style, orange = false, line = true } = props;
+    const { data, loading, refresh } = useUserData();
 
     return <SafeAreaView edges={["top"]} style={[styles.screen, orange && { "backgroundColor": colors.primary }]}>
         <StatusBar style="dark" />
@@ -110,6 +113,7 @@ export function Screen(props: ScreenProps) {
         <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === "ios" ? "padding" : undefined}>
             {scroll ? (
                 <ScrollView
+                    refreshControl={data.authenticated ? <RefreshControl refreshing={loading} onRefresh={() => { void refresh(); }} /> : undefined}
                     keyboardShouldPersistTaps="handled"
                     contentContainerStyle={[{ "flexGrow": 1, "backgroundColor": colors.background }, style]}
                 >
@@ -137,18 +141,18 @@ export function SearchField(props: SearchFieldProps) {
     if (onPress)
         return <Pressable
             accessibilityRole="button"
-            accessibilityLabel="AI 검색하기"
+            accessibilityLabel="저장한 정보 검색하기"
             style={styles.search}
             onPress={onPress}
         >
-            <Text style={{ "flex": 1, "color": colors.placeholder, "fontFamily": fonts.medium }}>AI 검색하기</Text>
+            <Text style={{ "flex": 1, "color": colors.placeholder, "fontFamily": fonts.medium }}>저장한 정보 검색하기</Text>
             <Icon name={archive ? "searchArchive" : "search"} width={20} />
         </Pressable>;
 
     return <View style={styles.search}>
         <TextInput
-            accessibilityLabel="AI 검색하기"
-            placeholder="AI 검색하기"
+            accessibilityLabel="저장한 정보 검색하기"
+            placeholder="저장한 정보 검색하기"
             placeholderTextColor={colors.placeholder}
             value={value}
             onChangeText={onChangeText}

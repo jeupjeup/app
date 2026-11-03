@@ -26,7 +26,7 @@ type LibraryContentProps = {
 
 function LibraryContent(props: LibraryContentProps) {
     const { initialQuery, initialCollection } = props;
-    const { data } = useUserData();
+    const { data, loading, refresh } = useUserData();
     const [query, setQuery] = useState(initialQuery);
     const [search, setSearch] = useState(initialQuery);
     const [type, setType] = useState("전체");
@@ -75,6 +75,8 @@ function LibraryContent(props: LibraryContentProps) {
         <Screen orange line={false} scroll={false}>
             <FlatList
                 data={items}
+                refreshing={loading}
+                onRefresh={() => { void refresh(); }}
                 keyExtractor={(item) => item.id}
                 keyboardShouldPersistTaps="handled"
                 contentContainerStyle={{ "padding": 16, "gap": 20, "flexGrow": 1 }}

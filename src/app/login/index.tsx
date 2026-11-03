@@ -1,22 +1,20 @@
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import { useState } from "react";
-import { Pressable, StyleSheet, TextInput, View } from "react-native";
+import { Alert, Pressable, StyleSheet, TextInput, View } from "react-native";
 import { Button, Icon, Screen, Text, ui } from "@/components/ui";
 import { assets } from "@/modules/assets";
 import { colors, fonts } from "@/modules/theme";
 import { useUserData } from "@/modules/userData";
 
-// 135:188 — local UI preview; no authentication endpoint was supplied.
+// Email authentication uses the API session.
 export default function Page() {
-    const { update, previewPasswordRef } = useUserData();
+    const { login: authenticate, busy } = useUserData();
     const [id, setId] = useState("");
     const [password, setPassword] = useState("");
-    const login = () => {
-        if (!id.trim() || !password) return;
-        previewPasswordRef.current = password;
-        update({ "email": id.trim() });
-        router.replace({ "pathname": "/login/signup", "params": { "returning": "1" } });
+    const login = async () => {
+        if (!id.trim() || !password || busy) return;
+        if (await authenticate(id.trim(), password)) router.replace("/home");
     };
 
     return <Screen line={false} style={styles.page}>
@@ -46,10 +44,11 @@ export default function Page() {
                 style={styles.input}
                 onSubmitEditing={login}
             />
-            <Button onPress={login} style={{ "height": 58, "borderRadius": 4 }}>
+            <Button disabled={busy || !id.trim() || !password} onPress={login} style={{ "height": 58, "borderRadius": 4 }}>
                 로그인
             </Button>
         </View>
+        <Button onPress={() => router.push("/login/signup")} style={{ marginTop: 12 }}>이메일 회원가입</Button>
         <View style={styles.line} />
         <Text style={[styles.caption, { "textAlign": "center", "marginTop": 56 }]}>SNS로 10초만에 회원가입</Text>
         <View style={styles.social}>
@@ -58,7 +57,7 @@ export default function Page() {
                     key={name}
                     accessibilityRole="button"
                     accessibilityLabel={`${name} 회원가입 화면`}
-                    onPress={() => router.push("/login/signup")}
+                    onPress={() => Alert.alert("소셜 로그인 준비 중", "소셜 인증 제공자 설정이 필요합니다. 이메일로 가입해주세요.")}
                 >
                     <Icon name={name} width={58} height={58} />
                 </Pressable>

@@ -2,6 +2,8 @@ import "expo-dev-client";
 import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+import { View } from "react-native";
+import ApiFeedback from "@/components/ApiFeedback";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { UserDataProvider, useUserData } from "@/modules/userData";
@@ -28,7 +30,7 @@ function Navigator() {
 
     if (!ready || (!loaded && !error)) return null;
 
-    return <Stack screenOptions={{ "headerShown": false, "contentStyle": { "backgroundColor": colors.background } }} />;
+    return <View style={{ flex: 1, paddingTop: 0 }}><ApiFeedback /><Stack screenOptions={{ "headerShown": false, "contentStyle": { "backgroundColor": colors.background } }} /></View>;
 }
 
 export default function RootLayout() {

@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, View } from "react-native";
 import { Icon, Text } from "@/components/ui";
 import { colors, fonts } from "@/modules/theme";
 import type { AssetName } from "@/modules/assets";
+import { useUserData } from "@/modules/userData";
 import type { Collection } from "@/types/content";
 
 export const collections: { name: Collection; icon: AssetName; }[] = [
@@ -24,9 +25,14 @@ type Props = {
 
 export default function CollectionGrid(props: Props) {
     const { popular = false } = props;
+    const { data } = useUserData();
+    const active = data.contents.filter(c => !c.deletedAt);
+    const populated = collections.filter(c => active.some(item => item.collection === c.name));
+    const score = (name: Collection) => active.filter(c => c.collection === name && c.viewedAt).length;
+    const visible = popular ? [...populated].sort((a, b) => score(b.name) - score(a.name)).filter(c => score(c.name) > 0).slice(0, 2) : populated;
 
     return <View style={styles.grid}>
-        {(popular ? [collections[0], collections[2]] : collections).map((item) => (
+        {visible.map((item) => (
             <Pressable
                 accessibilityRole="button"
                 key={item.name}

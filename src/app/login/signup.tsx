@@ -9,21 +9,22 @@ import { useUserData } from "@/modules/userData";
 // 135:262 → 241:5974 → 241:6015 → 241:6209; returning: 241:6354 / 241:6483.
 export default function Page() {
     const { returning } = useLocalSearchParams<{ returning?: string; }>();
-    const { data, update } = useUserData();
+    const { data, register, busy } = useUserData();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [nickname, setNickname] = useState(returning ? data.nickname : "");
     const [required, setRequired] = useState(false);
     const [optional, setOptional] = useState(false);
     const [showTerms, setShowTerms] = useState(!!returning);
     const all = required && optional;
-    const finish = () => {
+    const finish = async () => {
         if (!showTerms) {
             if (nickname.trim()) setShowTerms(true);
 
             return;
         }
         if (!required || !nickname.trim()) return;
-        update({ "nickname": nickname.trim(), "previewSession": true });
-        router.replace("/home");
+        if (await register({ email: email.trim(), password, nickname: nickname.trim(), requiredConsent: required, notificationsEnabled: optional })) router.replace("/home");
     };
     const agreement = (title: string, checked: boolean, onPress: () => void, top = false) => (
         <Pressable
@@ -54,6 +55,8 @@ export default function Page() {
         </Text>
         {!returning && (
             <View style={styles.nickname}>
+                <TextInput accessibilityLabel="가입 이메일" keyboardType="email-address" autoCapitalize="none" autoCorrect={false} placeholder="이메일" value={email} onChangeText={setEmail} style={[ui.input, { marginBottom: 12 }]} />
+                <TextInput accessibilityLabel="가입 비밀번호" secureTextEntry autoCapitalize="none" autoCorrect={false} placeholder="비밀번호 (영문·숫자·특수문자 8~20자)" value={password} onChangeText={setPassword} style={[ui.input, { marginBottom: 12 }]} />
                 <Text style={{ "marginBottom": 14 }}>닉네임</Text>
                 <TextInput
                     accessibilityLabel="닉네임"
@@ -102,7 +105,7 @@ export default function Page() {
         <SafeAreaView edges={["bottom"]} style={{ "paddingBottom": showTerms ? 40 : 28 }}>
             <Button
                 onPress={finish}
-                disabled={!nickname.trim() || (showTerms && !required)}
+                disabled={busy || !email.trim() || !password || !nickname.trim() || (showTerms && !required)}
                 style={{ "height": showTerms ? 46 : 58 }}
             >
                 시작하기

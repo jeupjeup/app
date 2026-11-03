@@ -1,8 +1,12 @@
-import { Tabs } from "expo-router";
+import { Redirect, Tabs } from "expo-router";
+import { useUserData } from "@/modules/userData";
 import TabBar from "@/components/TabBar";
 import { colors } from "@/modules/theme";
 
 export default function TabLayout() {
+    const { data, ready } = useUserData();
+    if (!ready) return null;
+    if (!data.authenticated) return <Redirect href="/login" />;
     return <Tabs
         backBehavior="history"
         tabBar={({ state, emitter, navigateToTab }) => (

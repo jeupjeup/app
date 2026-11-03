@@ -8,14 +8,11 @@ import { useUserData } from "@/modules/userData";
 
 // 195:1059; nickname/logout/withdraw overlays: 261:2036, 261:2098, 257:1797.
 export default function Page() {
-    const { data, update, reset, previewPasswordRef } = useUserData();
+    const { data, changeNickname, logout: endSession, busy, error } = useUserData();
     const [dialog, setDialog] = useState<"nickname" | "logout" | "withdraw" | null>(null);
     const [nickname, setNickname] = useState(data.nickname);
-    const logout = () => {
-        previewPasswordRef.current = "";
-        update({ "previewSession": false });
-        setDialog(null);
-        router.replace("/login");
+    const logout = async () => {
+        if (await endSession()) { setDialog(null); router.replace("/login"); }
     };
 
     return <>
@@ -31,7 +28,7 @@ export default function Page() {
                 trailing={
                     <View style={{ "alignItems": "flex-end" }}>
                         <Text style={{ "fontSize": 14, "color": colors.muted }}>{data.email}</Text>
-                        <Text style={{ "fontSize": 12, "color": colors.muted }}>카카오로 로그인중</Text>
+                        <Text style={{ "fontSize": 12, "color": colors.muted }}>이메일로 로그인중</Text>
                     </View>
                 }
             />
@@ -55,6 +52,7 @@ export default function Page() {
             </Pressable>
         </Screen>
         <Dialog visible={!!dialog} onClose={() => setDialog(null)}>
+            {error && <Text accessibilityRole="alert" style={{ color: colors.error, fontSize: 12 }}>{error}</Text>}
             {dialog === "nickname" ? (
                 <>
                     <Text style={styles.message}>새로운 닉네임을 입력해주세요</Text>
@@ -69,11 +67,8 @@ export default function Page() {
                         ]}
                     />
                     <Button
-                        disabled={!nickname.trim()}
-                        onPress={() => {
-                            update({ "nickname": nickname.trim() });
-                            setDialog(null);
-                        }}
+                        disabled={busy || !nickname.trim()}
+                        onPress={async () => { if (await changeNickname(nickname.trim())) setDialog(null); }}
                         style={{ "minHeight": 36, "borderRadius": 10, "paddingVertical": 5 }}
                     >
                         완료
@@ -91,12 +86,11 @@ export default function Page() {
                     </Text>
                     <Button
                         danger={dialog === "withdraw"}
-                        onPress={() => {
+                        disabled={busy}
+                        onPress={async () => {
                             if (dialog === "withdraw") {
-                                reset();
-                                setDialog(null);
-                                router.replace("/login/choose");
-                            } else logout();
+                                if (await endSession(true)) { setDialog(null); router.replace("/login/choose"); }
+                            } else await logout();
                         }}
                         style={{
                             "minHeight": 36,

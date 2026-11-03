@@ -46,8 +46,8 @@ export default function Page() {
                     </>
                 ) : step === 1 ? (
                     <>
-                        <Text style={styles.bold}>AI</Text>가 알아서 <Text style={styles.bold}>컬렉션</Text>에{"\n"}
-                        저장해요!
+                        <Text style={styles.bold}>컬렉션</Text>을 선택해{"\n"}
+                        정보를 정리해요!
                     </>
                 ) : (
                     <>

@@ -40,7 +40,7 @@ export default function Page() {
             <View style={styles.body}>
                 <View>
                     <SearchField onPress={() => setSearch(true)} />
-                    <Text style={styles.hint}>기억나는 모든 것으로 AI에게 질문해보세요!</Text>
+                    <Text style={styles.hint}>제목, 메모, 태그로 저장한 정보를 검색해보세요!</Text>
                     {items.length === 0 && (
                         <Text style={styles.hint}>ex) 오사카 여행갈 때 필요했던 캐리어 뭐였더라?</Text>
                     )}

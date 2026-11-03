@@ -40,7 +40,8 @@ export default function ContentCard(props: Props) {
                 : minutes < 1440
                     ? `${Math.floor(minutes / 60)}시간 전 저장`
                     : `${Math.floor(minutes / 1440)}일 전 저장`;
-    const relativeDate = item.id === "cafe-1" ? "15분 전 저장" : item.id === "cafe-2" ? "12시간 전 저장" : elapsed;
+    const preview = __DEV__ && process.env.EXPO_PUBLIC_ENABLE_PREVIEW === "1";
+    const relativeDate = preview && item.id === "cafe-1" ? "15분 전 저장" : preview && item.id === "cafe-2" ? "12시간 전 저장" : elapsed;
     const Card = restore ? View : Pressable;
 
     return <Card
@@ -57,11 +58,11 @@ export default function ContentCard(props: Props) {
             />
         )}
         <Text numberOfLines={1} style={[styles.title, compact && { "marginTop": 8 }]}>
-            {compact && item.id.startsWith("cafe-") ? (index === 0 ? "브루다 커피" : "무슨 커피") : item.title}
+            {preview && compact && item.id.startsWith("cafe-") ? (index === 0 ? "브루다 커피" : "무슨 커피") : item.title}
         </Text>
         <View style={styles.metadata}>
             <Text style={styles.date}>
-                {compact ? relativeDate : `${formatDate(item.savedAt)} ${recent ? "조회함" : "저장됨"}`}
+                {compact ? relativeDate : `${formatDate(recent && item.viewedAt ? item.viewedAt : item.savedAt)} ${recent ? "조회함" : "저장됨"}`}
             </Text>
             {restore && (
                 <Pressable onPress={restore} accessibilityRole="button" hitSlop={8}>

@@ -1,8 +1,9 @@
 import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { Linking, Pressable, Share, StyleSheet, View } from "react-native";
+import { Linking, Pressable, Share, StyleSheet, TextInput, View } from "react-native";
 import { Button, Dialog, Header, Icon, Screen, Text } from "@/components/ui";
+import { collections } from "@/components/CollectionGrid";
 import { openContent } from "@/components/ContentCard";
 import { assets } from "@/modules/assets";
 import { colors, fonts } from "@/modules/theme";
@@ -12,27 +13,27 @@ import type { ContentStatus } from "@/types/content";
 // D-01: ready, analyzing, failed and unavailable states; deletion dialogs 293:2373 / 293:2381.
 export default function Page() {
     const { id, status } = useLocalSearchParams<{ id: string; status?: ContentStatus; }>();
-    const { data, update, remove } = useUserData();
+    const { data, command, remove, busy, error } = useUserData();
+    const [editing, setEditing] = useState(false);
+    const [editTitle, setEditTitle] = useState("");
+    const [editMemo, setEditMemo] = useState("");
+    const [editCollection, setEditCollection] = useState<string | null>(null);
+    const [editType, setEditType] = useState("기타");
     const [confirm, setConfirm] = useState(false);
     const [deleted, setDeleted] = useState(false);
     const [linkFailed, setLinkFailed] = useState(false);
     const item = data.contents.find((content) => content.id === id);
 
     useEffect(() => {
-        if (id)
-            update((d) => ({
-                ...d,
-                "contents": d.contents.map((content) =>
-                    content.id === id ? { ...content, "viewedAt": new Date().toISOString() } : content
-                )
-            }));
-    }, [id, update]);
+        if (id && !item?.deletedAt) void command(`/contents/${encodeURIComponent(id)}/view`, "POST", {});
+    }, [id, item?.deletedAt, command]);
 
     if (!item)
         return <Screen>
             <Header />
+            <Text style={{ padding: 16 }}>콘텐츠를 찾을 수 없습니다. 목록을 새로고침해주세요.</Text>
         </Screen>;
-    const state = linkFailed ? "unavailable" : (status ?? item.status);
+    const state = linkFailed ? "unavailable" : ((__DEV__ && process.env.EXPO_PUBLIC_ENABLE_PREVIEW === "1" ? status : undefined) ?? item.status);
     const finishDeletion = () => {
         setDeleted(false);
         if (router.canGoBack()) router.back();
@@ -98,7 +99,7 @@ export default function Page() {
                         </View>
                     ) : (
                         <>
-                            {field("AI 설명", item.description)}
+                            {field("설명", item.description || "자동 분석은 아직 제공되지 않습니다.")}
                             {field("태그", item.tags.map((tag) => `#${tag}`).join(" "))}
                             {field("유형", item.type)}
                             {field("출처", item.source)}
@@ -126,7 +127,7 @@ export default function Page() {
                                     </Pressable>
                                 )
                             )}
-                            {item.id.startsWith("cafe-") && (
+                            {__DEV__ && process.env.EXPO_PUBLIC_ENABLE_PREVIEW === "1" && item.id.startsWith("cafe-") && (
                                 <View style={styles.field}>
                                     <Text style={styles.label}>관련된 콘텐츠</Text>
                                     {[
@@ -161,19 +162,39 @@ export default function Page() {
                         </>
                     )}
                 </View>
-                <Button danger onPress={() => setConfirm(true)}>
+                <Button disabled={busy || !!item.deletedAt} onPress={() => {
+                    setEditTitle(item.title); setEditMemo(item.memo); setEditCollection(item.collection ?? null); setEditType(item.type); setEditing(true);
+                }}>정보 수정</Button>
+                <Button disabled={busy || !!item.deletedAt} danger onPress={() => setConfirm(true)}>
                     정보 삭제
                 </Button>
             </View>
         </Screen>
+        <Dialog visible={editing} onClose={() => setEditing(false)} close>
+            <Text style={{ fontSize: 16 }}>정보 수정</Text>
+            {error && <Text accessibilityRole="alert" style={{ color: colors.error, fontSize: 12 }}>{error}</Text>}
+            <TextInput accessibilityLabel="콘텐츠 제목" value={editTitle} onChangeText={setEditTitle} maxLength={200} style={{ borderWidth: 1, borderColor: colors.border, padding: 8 }} />
+            <TextInput accessibilityLabel="콘텐츠 메모" value={editMemo} onChangeText={setEditMemo} maxLength={70} multiline placeholder="메모" style={{ borderWidth: 1, borderColor: colors.border, padding: 8 }} />
+            <Text>유형</Text>
+            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+                {["영상", "이미지", "텍스트", "기타"].map(value => <Pressable key={value} onPress={() => setEditType(value)} accessibilityRole="radio" accessibilityState={{ checked: editType === value }} style={{ padding: 8, backgroundColor: editType === value ? colors.primary : colors.soft }}><Text>{value}</Text></Pressable>)}
+            </View>
+            <Text>컬렉션</Text>
+            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+                {[null, ...collections.map(c => c.name)].map(value => <Pressable key={value ?? "none"} onPress={() => setEditCollection(value)} accessibilityRole="radio" accessibilityState={{ checked: editCollection === value }} style={{ padding: 8, backgroundColor: editCollection === value ? colors.primary : colors.soft }}><Text>{value ?? "없음"}</Text></Pressable>)}
+            </View>
+            <Button disabled={busy || !editTitle.trim()} onPress={async () => {
+                if (await command(`/contents/${encodeURIComponent(item.id)}`, "PATCH", { title: editTitle.trim(), memo: editMemo, type: editType, collection: editCollection })) setEditing(false);
+            }}>저장</Button>
+        </Dialog>
         <Dialog visible={confirm} onClose={() => setConfirm(false)} close>
+            {error && <Text accessibilityRole="alert" style={{ color: colors.error, fontSize: 12 }}>{error}</Text>}
             <Text style={{ "textAlign": "center", "fontSize": 16 }}>이 정보를 삭제하시겠습니까?</Text>
             <Button
                 danger
-                onPress={() => {
-                    remove(item.id);
-                    setConfirm(false);
-                    setDeleted(true);
+                disabled={busy}
+                onPress={async () => {
+                    if (await remove(item.id)) { setConfirm(false); setDeleted(true); }
                 }}
             >
                 삭제

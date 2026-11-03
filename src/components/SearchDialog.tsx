@@ -9,7 +9,7 @@ import { colors } from "@/modules/theme";
 import { useUserData } from "@/modules/userData";
 import { openContent } from "@/components/ContentCard";
 
-// 293:2082 — native search input, local preview results and recent queries.
+// 293:2082 — native search input, server-backed results and recent queries.
 type Props = {
     visible: boolean;
     onClose: () => void;
@@ -17,7 +17,7 @@ type Props = {
 
 export default function SearchDialog(props: Props) {
     const { visible, onClose } = props;
-    const { data, update } = useUserData();
+    const { data, command, busy, error } = useUserData();
     const [query, setQuery] = useState("");
     const insets = useSafeAreaInsets();
     const matches = data.contents
@@ -29,12 +29,9 @@ export default function SearchDialog(props: Props) {
                     .includes(query.toLowerCase().trim())
         )
         .slice(0, 3);
-    const submit = (value = query) => {
+    const submit = async (value = query) => {
         if (!value.trim()) return;
-        update((d) => ({
-            ...d,
-            "searchHistory": [value.trim(), ...d.searchHistory.filter((q) => q !== value.trim())].slice(0, 10)
-        }));
+        if (!await command("/search-history", "POST", { query: value.trim() })) return;
         onClose();
         router.navigate({ "pathname": "/library", "params": { "q": value.trim(), "collection": "" } });
     };
@@ -53,7 +50,8 @@ export default function SearchDialog(props: Props) {
             <View style={{ "paddingHorizontal": 16 }}>
                 <SearchField autoFocus value={query} onChangeText={setQuery} onSubmit={() => submit()} />
                 <View style={styles.preview}>
-                    <Text style={{ "fontSize": 12, "marginBottom": 12 }}>미리보기</Text>
+                    <Text style={{ "fontSize": 12, "marginBottom": 12 }}>검색 결과 미리보기</Text>
+                    {error && <Text accessibilityRole="alert" style={{ color: colors.error, fontSize: 12 }}>{error}</Text>}
                     {matches.map((item) => (
                         <Pressable
                             key={item.id}
@@ -78,7 +76,8 @@ export default function SearchDialog(props: Props) {
                         </Pressable>
                     ))}
                     <Pressable
-                        onPress={() => update({ "searchHistory": [] })}
+                        disabled={busy}
+                        onPress={() => { void command("/search-history", "DELETE"); }}
                         accessibilityRole="button"
                         style={{ "alignSelf": "flex-end", "paddingVertical": 12 }}
                     >

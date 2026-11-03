@@ -1,4 +1,3 @@
-import { getNetworkStateAsync } from "expo-network";
 import { router } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, TextInput } from "react-native";
@@ -6,7 +5,7 @@ import { Button, Dialog, Text } from "@/components/ui";
 import { colors, fonts } from "@/modules/theme";
 import { useUserData } from "@/modules/userData";
 
-// 294:2755, 294:2780, 298:2953, 298:2956. Analysis is left pending for API integration.
+// A save succeeds only after the server has persisted the URL.
 type Props = {
     visible: boolean;
     onClose: () => void;
@@ -15,10 +14,10 @@ type Props = {
 
 export default function AddContentDialog(props: Props) {
     const { visible, onClose, initialUrl = "" } = props;
-    const { data, update } = useUserData();
+    const { createContent, busy: apiBusy, error } = useUserData();
     const [url, setUrl] = useState(initialUrl);
     const [memo, setMemo] = useState("");
-    const [result, setResult] = useState<"saved" | "offline" | "duplicate" | null>(null);
+    const [result, setResult] = useState<"saved" | null>(null);
     const [busy, setBusy] = useState(false);
     const [savedId, setSavedId] = useState("");
     let valid = false;
@@ -36,43 +35,11 @@ export default function AddContentDialog(props: Props) {
     };
     const save = async () => {
         if (!valid || busy) return;
-        if (data.contents.some((item) => !item.deletedAt && item.url === url.trim())) {
-            setResult("duplicate");
-
-            return;
-        }
         setBusy(true);
-        let offline = false;
         try {
-            const network = await getNetworkStateAsync();
-            offline = network.isConnected === false || network.isInternetReachable === false;
-        } catch {
-            /* Unknown connectivity still permits a local save. */
-        }
-        const id = `saved-${Date.now()}`;
-        update((d) => ({
-            ...d,
-            "savedCount": d.savedCount + 1,
-            "contents": [
-                {
-                    id,
-                    "title": new URL(url.trim()).hostname,
-                    "url": url.trim(),
-                    memo,
-                    "type": "기타",
-                    "source": "",
-                    "description": "",
-                    "tags": [],
-                    "savedAt": new Date().toISOString(),
-                    "status": "analyzing",
-                    "pendingSync": offline
-                },
-                ...d.contents
-            ]
-        }));
-        setSavedId(id);
-        setBusy(false);
-        setResult(offline ? "offline" : "saved");
+            const item = await createContent(url.trim(), memo);
+            if (item) { setSavedId(item.id); setResult("saved"); }
+        } finally { setBusy(false); }
     };
 
     return <Dialog
@@ -85,30 +52,9 @@ export default function AddContentDialog(props: Props) {
         {result ? (
             <>
                 <Text style={styles.heading}>
-                    {result === "saved"
-                        ? "정보를 주웠어요."
-                        : result === "duplicate"
-                            ? "이미 주워둔 정보예요."
-                            : "기기에 임시로 저장했어요."}
+                    정보를 주웠어요.
                 </Text>
-                {result === "saved" ? (
-                    <Button
-                        onPress={() => {
-                            close();
-                            router.push({ "pathname": "/library/[id]", "params": { "id": savedId } });
-                        }}
-                        style={styles.details}
-                        textStyle={{ "color": colors.placeholder, "fontSize": 12 }}
-                    >
-                        상세보기
-                    </Button>
-                ) : (
-                    <Text style={styles.message}>
-                        {result === "duplicate"
-                            ? "같은 콘텐츠가 이미 저장되어 있어요."
-                            : "인터넷이 연결되면 자동으로 저장할게요."}
-                    </Text>
-                )}
+                <Button onPress={() => { close(); router.push({ pathname: "/library/[id]", params: { id: savedId } }); }} style={styles.details} textStyle={{ color: colors.placeholder, fontSize: 12 }}>상세보기</Button>
             </>
         ) : (
             <>
@@ -138,11 +84,12 @@ export default function AddContentDialog(props: Props) {
                 <Text style={styles.count}>
                     <Text style={{ "color": colors.primary, "fontSize": 12 }}>{memo.length}</Text>/70
                 </Text>
+                {error && <Text accessibilityRole="alert" style={{ color: colors.error, fontSize: 12, marginBottom: 8 }}>{error}</Text>}
                 <Button
                     onPress={() => {
                         void save();
                     }}
-                    disabled={!valid || busy}
+                    disabled={!valid || busy || apiBusy}
                     style={{ "marginTop": 2 }}
                 >
                     추가

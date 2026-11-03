@@ -8,7 +8,7 @@ import { useUserData } from "@/modules/userData";
 
 // H-02: 165:1997, 184:2696, 165:1945.
 export default function Page() {
-    const { data, update } = useUserData();
+    const { data, command, busy } = useUserData();
     const [add, setAdd] = useState(false);
 
     return <>
@@ -19,12 +19,8 @@ export default function Page() {
                     <>
                         <Pressable
                             accessibilityRole="button"
-                            onPress={() =>
-                                update((d) => ({
-                                    ...d,
-                                    "notices": d.notices.map((notice) => ({ ...notice, "read": true }))
-                                }))
-                            }
+                            disabled={busy}
+                            onPress={() => { void command("/notices/read", "POST", {}); }}
                             style={{ "alignSelf": "flex-end", "marginBottom": 20 }}
                         >
                             <Text style={{ "fontSize": 12, "color": colors.primary }}>모두 읽음</Text>
@@ -34,13 +30,9 @@ export default function Page() {
                                 <Pressable
                                     key={notice.id}
                                     accessibilityRole="button"
-                                    onPress={() => {
-                                        update((d) => ({
-                                            ...d,
-                                            "notices": d.notices.map((n) =>
-                                                n.id === notice.id ? { ...n, "read": true } : n
-                                            )
-                                        }));
+                                    disabled={busy}
+                                    onPress={async () => {
+                                        if (!await command(`/notices/${encodeURIComponent(notice.id)}/read`, "POST", {})) return;
                                         if (notice.error) setAdd(true);
                                         else openCollection(notice.collection);
                                     }}
@@ -74,7 +66,7 @@ export default function Page() {
                                             </Text>
                                         </View>
                                     </View>
-                                    <Text style={styles.date}>{notice.date}</Text>
+                                    <Text style={styles.date}>{new Date(notice.date).toLocaleString("ko-KR")}</Text>
                                 </Pressable>
                             ))}
                         </View>
@@ -82,7 +74,7 @@ export default function Page() {
                 ) : (
                     <View style={{ "flex": 1, "justifyContent": "center", "paddingBottom": 30 }}>
                         <EmptyState icon="emptyNotice" width={51} height={54} small>
-                            휴지통이 비었습니다
+                            아직 알림이 없어요
                         </EmptyState>
                     </View>
                 )}

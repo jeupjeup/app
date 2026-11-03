@@ -1,48 +1,27 @@
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import { Button, Header, Icon, Screen, Text } from "@/components/ui";
 import { colors, fonts } from "@/modules/theme";
 import { useUserData } from "@/modules/userData";
 
 // 294:2662, 345:1358, 345:1432, 268:2305, 292:1584.
-// Password verification is local preview state, never a backend authentication claim.
+// Verification and lockout are enforced by the server.
 export default function Page() {
-    const { data, update, previewPasswordRef } = useUserData();
+    const { verifyPassword, changePassword, busy } = useUserData();
     const [current, setCurrent] = useState("");
     const [next, setNext] = useState("");
     const [confirmation, setConfirmation] = useState("");
     const [verified, setVerified] = useState(false);
     const [attempted, setAttempted] = useState(false);
     const [visible, setVisible] = useState([false, false, false]);
-    const [now, setNow] = useState(() => Date.now());
-
-    useEffect(() => {
-        const timer = setInterval(() => setNow(Date.now()), 1000);
-
-        return () => clearInterval(timer);
-    }, []);
-
-    const locked = data.passwordLockedUntil > now;
     const valid = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*<>])[A-Za-z\d!@#$%^&*<>]{8,20}$/.test(next);
-    const canChange = verified && valid && next === confirmation && !locked;
-    const verify = () => {
-        if (!current || locked) return;
-        const matches = current === (previewPasswordRef.current || "wjdiawnd23.");
+    const canChange = verified && valid && next === confirmation && !busy;
+    const verify = async () => {
+        if (!current || busy) return;
+        const matches = await verifyPassword(current);
         setVerified(matches);
         setAttempted(true);
-        if (matches) update({ "passwordAttempts": 0, "passwordLockedUntil": 0 });
-        else
-            update((d) => {
-                const attempts =
-                    (d.passwordLockedUntil && d.passwordLockedUntil <= Date.now() ? 0 : d.passwordAttempts) + 1;
-
-                return {
-                    ...d,
-                    "passwordAttempts": attempts,
-                    "passwordLockedUntil": attempts >= 5 ? Date.now() + 24 * 60 * 60 * 1000 : 0
-                };
-            });
     };
     const field = (
         index: number,
@@ -65,7 +44,7 @@ export default function Page() {
                     autoCapitalize="none"
                     autoCorrect={false}
                     secureTextEntry={!visible[index]}
-                    editable={!locked}
+                    editable={!busy}
                     onBlur={index === 0 ? verify : undefined}
                     style={styles.input}
                 />
@@ -94,9 +73,7 @@ export default function Page() {
                 setAttempted(false);
             },
             "영문,숫자,특수문자 8~20자",
-            locked
-                ? "기존 비밀번호 입력 오류 횟수(5회)를 초과하였습니다.\n계정 보호를 위해 24시간 후 다시 시도해 주세요."
-                : verified
+            verified
                     ? "비밀번호 인증이 완료되었습니다."
                     : attempted
                         ? "비밀번호가 틀렸습니다"
@@ -122,11 +99,8 @@ export default function Page() {
         <View style={{ "paddingHorizontal": 32, "paddingTop": 30 }}>
             <Button
                 disabled={!canChange}
-                onPress={() => {
-                    if (!canChange) return;
-                    previewPasswordRef.current = next;
-                    update({ "passwordAttempts": 0, "passwordLockedUntil": 0 });
-                    router.back();
+                onPress={async () => {
+                    if (canChange && await changePassword(current, next)) router.back();
                 }}
                 style={[
                     { "height": 45, "minHeight": 45, "borderRadius": 10 },

@@ -1,143 +1,146 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
+import { AppState } from "react-native";
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
-import { initialContents, initialNotices, initialTrash } from "@/modules/fixtures";
+import { api, ApiError } from "@/modules/api";
+import type { Registration, Session, Snapshot } from "@/types/api";
 import type { Notice, SavedContent } from "@/types/content";
 
 type UserData = {
-    onboarded: boolean;
-    previewSession: boolean;
-    nickname: string;
-    email: string;
-    contents: SavedContent[];
-    notices: Notice[];
-    searchHistory: string[];
-    passwordAttempts: number;
-    passwordLockedUntil: number;
-    savedCount: number;
+    onboarded: boolean; authenticated: boolean; nickname: string; email: string;
+    contents: SavedContent[]; notices: Notice[]; searchHistory: string[]; savedCount: number;
 };
-
-const initialData: UserData = {
-    "onboarded": false,
-    "previewSession": false,
-    "nickname": "달리는 자동차",
-    "email": "ajhfaofew@gmail.com",
-    "contents": [...initialContents, ...initialTrash],
-    "notices": initialNotices,
-    "searchHistory": ["오사카", "케이크", "유자차", "커피"],
-    "passwordAttempts": 0,
-    "passwordLockedUntil": 0,
-    "savedCount": 143
-};
-
-const STORAGE_KEY = "@jeupjeup/ui-preview/v1";
-
+const empty: UserData = { onboarded: false, authenticated: false, nickname: "", email: "", contents: [], notices: [], searchHistory: [], savedCount: 0 };
 type Update = Partial<UserData> | ((data: UserData) => UserData);
+const TOKEN_KEY = "jeupjeup-session-v1";
+const ONBOARDING_KEY = "@jeupjeup/onboarded/v1";
+const previewEnabled = __DEV__ && process.env.EXPO_PUBLIC_ENABLE_PREVIEW === "1";
 
-const Context = createContext<{
-    data: UserData;
-    ready: boolean;
-    update: (change: Update) => void;
-    remove: (id: string) => void;
-    restore: (id: string) => void;
-    reset: () => void;
-    previewPasswordRef: React.MutableRefObject<string>;
-} | null>(null);
-
-type UserDataProviderProps = {
-    children: ReactNode;
-};
-
-export function UserDataProvider(props: UserDataProviderProps) {
-    const { children } = props;
-    const [data, setData] = useState<UserData>(initialData);
+function useDataStore() {
+    const [data, setData] = useState(empty);
     const [ready, setReady] = useState(false);
-    // Credentials are never persisted. Authentication is an explicit local UI preview.
-    const previewPasswordRef = useRef("");
-    const writes = useRef(Promise.resolve());
-
+    const [loading, setLoading] = useState(false);
+    const [busy, setBusy] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const token = useRef<string | null>(null);
+    const generation = useRef(0);
+    const mutating = useRef(false);
+    const readVersion = useRef(0);
+    const preview = useRef(false);
+    const apply = useCallback((state: Snapshot) => {
+        setData(d => ({ ...d, authenticated: true, nickname: state.user.nickname, email: state.user.email, contents: state.contents, notices: state.notices, searchHistory: state.searchHistory, savedCount: state.savedCount }));
+    }, []);
+    const clearSession = useCallback(async () => {
+        generation.current++;
+        token.current = null;
+        preview.current = false;
+        setData(d => ({ ...empty, onboarded: d.onboarded }));
+        await SecureStore.deleteItemAsync(TOKEN_KEY);
+    }, []);
+    const report = useCallback(async (cause: unknown) => {
+        if (cause instanceof ApiError && cause.status === 401 && cause.code !== "INVALID_CREDENTIALS") await clearSession();
+        setError(cause instanceof Error ? cause.message : "요청을 처리하지 못했습니다.");
+    }, [clearSession]);
+    const refresh = useCallback(async () => {
+        if (!token.current || preview.current) return;
+        const version = ++readVersion.current, activeToken = token.current;
+        setLoading(true);
+        try {
+            const state = await api.state(activeToken);
+            if (activeToken === token.current && version === readVersion.current) { apply(state); setError(null); }
+        } catch (cause) { if (activeToken === token.current) await report(cause); }
+        finally { if (version === readVersion.current) setLoading(false); }
+    }, [apply, report]);
     useEffect(() => {
         let active = true;
-        AsyncStorage.getItem(STORAGE_KEY)
-            .then((raw) => {
-                if (active && raw) {
-                    const stored = JSON.parse(raw) as Partial<UserData>;
-                    const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
-                    setData({
-                        ...initialData,
-                        ...stored,
-                        "contents": (stored.contents ?? initialData.contents).filter(
-                            (item) => !item.deletedAt || Date.parse(item.deletedAt) > cutoff
-                        )
-                    });
+        void (async () => {
+            try {
+                const [onboarded, savedToken] = await Promise.all([AsyncStorage.getItem(ONBOARDING_KEY), SecureStore.getItemAsync(TOKEN_KEY)]);
+                if (!active) return;
+                setData(d => ({ ...d, onboarded: onboarded === "1" }));
+                if (savedToken) {
+                    token.current = savedToken;
+                    setData(d => ({ ...d, authenticated: true }));
+                    await refresh();
                 }
-            })
-            .catch((error: unknown) => console.warn("Could not read local preview data", error))
-            .finally(() => {
-                if (active) setReady(true);
-            });
-
-        return () => {
-            active = false;
-        };
-    }, []);
-
+            } catch (cause) { if (active) await report(cause); }
+            finally { if (active) setReady(true); }
+        })();
+        return () => { active = false; };
+    }, [refresh, report]);
     useEffect(() => {
-        if (!ready) return;
-        writes.current = writes.current
-            .then(() => AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data)))
-            .catch((error: unknown) => console.warn("Could not persist local preview data", error));
-    }, [data, ready]);
-
+        const subscription = AppState.addEventListener("change", state => { if (state === "active") void refresh(); });
+        return () => subscription.remove();
+    }, [refresh]);
     const update = useCallback((change: Update) => {
-        setData((previous) => (typeof change === "function" ? change(previous) : { ...previous, ...change }));
+        setData(d => {
+            const next = typeof change === "function" ? change(d) : { ...d, ...change };
+            if (next.onboarded !== d.onboarded) void AsyncStorage.setItem(ONBOARDING_KEY, next.onboarded ? "1" : "0").catch(() => setError("기기 설정을 저장하지 못했습니다."));
+            if (previewEnabled) { preview.current = true; return { ...next, authenticated: true }; }
+            return { ...d, onboarded: next.onboarded };
+        });
     }, []);
-    const remove = useCallback(
-        (id: string) =>
-            update((d) => {
-                if (!d.contents.some((item) => item.id === id && !item.deletedAt)) return d;
-
-                return {
-                    ...d,
-                    "contents": d.contents.map((item) =>
-                        item.id === id ? { ...item, "deletedAt": new Date().toISOString() } : item
-                    ),
-                    "savedCount": Math.max(0, d.savedCount - 1)
-                };
-            }),
-        [update]
-    );
-    const restore = useCallback(
-        (id: string) =>
-            update((d) => {
-                if (!d.contents.some((item) => item.id === id && item.deletedAt)) return d;
-
-                return {
-                    ...d,
-                    "contents": d.contents.map((item) => (item.id === id ? { ...item, "deletedAt": undefined } : item)),
-                    "savedCount": d.savedCount + 1
-                };
-            }),
-        [update]
-    );
-    const reset = useCallback(() => {
-        previewPasswordRef.current = "";
-        setData({ ...initialData, "onboarded": true, "contents": [], "notices": [], "savedCount": 0, "searchHistory": [] });
-    }, []);
-
-    return <Context.Provider value={{ data, ready, update, remove, restore, reset, previewPasswordRef }}>
-        {children}
-    </Context.Provider>;
+    const execute = useCallback(async <T,>(action: (activeToken: string) => Promise<T>, reload = true): Promise<{ value: T; } | null> => {
+        if (mutating.current) return null;
+        if (!token.current || preview.current) { setError("로그인 후 이용해주세요. 미리보기 데이터는 서버에 저장하지 않습니다."); return null; }
+        const activeToken = token.current, epoch = generation.current;
+        mutating.current = true; setBusy(true); setError(null);
+        ++readVersion.current;
+        try {
+            const value = await action(activeToken);
+            if (generation.current !== epoch) return null;
+            if (reload) await refresh();
+            return { value };
+        } catch (cause) { if (generation.current === epoch) await report(cause); return null; }
+        finally { mutating.current = false; setBusy(false); setLoading(false); }
+    }, [refresh, report]);
+    const authenticate = useCallback(async (action: () => Promise<Session>) => {
+        if (mutating.current) return false;
+        mutating.current = true; setBusy(true); setError(null);
+        try {
+            const session = await action();
+            await SecureStore.setItemAsync(TOKEN_KEY, session.token);
+            generation.current++; token.current = session.token; preview.current = false;
+            setData({ ...empty, onboarded: true, authenticated: true, nickname: session.user.nickname, email: session.user.email });
+            void AsyncStorage.setItem(ONBOARDING_KEY, "1").catch(() => {});
+            await refresh();
+            return !!token.current;
+        } catch (cause) { await report(cause); return false; }
+        finally { mutating.current = false; setBusy(false); }
+    }, [refresh, report]);
+    const login = (email: string, password: string) => authenticate(() => api.login(email, password));
+    const register = (body: Registration) => authenticate(() => api.register(body));
+    const command = useCallback(async (path: string, method = "POST", body?: unknown) => !!await execute(t => api.request<void>(path, method, body, t)), [execute]);
+    const logout = async (withdraw = false) => {
+        if (!await execute(t => api.request<void>(withdraw ? "/me" : "/auth/logout", withdraw ? "DELETE" : "POST", withdraw ? undefined : {}, t), false)) return false;
+        await clearSession(); return true;
+    };
+    return {
+        data, ready, loading, busy, error, update, refresh, login, register, logout,
+        dismissError: () => setError(null), command,
+        remove: (id: string) => command(`/contents/${encodeURIComponent(id)}`, "DELETE"),
+        restore: (id: string) => command(`/contents/${encodeURIComponent(id)}/restore`, "POST", {}),
+        createContent: async (url: string, memo: string) => (await execute(async t => {
+            const item = await api.createContent(t, url, memo);
+            if (token.current === t) setData(d => ({ ...d, contents: [item, ...d.contents.filter(c => c.id !== item.id)], savedCount: d.savedCount + 1 }));
+            return item;
+        }))?.value ?? null,
+        changeNickname: async (nickname: string) => !!await execute(t => api.profile(t, nickname)),
+        verifyPassword: async (currentPassword: string) => !!await execute(t => api.request<void>("/me/password/verify", "POST", { currentPassword }, t), false),
+        changePassword: (currentPassword: string, newPassword: string) => command("/me/password", "PATCH", { currentPassword, newPassword })
+    };
 }
-
+const Context = createContext<ReturnType<typeof useDataStore> | null>(null);
+export function UserDataProvider({ children }: { children: ReactNode; }) {
+    const store = useDataStore();
+    return <Context.Provider value={store}>{children}</Context.Provider>;
+}
 export function useUserData() {
     const context = useContext(Context);
     if (!context) throw new Error("UserDataProvider is required");
-
     return context;
 }
-
 export function formatDate(value: string) {
     const date = new Date(value);
-
-    return new Intl.DateTimeFormat("sv-SE", { "timeZone": "Asia/Seoul" }).format(date).replaceAll("-", ".");
+    return Number.isNaN(date.getTime()) ? "" : new Intl.DateTimeFormat("sv-SE", { timeZone: "Asia/Seoul" }).format(date).replaceAll("-", ".");
 }

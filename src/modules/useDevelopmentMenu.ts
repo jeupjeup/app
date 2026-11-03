@@ -10,7 +10,7 @@ export function useDevelopmentMenu() {
     const { update } = useUserData();
 
     useEffect(() => {
-        if (!__DEV__) return;
+        if (!__DEV__ || process.env.EXPO_PUBLIC_ENABLE_PREVIEW !== "1") return;
         const detail = (status: ContentStatus) => {
             update((d) => ({
                 ...d,
