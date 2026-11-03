@@ -15,6 +15,7 @@ const config: ExpoConfig = {
         "bundleIdentifier": "kr.pro203s.jeupjeup"
     },
     "android": {
+        "package": "kr.pro203s.jeupjeup",
         "adaptiveIcon": {
             "backgroundColor": "#E6F4FE",
             "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -28,6 +29,7 @@ const config: ExpoConfig = {
         "expo-dev-client",
         "expo-secure-store",
         "expo-web-browser",
+        "./plugins/with-native-social-login",
         [
             "expo-splash-screen",
             {

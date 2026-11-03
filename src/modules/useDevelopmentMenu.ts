@@ -7,10 +7,10 @@ import type { ContentStatus } from "@/types/content";
 
 // Preview controls stay in the development client's menu, outside the product UI.
 export function useDevelopmentMenu() {
-    const { update } = useUserData();
+    const { previewData: update, ready } = useUserData();
 
     useEffect(() => {
-        if (!__DEV__ || process.env.EXPO_PUBLIC_ENABLE_PREVIEW !== "1") return;
+        if (!__DEV__ || !ready) return;
         const detail = (status: ContentStatus) => {
             update((d) => ({
                 ...d,
@@ -46,5 +46,5 @@ export function useDevelopmentMenu() {
             { "name": "Figma · 상세 / 원본 접근 불가", "shouldCollapse": true, "callback": () => detail("unavailable") },
             { "name": "Figma · 온보딩", "shouldCollapse": true, "callback": () => router.push("/onboarding") }
         ]).catch((error: unknown) => console.warn("Could not register development menu", error));
-    }, [update]);
+    }, [update, ready]);
 }

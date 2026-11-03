@@ -1,7 +1,7 @@
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import { useState } from "react";
-import { Alert, Pressable, StyleSheet, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import { Button, Icon, Screen, Text, ui } from "@/components/ui";
 import { assets } from "@/modules/assets";
 import { colors, fonts } from "@/modules/theme";
@@ -9,7 +9,7 @@ import { useUserData } from "@/modules/userData";
 
 // Email authentication uses the API session.
 export default function Page() {
-    const { login: authenticate, busy } = useUserData();
+    const { login: authenticate, loginSocial, busy } = useUserData();
     const [id, setId] = useState("");
     const [password, setPassword] = useState("");
     const login = async () => {
@@ -56,8 +56,12 @@ export default function Page() {
                 <Pressable
                     key={name}
                     accessibilityRole="button"
-                    accessibilityLabel={`${name} 회원가입 화면`}
-                    onPress={() => Alert.alert("소셜 로그인 준비 중", "소셜 인증 제공자 설정이 필요합니다. 이메일로 가입해주세요.")}
+                    accessibilityLabel={`${name === "naver" ? "네이버" : name === "kakao" ? "카카오" : "구글"}로 로그인`}
+                    accessibilityState={{ disabled: busy }}
+                    disabled={busy}
+                    onPress={async () => {
+                        if (await loginSocial(name)) router.replace("/home");
+                    }}
                 >
                     <Icon name={name} width={58} height={58} />
                 </Pressable>

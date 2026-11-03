@@ -42,3 +42,6 @@ example
 /android
 
 .env
+
+# Local example auth database
+.data/

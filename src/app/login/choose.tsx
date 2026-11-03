@@ -24,7 +24,7 @@ export default function Page() {
                 onPress={() => router.push("/login/signup")}
                 style={({ pressed }) => [
                     styles.choice,
-                    { "backgroundColor": pressed ? colors.primary : colors.soft }
+                    { "backgroundColor": pressed ? colors.soft : colors.primary }
                 ]}
             >
                 <Icon name="signup" width={46} height={40} />

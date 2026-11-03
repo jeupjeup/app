@@ -3,6 +3,7 @@ import * as SecureStore from "expo-secure-store";
 import { AppState } from "react-native";
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { api, ApiError } from "@/modules/api";
+import { signInWithOAuth, type OAuthProvider } from "@/modules/oauth";
 import type { Registration, Session, Snapshot } from "@/types/api";
 import type { Notice, SavedContent } from "@/types/content";
 
@@ -14,7 +15,6 @@ const empty: UserData = { onboarded: false, authenticated: false, nickname: "", 
 type Update = Partial<UserData> | ((data: UserData) => UserData);
 const TOKEN_KEY = "jeupjeup-session-v1";
 const ONBOARDING_KEY = "@jeupjeup/onboarded/v1";
-const previewEnabled = __DEV__ && process.env.EXPO_PUBLIC_ENABLE_PREVIEW === "1";
 
 function useDataStore() {
     const [data, setData] = useState(empty);
@@ -48,7 +48,7 @@ function useDataStore() {
         try {
             const state = await api.state(activeToken);
             if (activeToken === token.current && version === readVersion.current) { apply(state); setError(null); }
-        } catch (cause) { if (activeToken === token.current) await report(cause); }
+        } catch (cause) { if (activeToken === token.current && version === readVersion.current) await report(cause); }
         finally { if (version === readVersion.current) setLoading(false); }
     }, [apply, report]);
     useEffect(() => {
@@ -76,8 +76,19 @@ function useDataStore() {
         setData(d => {
             const next = typeof change === "function" ? change(d) : { ...d, ...change };
             if (next.onboarded !== d.onboarded) void AsyncStorage.setItem(ONBOARDING_KEY, next.onboarded ? "1" : "0").catch(() => setError("기기 설정을 저장하지 못했습니다."));
-            if (previewEnabled) { preview.current = true; return { ...next, authenticated: true }; }
             return { ...d, onboarded: next.onboarded };
+        });
+    }, []);
+    const previewData = useCallback((change: Update) => {
+        if (!__DEV__) return;
+        preview.current = true;
+        ++generation.current;
+        ++readVersion.current;
+        setLoading(false);
+        setError(null);
+        setData(d => {
+            const next = typeof change === "function" ? change(d) : { ...d, ...change };
+            return { ...next, onboarded: true, authenticated: true };
         });
     }, []);
     const execute = useCallback(async <T,>(action: (activeToken: string) => Promise<T>, reload = true): Promise<{ value: T; } | null> => {
@@ -94,11 +105,12 @@ function useDataStore() {
         } catch (cause) { if (generation.current === epoch) await report(cause); return null; }
         finally { mutating.current = false; setBusy(false); setLoading(false); }
     }, [refresh, report]);
-    const authenticate = useCallback(async (action: () => Promise<Session>) => {
+    const authenticate = useCallback(async (action: () => Promise<Session | null>) => {
         if (mutating.current) return false;
         mutating.current = true; setBusy(true); setError(null);
         try {
             const session = await action();
+            if (!session) return false;
             await SecureStore.setItemAsync(TOKEN_KEY, session.token);
             generation.current++; token.current = session.token; preview.current = false;
             setData({ ...empty, onboarded: true, authenticated: true, nickname: session.user.nickname, email: session.user.email });
@@ -109,6 +121,7 @@ function useDataStore() {
         finally { mutating.current = false; setBusy(false); }
     }, [refresh, report]);
     const login = (email: string, password: string) => authenticate(() => api.login(email, password));
+    const loginSocial = (provider: OAuthProvider) => authenticate(() => signInWithOAuth(provider));
     const register = (body: Registration) => authenticate(() => api.register(body));
     const command = useCallback(async (path: string, method = "POST", body?: unknown) => !!await execute(t => api.request<void>(path, method, body, t)), [execute]);
     const logout = async (withdraw = false) => {
@@ -116,7 +129,7 @@ function useDataStore() {
         await clearSession(); return true;
     };
     return {
-        data, ready, loading, busy, error, update, refresh, login, register, logout,
+        data, ready, loading, busy, error, update, previewData, refresh, login, loginSocial, register, logout,
         dismissError: () => setError(null), command,
         remove: (id: string) => command(`/contents/${encodeURIComponent(id)}`, "DELETE"),
         restore: (id: string) => command(`/contents/${encodeURIComponent(id)}/restore`, "POST", {}),

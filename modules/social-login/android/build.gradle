@@ -1,0 +1,16 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'expo.modules.sociallogin'
+version = '1.0.0'
+
+android {
+  namespace 'expo.modules.sociallogin'
+}
+
+dependencies {
+  implementation 'com.kakao.sdk:v2-user:2.26.0'
+  implementation 'com.navercorp.nid:oauth:5.12.0'
+}

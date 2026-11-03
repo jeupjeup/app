@@ -3,7 +3,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button, Icon, Screen, Text } from "@/components/ui";
+import { Button, Screen, Text } from "@/components/ui";
 import { assets } from "@/modules/assets";
 import { fonts } from "@/modules/theme";
 import { useUserData } from "@/modules/userData";
@@ -30,7 +30,11 @@ export default function Page() {
 
     return <Screen line={false} style={styles.page}>
         <View style={styles.dots}>
-            <Icon name={(["dots1", "dots2", "dots3"] as const)[step]} width={57} height={12} />
+            <View style={styles.dotRow}>
+                {illustrations.map((_, index) => (
+                    <View key={index} style={[styles.dot, index === step && styles.activeDot]} />
+                ))}
+            </View>
         </View>
         <Image
             source={illustrations[step]}
@@ -76,6 +80,20 @@ const styles = StyleSheet.create({
     "dots": {
         "alignItems": "center",
         "paddingTop": 77
+    },
+    "dotRow": {
+        "flexDirection": "row",
+        "justifyContent": "space-between",
+        "width": 57
+    },
+    "dot": {
+        "width": 12.46875,
+        "height": 12,
+        "borderRadius": 6.234375,
+        "backgroundColor": "#D0D0D0"
+    },
+    "activeDot": {
+        "backgroundColor": "#FF9F43"
     },
     "bottom": {
         "gap": 44,

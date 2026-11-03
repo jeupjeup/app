@@ -1,5 +1,7 @@
 import type { Registration, Session, Snapshot, User } from "@/types/api";
 import type { SavedContent } from "@/types/content";
+import type { NativeOAuthProvider } from "../../modules/social-login";
+import type { GoogleOAuthExchangeRequest } from "@/modules/oauthConfig";
 
 type RecordValue = Record<string, unknown>;
 const record = (value: unknown): value is RecordValue => !!value && typeof value === "object" && !Array.isArray(value);
@@ -24,7 +26,7 @@ export class ApiError extends Error {
 
 export const api = {
     async request<T>(path: string, method = "GET", body?: unknown, token?: string, signal?: AbortSignal): Promise<T> {
-        const base = process.env.EXPO_PUBLIC_API_URL?.replace(/\/$/, "");
+        const base = process.env.EXPO_PUBLIC_API_URL?.trim().replace(/\/+$/, "");
         if (!base) throw new ApiError(0, "CONFIGURATION", "API 주소가 설정되지 않았습니다. EXPO_PUBLIC_API_URL을 확인해주세요.");
         const controller = new AbortController();
         const abort = () => controller.abort();
@@ -47,6 +49,14 @@ export const api = {
         } finally { clearTimeout(timeout); signal?.removeEventListener("abort", abort); }
     },
     login: async (email: string, password: string) => { const s = await api.request<Session>("/auth/login", "POST", { email, password }); return checked(s, sessionShape(s)); },
+    socialLogin: async (provider: NativeOAuthProvider, accessToken: string) => {
+        const s = await api.request<Session>(`/auth/oauth/${provider}/exchange`, "POST", { access_token: accessToken, keep_me_logged_in: true });
+        return checked(s, sessionShape(s) && Date.parse(s.expiresAt) > Date.now());
+    },
+    googleLogin: async (body: GoogleOAuthExchangeRequest) => {
+        const s = await api.request<Session>("/auth/oauth/google/exchange", "POST", body);
+        return checked(s, sessionShape(s) && Date.parse(s.expiresAt) > Date.now());
+    },
     register: async (body: Registration) => { const s = await api.request<Session>("/auth/register", "POST", body); return checked(s, sessionShape(s)); },
     state: async (token: string) => {
         const s = await api.request<Snapshot>("/state", "GET", undefined, token);
