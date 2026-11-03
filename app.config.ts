@@ -29,6 +29,26 @@ const config: ExpoConfig = {
         "expo-dev-client",
         "expo-secure-store",
         "expo-web-browser",
+        [
+            "expo-sharing",
+            {
+                "ios": {
+                    "enabled": true,
+                    "extensionBundleIdentifier": "kr.pro203s.jeupjeup.ShareExtension",
+                    "appGroupId": "group.kr.pro203s.jeupjeup",
+                    "activationRule": {
+                        "supportsText": true,
+                        "supportsWebUrlWithMaxCount": 1,
+                        "supportsWebPageWithMaxCount": 1
+                    }
+                },
+                "android": {
+                    "enabled": true,
+                    "singleShareMimeTypes": ["text/plain"]
+                }
+            }
+        ],
+        "./plugins/with-share-extension-name",
         "./plugins/with-native-social-login",
         [
             "expo-splash-screen",

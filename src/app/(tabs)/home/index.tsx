@@ -1,15 +1,15 @@
+import AddContentDialog from "@/components/AddContentDialog";
+import CollectionGrid, { openCollection } from "@/components/CollectionGrid";
+import ContentCard from "@/components/ContentCard";
+import SearchDialog from "@/components/SearchDialog";
+import { EmptyState, Icon, Screen, SearchField, Text, ui } from "@/components/ui";
+import { assets } from "@/modules/assets";
+import { colors } from "@/modules/theme";
+import { useUserData } from "@/modules/userData";
 import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
-import { EmptyState, Icon, Screen, SearchField, Text, ui } from "@/components/ui";
-import ContentCard from "@/components/ContentCard";
-import CollectionGrid, { openCollection } from "@/components/CollectionGrid";
-import AddContentDialog from "@/components/AddContentDialog";
-import SearchDialog from "@/components/SearchDialog";
-import { assets } from "@/modules/assets";
-import { colors } from "@/modules/theme";
-import { useUserData } from "@/modules/userData";
 
 export default function Page() {
     const { url } = useLocalSearchParams<{ url?: string; }>();
@@ -57,7 +57,7 @@ export default function Page() {
                         style={styles.add}
                         onPress={() => setAdd(true)}
                     >
-                        <Text style={{ "fontSize": 28, "lineHeight": 28 }}>＋</Text>
+                        <Icon name="plus" width={24} height={23} />
                         <Text style={{ "fontSize": 12 }}>URL · 텍스트 추가</Text>
                     </Pressable>
                 </View>

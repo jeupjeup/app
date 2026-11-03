@@ -57,6 +57,12 @@ AI 분석·자동 분류·의미 검색, 원격 이미지/추천, 오프라인 �
 
 개발 빌드에서는 환경변수 없이 개발 메뉴의 Custom items에 Figma 예시 데이터·빈 화면·상세 상태·온보딩 항목이 표시됩니다. 해당 메뉴를 선택하면 미리보기 모드로 전환됩니다. 이 미리보기 데이터는 서버로 전송하지 않습니다. 이전 로컬 UI 미리보기 데이터는 운영 데이터로 자동 가져오지 않습니다.
 
+## 다른 앱에서 링크 공유받기
+
+`expo-sharing`으로 iOS Share Extension과 Android 텍스트 공유 수신을 활성화했습니다. 플랫폼·도메인 제한 없이 공유받은 HTTP/HTTPS 링크를 기존 ‘정보의 링크를 입력해주세요’ 창의 URL 칸에 자동 입력합니다. 설명이 함께 전달되면 그 안의 첫 번째 링크를 사용합니다. 공유만으로 저장하거나 링크 미리보기를 조회하지 않으며, ‘추가’를 누르면 기존 저장 API를 호출합니다. 로그인 여부와 현재 화면에 관계없이 입력 창을 표시합니다. 이미지·영상 파일 수신은 이번 범위에 포함하지 않습니다.
+
+네이티브 확장 기능이 추가되어 앱을 다시 빌드·설치해야 합니다. `bunx expo run:ios` 또는 `bunx expo run:android`를 사용합니다. iOS에는 `kr.pro203s.jeupjeup.ShareExtension` 확장과 `group.kr.pro203s.jeupjeup` App Group이 추가됩니다. 실기기 빌드의 서명 설정에도 이 App Group이 반영되어야 합니다. Expo Go나 재빌드 전 개발 클라이언트에는 공유 대상이 나타나지 않습니다. SDK 58의 iOS 공유 수신은 Expo가 실험적 기능으로 제공하는 방식입니다.
+
 ## 화면과 에셋
 
 [Figma uiux](https://www.figma.com/design/E4bCW66UwriovsrDEnmqsL?node-id=1-5)의 화면 구조를 유지했습니다. 화면은 `src/app`, 재사용 UI는 `src/components`, 상태·API·에셋·색상은 `src/modules`, 타입은 `src/types`에 있습니다. 이미지·SVG는 `assets/figma`, Pretendard·Paperlogy는 라이선스와 함께 `assets/fonts`에 있습니다.

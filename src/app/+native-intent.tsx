@@ -1,6 +1,10 @@
 export function redirectSystemPath({ path, initial }: { path: string; initial: boolean; }) {
     try {
         const url = new URL(path, "jeupjeupsave://app");
+        if (url.hostname === "expo-sharing") {
+            // The global dialog reads the payload; a share is not a screen route.
+            return initial ? "/" : "";
+        }
         const kakaoCallback = /^kakao[0-9a-f]+:$/i.test(url.protocol) && url.hostname === "oauth";
         const naverCallback = url.protocol === "kr.pro203s.jeupjeup.naver:";
 

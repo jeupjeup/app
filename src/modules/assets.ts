@@ -17,6 +17,7 @@ export const assets = {
     "cafeHome": require("@/assets/figma/images/cafe.png"), // 275:2532
     "bell": require("@/assets/figma/icons/bell.svg"), // 275:2532
     "search": require("@/assets/figma/icons/search.svg"), // 275:2532
+    "plus": require("@/assets/figma/icons/plusFigma.svg"), // 293:1661
     "chevron": require("@/assets/figma/icons/chevron.svg"), // 275:2532
     "place": require("@/assets/figma/icons/place.svg"), // 275:2532
     "travel": require("@/assets/figma/icons/travel.svg"), // 275:2532
