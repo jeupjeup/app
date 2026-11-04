@@ -11,13 +11,13 @@ const config: ExpoConfig = {
     "userInterfaceStyle": "light",
     "ios": {
         "appleTeamId": "R394X6W495",
-        "icon": "./assets/expo.icon",
+        "icon": "./assets/images/icon.png",
         "bundleIdentifier": "kr.pro203s.jeupjeup"
     },
     "android": {
         "package": "kr.pro203s.jeupjeup",
         "adaptiveIcon": {
-            "backgroundColor": "#E6F4FE",
+            "backgroundColor": "#FB9534",
             "foregroundImage": "./assets/images/android-icon-foreground.png",
             "backgroundImage": "./assets/images/android-icon-background.png",
             "monochromeImage": "./assets/images/android-icon-monochrome.png"
