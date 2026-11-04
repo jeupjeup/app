@@ -3,7 +3,6 @@ import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { View } from "react-native";
-import ApiFeedback from "@/components/ApiFeedback";
 import IncomingShareDialog from "@/components/IncomingShareDialog";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -31,7 +30,7 @@ function Navigator() {
 
     if (!ready || (!loaded && !error)) return null;
 
-    return <View style={{ flex: 1, paddingTop: 0 }}><ApiFeedback /><Stack screenOptions={{ "headerShown": false, "contentStyle": { "backgroundColor": colors.background } }} /><IncomingShareDialog /></View>;
+    return <View style={{ flex: 1, paddingTop: 0 }}><Stack screenOptions={{ "headerShown": false, "contentStyle": { "backgroundColor": colors.background } }} /><IncomingShareDialog /></View>;
 }
 
 export default function RootLayout() {

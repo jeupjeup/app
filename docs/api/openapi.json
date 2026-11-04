@@ -738,10 +738,11 @@
       },
       "patch": {
         "operationId": "updateMe",
-        "summary": "닉네임 변경",
-        "description": "",
+        "summary": "닉네임 및 가입 동의 설정",
+        "description": "프론트엔드 요구 계약. 가입 동의 필드의 실제 저장은 외부 백엔드 구현 및 검증이 필요하다.",
         "x-frontend-pages": [
-          "/mypage/account"
+          "/mypage/account",
+          "/login/signup"
         ],
         "x-integration-status": "external-backend-unverified",
         "responses": {
@@ -3751,6 +3752,13 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 25
+          },
+          "requiredConsent": {
+            "type": "boolean",
+            "const": true
+          },
+          "notificationsEnabled": {
+            "type": "boolean"
           }
         },
         "required": [

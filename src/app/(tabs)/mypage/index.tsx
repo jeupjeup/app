@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { Alert, Linking, StyleSheet, View } from "react-native";
+import { Linking, StyleSheet, View } from "react-native";
 import { Header, Screen, Text, ui } from "@/components/ui";
 import { ProfileRow, ServiceRow } from "@/components/ProfileRow";
 import { colors, fonts } from "@/modules/theme";
@@ -28,7 +28,7 @@ export default function Page() {
             <Text style={ui.subtitle}>서비스 관리</Text>
         </View>
         <View style={{ "marginTop": 20 }}>
-            <ServiceRow icon="support" title="고객센터" onPress={() => { const url = process.env.EXPO_PUBLIC_SUPPORT_URL; if (url) void Linking.openURL(url).catch(() => Alert.alert("연결 실패", "고객센터를 열 수 없습니다.")); else Alert.alert("고객센터 준비 중", "고객센터 주소가 아직 등록되지 않았습니다."); }} />
+            <ServiceRow icon="support" title="고객센터" onPress={() => { const url = process.env.EXPO_PUBLIC_SUPPORT_URL; if (url) void Linking.openURL(url).catch(() => {}); }} />
             <ServiceRow
                 icon="computer"
                 title="앱 이용 방법"

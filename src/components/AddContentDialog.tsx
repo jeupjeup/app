@@ -14,7 +14,7 @@ type Props = {
 
 export default function AddContentDialog(props: Props) {
     const { visible, onClose, initialUrl = "" } = props;
-    const { createContent, busy: apiBusy, error } = useUserData();
+    const { createContent, busy: apiBusy } = useUserData();
     const [url, setUrl] = useState(initialUrl);
     const [memo, setMemo] = useState("");
     const [result, setResult] = useState<"saved" | null>(null);
@@ -84,7 +84,6 @@ export default function AddContentDialog(props: Props) {
                 <Text style={styles.count}>
                     <Text style={{ "color": colors.primary, "fontSize": 12 }}>{memo.length}</Text>/70
                 </Text>
-                {error && <Text accessibilityRole="alert" style={{ color: colors.error, fontSize: 12, marginBottom: 8 }}>{error}</Text>}
                 <Button
                     onPress={() => {
                         void save();

@@ -17,7 +17,7 @@ type Props = {
 
 export default function SearchDialog(props: Props) {
     const { visible, onClose } = props;
-    const { data, command, busy, error } = useUserData();
+    const { data, command, busy } = useUserData();
     const [query, setQuery] = useState("");
     const insets = useSafeAreaInsets();
     const matches = data.contents
@@ -50,8 +50,7 @@ export default function SearchDialog(props: Props) {
             <View style={{ "paddingHorizontal": 16 }}>
                 <SearchField autoFocus value={query} onChangeText={setQuery} onSubmit={() => submit()} />
                 <View style={styles.preview}>
-                    <Text style={{ "fontSize": 12, "marginBottom": 12 }}>검색 결과 미리보기</Text>
-                    {error && <Text accessibilityRole="alert" style={{ color: colors.error, fontSize: 12 }}>{error}</Text>}
+                    <Text style={{ "fontSize": 12, "marginBottom": 12 }}>미리보기</Text>
                     {matches.map((item) => (
                         <Pressable
                             key={item.id}

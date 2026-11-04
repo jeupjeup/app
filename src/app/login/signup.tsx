@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from "expo-router";
+import { Redirect, router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -9,9 +9,7 @@ import { useUserData } from "@/modules/userData";
 // 135:262 → 241:5974 → 241:6015 → 241:6209; returning: 241:6354 / 241:6483.
 export default function Page() {
     const { returning } = useLocalSearchParams<{ returning?: string; }>();
-    const { data, register, busy } = useUserData();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const { data, command, busy } = useUserData();
     const [nickname, setNickname] = useState(returning ? data.nickname : "");
     const [required, setRequired] = useState(false);
     const [optional, setOptional] = useState(false);
@@ -24,7 +22,7 @@ export default function Page() {
             return;
         }
         if (!required || !nickname.trim()) return;
-        if (await register({ email: email.trim(), password, nickname: nickname.trim(), requiredConsent: required, notificationsEnabled: optional })) router.replace("/home");
+        if (await command("/me", "PATCH", { nickname: nickname.trim(), requiredConsent: required, notificationsEnabled: optional })) router.replace("/home");
     };
     const agreement = (title: string, checked: boolean, onPress: () => void, top = false) => (
         <Pressable
@@ -39,6 +37,8 @@ export default function Page() {
             </View>
         </Pressable>
     );
+
+    if (!data.authenticated) return <Redirect href={{ pathname: "/login", params: { signup: "1" } }} />;
 
     return <Screen line={false} style={styles.page}>
         <Text style={[ui.title, { "marginTop": 44 }]}>
@@ -55,8 +55,6 @@ export default function Page() {
         </Text>
         {!returning && (
             <View style={styles.nickname}>
-                <TextInput accessibilityLabel="가입 이메일" keyboardType="email-address" autoCapitalize="none" autoCorrect={false} placeholder="이메일" value={email} onChangeText={setEmail} style={[ui.input, { marginBottom: 12 }]} />
-                <TextInput accessibilityLabel="가입 비밀번호" secureTextEntry autoCapitalize="none" autoCorrect={false} placeholder="비밀번호 (영문·숫자·특수문자 8~20자)" value={password} onChangeText={setPassword} style={[ui.input, { marginBottom: 12 }]} />
                 <Text style={{ "marginBottom": 14 }}>닉네임</Text>
                 <TextInput
                     accessibilityLabel="닉네임"
@@ -105,7 +103,7 @@ export default function Page() {
         <SafeAreaView edges={["bottom"]} style={{ "paddingBottom": showTerms ? 40 : 28 }}>
             <Button
                 onPress={finish}
-                disabled={busy || !email.trim() || !password || !nickname.trim() || (showTerms && !required)}
+                disabled={busy || !nickname.trim() || (showTerms && !required)}
                 style={{ "height": showTerms ? 46 : 58 }}
             >
                 시작하기

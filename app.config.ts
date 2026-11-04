@@ -11,7 +11,7 @@ const config: ExpoConfig = {
     "userInterfaceStyle": "light",
     "ios": {
         "appleTeamId": "R394X6W495",
-        "icon": "./assets/images/icon.png",
+        "icon": "./assets/icon.icon",
         "bundleIdentifier": "kr.pro203s.jeupjeup"
     },
     "android": {

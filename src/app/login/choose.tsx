@@ -21,7 +21,7 @@ export default function Page() {
             </Pressable>
             <Pressable
                 accessibilityRole="button"
-                onPress={() => router.push("/login/signup")}
+                onPress={() => router.push({ pathname: "/login", params: { signup: "1" } })}
                 style={({ pressed }) => [
                     styles.choice,
                     { "backgroundColor": pressed ? colors.soft : colors.primary }

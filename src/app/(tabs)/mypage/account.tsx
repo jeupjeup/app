@@ -8,7 +8,7 @@ import { useUserData } from "@/modules/userData";
 
 // 195:1059; nickname/logout/withdraw overlays: 261:2036, 261:2098, 257:1797.
 export default function Page() {
-    const { data, changeNickname, logout: endSession, busy, error } = useUserData();
+    const { data, changeNickname, logout: endSession, busy } = useUserData();
     const [dialog, setDialog] = useState<"nickname" | "logout" | "withdraw" | null>(null);
     const [nickname, setNickname] = useState(data.nickname);
     const logout = async () => {
@@ -52,7 +52,6 @@ export default function Page() {
             </Pressable>
         </Screen>
         <Dialog visible={!!dialog} onClose={() => setDialog(null)}>
-            {error && <Text accessibilityRole="alert" style={{ color: colors.error, fontSize: 12 }}>{error}</Text>}
             {dialog === "nickname" ? (
                 <>
                     <Text style={styles.message}>새로운 닉네임을 입력해주세요</Text>

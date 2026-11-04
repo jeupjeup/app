@@ -38,16 +38,16 @@ bun start
 | --- | --- | --- | --- |
 | 온보딩 `/onboarding` | 로컬 완료 여부 | AsyncStorage 설정만 저장 | API 불필요. AI 자동 분류 안내를 실제 수동 분류 동작에 맞춤 |
 | 로그인 `/login` | 이메일·비밀번호 입력 | POST `/auth/login` | Session 토큰 안전 저장 → GET `/state` → 홈. 잘못된 로그인은 화면 유지 |
-| 소셜 로그인 `/login` | 네이버(NID)·카카오 네이티브 SDK 인증 | POST `/auth/oauth/{provider}/exchange` `{access_token,keep_me_logged_in:true}` | 제공자 토큰 서버 검증 → 기존 Session 안전 저장 → GET `/state` → 홈. 취소는 화면 유지, 오류는 공통 메시지. 외부 BE 연동 미검증 |
+| 소셜 로그인 `/login` | 네이버(NID)·카카오 네이티브 SDK 인증 | POST `/auth/oauth/{provider}/exchange` `{access_token,keep_me_logged_in:true}` | 제공자 토큰 서버 검증 → 기존 Session 안전 저장 → GET `/state` → 홈. 취소·오류는 화면 유지. 외부 BE 연동 미검증 |
 | 구글 로그인 `/login` | 서버 중계 브라우저 인증 + PKCE(S256) | GET `/auth/oauth/google/authorize` → 앱 callback → POST `/auth/oauth/google/exchange` | callback URI·state 검증 → 일회용 앱 코드 교환 → 기존 Session 저장 → GET `/state` → 홈. 취소·동의 거절은 화면 유지. 외부 BE 미검증 |
-| 가입 `/login/signup` | 이메일·비밀번호·닉네임·필수/선택 동의 | POST `/auth/register` | 실제 계정 생성·동의 저장·Session 수신. 서버 검증 오류 표시 |
+| 가입 `/login/signup` | 기존 로그인 화면에서 인증 후 닉네임·필수/선택 동의 | PATCH `/me` `{nickname,requiredConsent,notificationsEnabled}` | Figma에 없는 이메일·비밀번호 가입 입력란 제거. 인증 성공 후 진입하며 프로필 저장 성공 시 홈 이동. 동의 필드 처리는 외부 BE 확인 필요 |
 | 홈 `/home` | `/state.contents/notices` | URL+메모 POST `/contents` | 서버 201 수신 후 상세 버튼. 실패는 입력 유지. 오프라인 임시 저장/동기화 성공 안내 제거 |
 | 검색 팝업 | `/state.contents/searchHistory`에서 부분일치 미리보기 | POST `/search-history` `{query}`, DELETE `/search-history` | 기록 저장 성공 후 `/library?q=` 이동. 최대 10개 중복 제거 |
 | 보관함 `/library` | `/state.contents` 중 활성 | q/collection/type/sort 로컬 필터. 당겨서 GET `/state` | 수신한 응답으로 최신/오래된 순 정렬. Empty와 결과 없음 구분 |
-| 상세 `/library/[id]` | `/state.contents`에서 id 조회 | 진입 POST `/contents/{id}/view`; PATCH `/contents/{id}` `{title,memo,type,collection}` | 조회 기록 영속화, 수정 응답 뒤 상태 재조회. ID 없으면 안내 |
+| 상세 `/library/[id]` | `/state.contents`에서 id 조회 | 진입 POST `/contents/{id}/view` | 조회 기록 영속화. Figma에 없는 정보 수정 버튼·팝업 제거 |
 | 상세 삭제 | 현재 소유 콘텐츠 | DELETE `/contents/{id}` | 성공 후 삭제 안내, 30일 휴지통 보관 |
 | 알림 `/home/notifications` | `/state.notices` | POST `/notices/read` 또는 `/notices/{id}/read` `{}` | 읽음 성공 후 상태 갱신. 알림은 실제 북마크 저장 트랜잭션에서 생성 |
-| 마이 `/mypage` | `/state.user/savedCount/contents` | 계정/가이드/최근/휴지통 이동 | 실제 개수·컬렉션을 계산. 고객센터는 설정 URL 또는 준비 중 안내 |
+| 마이 `/mypage` | `/state.user/savedCount/contents` | 계정/가이드/최근/휴지통 이동 | 실제 개수·컬렉션을 계산. 고객센터는 설정 URL 열기. Figma에 없는 준비 중·연결 실패 알림창 제거 |
 | 계정 `/mypage/account` | `/state.user` | PATCH `/me` `{nickname}`; POST `/auth/logout` `{}`; DELETE `/me` | 저장·로그아웃·탈퇴 성공 후에만 닫기/화면 이동. 이메일 로그인 표기 |
 | 비밀번호 `/mypage/password` | 입력 상태만 로컬 | POST `/me/password/verify` `{currentPassword}`, PATCH `/me/password` `{currentPassword,newPassword}` | 서버 검증과 잠금 사용. 변경 시 다시 검증. 메모리 예시 비밀번호 제거 |
 | 최근 조회 `/mypage/recent` | `/state.contents`의 viewedAt | 상세 진입 시 조회 기록 | 활성 콘텐츠를 viewedAt 내림차순으로 표시 |
@@ -60,16 +60,16 @@ bun start
 
 | 상태 | 처리 |
 | --- | --- |
-| Loading | 시작 시 토큰/서버 상태 확인 동안 스플래시, 이후 공통 진행 표시. 쓰기 중 버튼 비활성화. ScrollView/보관함 당겨서 새로고침 |
+| Loading | 시작 시 토큰/서버 상태 확인 동안 스플래시. 전역 진행 배너 없음. 쓰기 중 버튼 비활성화. ScrollView/보관함 당겨서 새로고침 |
 | Success | 서버 응답이 성공한 뒤에만 대화상자 완료/화면 이동. 변경 후 `/state` 재조회. 생성 응답은 서버 ID 사용 |
 | Empty | 예시 데이터를 주입하지 않음. 홈/보관함/알림/최근/휴지통 기존 빈 상태 UI |
-| Error | 공통 오류 표시와 새로고침. 입력 대화상자에도 오류 표시. 실패 시 입력/기존 데이터 보존. 추가 쓰기 자동 재시도 없음 |
+| Error | Figma에 없는 공통 오류 배너와 팝업 내 API 오류 문구 제거. 실패 시 입력/기존 데이터 보존. 추가 쓰기 자동 재시도 없음 |
 | 401 | 로그인 실패는 입력 유지. 인증된 요청의 만료·폐기 토큰은 SecureStore/사용자 데이터를 지우고 보호된 탭에서 로그인으로 이동 |
-| 403 | 권한/Origin 오류 메시지. 다른 사용자 리소스는 존재 여부를 숨기기 위해 404 |
-| Offline/timeout | 12초 제한 및 AbortController. 서버 저장을 확인할 수 없으면 실패 안내; 자동 오프라인 쓰기 큐 없음 |
+| 403 | 추가 UI 없이 현재 화면 유지. 다른 사용자 리소스는 존재 여부를 숨기기 위해 404 |
+| Offline/timeout | 12초 제한 및 AbortController. 서버 저장을 확인할 수 없으면 입력 유지; 자동 오프라인 쓰기 큐 없음 |
 | Refresh | 로그인·앱 재실행·포그라운드 복귀·사용자 새로고침·변경 후 재조회. 늦게 도착한 예전 조회는 버전/토큰으로 무시 |
 
-자동 쓰기 재시도는 없다. 서버 반영 후 새로고침만 실패했다면 변경을 재전송하지 않고 재조회 안내를 유지한다. 네트워크 단절로 쓰기 응답을 받지 못하면 저장 여부가 불확실할 수 있어 목록 새로고침으로 확인한다(정규화 URL 중복 제약으로 같은 URL 이중 활성 저장 방지).
+자동 쓰기 재시도는 없다. 서버 반영 후 새로고침만 실패했다면 변경을 재전송하지 않고 기존 화면을 유지한다. 네트워크 단절로 쓰기 응답을 받지 못하면 저장 여부가 불확실할 수 있어 목록 새로고침으로 확인한다(정규화 URL 중복 제약으로 같은 URL 이중 활성 저장 방지).
 
 ## 외부 백엔드 확인 필요
 

@@ -1,5 +1,5 @@
 import { Image } from "expo-image";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import { Button, Icon, Screen, Text, ui } from "@/components/ui";
@@ -9,12 +9,14 @@ import { useUserData } from "@/modules/userData";
 
 // Email authentication uses the API session.
 export default function Page() {
+    const { signup } = useLocalSearchParams<{ signup?: string; }>();
+    const destination = signup === "1" ? "/login/signup" : "/home";
     const { login: authenticate, loginSocial, busy } = useUserData();
     const [id, setId] = useState("");
     const [password, setPassword] = useState("");
     const login = async () => {
         if (!id.trim() || !password || busy) return;
-        if (await authenticate(id.trim(), password)) router.replace("/home");
+        if (await authenticate(id.trim(), password)) router.replace(destination);
     };
 
     return <Screen line={false} style={styles.page}>
@@ -48,7 +50,6 @@ export default function Page() {
                 로그인
             </Button>
         </View>
-        <Button onPress={() => router.push("/login/signup")} style={{ marginTop: 12 }}>이메일 회원가입</Button>
         <View style={styles.line} />
         <Text style={[styles.caption, { "textAlign": "center", "marginTop": 56 }]}>SNS로 10초만에 회원가입</Text>
         <View style={styles.social}>
@@ -60,7 +61,7 @@ export default function Page() {
                     accessibilityState={{ disabled: busy }}
                     disabled={busy}
                     onPress={async () => {
-                        if (await loginSocial(name)) router.replace("/home");
+                        if (await loginSocial(name)) router.replace(destination);
                     }}
                 >
                     <Icon name={name} width={58} height={58} />

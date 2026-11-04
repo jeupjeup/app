@@ -7,7 +7,7 @@ import { useUserData } from "@/modules/userData";
 
 // 218:1126, 218:1030, restore overlay 310:1605.
 export default function Page() {
-    const { data, command, restore, busy, error } = useUserData();
+    const { data, command, restore, busy } = useUserData();
     const [restoreId, setRestoreId] = useState<string | null>(null);
     const items = data.contents.filter((item) => item.deletedAt);
 
@@ -39,7 +39,6 @@ export default function Page() {
             </View>
         </Screen>
         <Dialog visible={!!restoreId} onClose={() => setRestoreId(null)}>
-            {error && <Text accessibilityRole="alert" style={{ color: colors.error, fontSize: 12 }}>{error}</Text>}
             <Text style={{ "textAlign": "center", "fontSize": 16 }}>이 정보를 복구하시겠습니까?</Text>
             <Button
                 disabled={busy}
