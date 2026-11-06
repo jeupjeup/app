@@ -69,3 +69,11 @@ export const initialNotices: Notice[] = [
         "collection": "의류"
     }
 ];
+
+// The named preset is restored when its development-only device setting is saved.
+export const samplePreviewData = {
+    contents: [...initialContents, ...initialTrash],
+    notices: initialNotices,
+    searchHistory: [] as string[],
+    savedCount: 143
+};

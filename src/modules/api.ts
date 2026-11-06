@@ -1,3 +1,4 @@
+import { apiBaseUrl } from "@/modules/apiConfig";
 import type { Registration, Session, Snapshot, User } from "@/types/api";
 import type { SavedContent } from "@/types/content";
 import type { NativeOAuthProvider } from "../../modules/social-login";
@@ -26,8 +27,9 @@ export class ApiError extends Error {
 
 export const api = {
     async request<T>(path: string, method = "GET", body?: unknown, token?: string, signal?: AbortSignal): Promise<T> {
-        const base = process.env.EXPO_PUBLIC_API_URL?.trim().replace(/\/+$/, "");
-        if (!base) throw new ApiError(0, "CONFIGURATION", "API 주소가 설정되지 않았습니다. EXPO_PUBLIC_API_URL을 확인해주세요.");
+        let base: string;
+        try { base = apiBaseUrl(); } catch (cause) { throw new ApiError(0, "CONFIGURATION", (cause as Error).message); }
+        if (body === undefined && ["POST", "PATCH"].includes(method)) body = {};
         const controller = new AbortController();
         const abort = () => controller.abort();
         if (signal?.aborted) controller.abort();

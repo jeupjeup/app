@@ -1,6 +1,7 @@
 import * as Crypto from "expo-crypto";
 import * as WebBrowser from "expo-web-browser";
 import { loginWithNativeProvider } from "../../modules/social-login";
+import { apiBaseUrl } from "@/modules/apiConfig";
 import { api, ApiError } from "@/modules/api";
 import { OAUTH_REDIRECT_URI, type OAuthProvider } from "@/modules/oauthConfig";
 
@@ -49,7 +50,7 @@ async function signInWithGoogle(base: string) {
 
 export async function signInWithOAuth(provider: OAuthProvider) {
     // Check the server before starting provider authentication.
-    const base = process.env.EXPO_PUBLIC_API_URL?.trim();
+    const base = apiBaseUrl();
     if (!base) throw new ApiError(0, "CONFIGURATION", "로그인 서버가 아직 설정되지 않았습니다. EXPO_PUBLIC_API_URL을 확인해주세요.");
     let url: URL;
     try { url = new URL(base); }

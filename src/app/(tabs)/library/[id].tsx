@@ -1,3 +1,4 @@
+import EditContentDialog from "@/components/EditContentDialog";
 import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
@@ -13,6 +14,7 @@ import type { ContentStatus } from "@/types/content";
 export default function Page() {
     const { id, status } = useLocalSearchParams<{ id: string; status?: ContentStatus; }>();
     const { data, command, remove, busy } = useUserData();
+    const [editing, setEditing] = useState(false);
     const [confirm, setConfirm] = useState(false);
     const [deleted, setDeleted] = useState(false);
     const [linkFailed, setLinkFailed] = useState(false);
@@ -92,6 +94,7 @@ export default function Page() {
                         </View>
                     ) : (
                         <>
+                            {field("메모", item.memo)}
                             {field("AI 설명", item.description)}
                             {field("태그", item.tags.map((tag) => `#${tag}`).join(" "))}
                             {field("유형", item.type)}
@@ -155,11 +158,13 @@ export default function Page() {
                         </>
                     )}
                 </View>
+                <Button disabled={busy || !!item.deletedAt} onPress={() => setEditing(true)}>정보 수정</Button>
                 <Button disabled={busy || !!item.deletedAt} danger onPress={() => setConfirm(true)}>
                     정보 삭제
                 </Button>
             </View>
         </Screen>
+        {editing && <EditContentDialog item={item} onClose={() => setEditing(false)} />}
         <Dialog visible={confirm} onClose={() => setConfirm(false)} close>
             <Text style={{ "textAlign": "center", "fontSize": 16 }}>이 정보를 삭제하시겠습니까?</Text>
             <Button

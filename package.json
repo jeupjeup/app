@@ -38,12 +38,15 @@
         "typescript": "~6.0.3"
     },
     "scripts": {
-        "dev:api": "node --env-file-if-exists=.env --env-file-if-exists=.env.local server/auth-server.mjs",
+        "dev:api": "node --env-file-if-exists=.env --env-file-if-exists=.env.local server/dev.mjs api",
         "start": "expo start",
         "android": "expo run:android",
         "ios": "expo run:ios",
         "lint": "expo lint",
-        "typecheck": "tsc --noEmit"
+        "typecheck": "tsc --noEmit",
+        "dev:web": "node --env-file-if-exists=.env --env-file-if-exists=.env.local server/dev.mjs web",
+        "dev": "node --env-file-if-exists=.env --env-file-if-exists=.env.local server/dev.mjs all",
+        "dev:auth:example": "node --env-file-if-exists=.env --env-file-if-exists=.env.local server/auth-server.mjs"
     },
     "private": true
 }

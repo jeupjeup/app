@@ -48,6 +48,7 @@ const config: ExpoConfig = {
                 }
             }
         ],
+        "./plugins/with-local-api",
         "./plugins/with-share-extension-name",
         "./plugins/with-native-social-login",
         [

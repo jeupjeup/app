@@ -45,3 +45,7 @@ example
 
 # Local example auth database
 .data/
+
+# Tool caches
+.mypy_cache/
+.ruff_cache/
