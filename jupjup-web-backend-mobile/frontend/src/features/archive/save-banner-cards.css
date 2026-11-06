@@ -1,0 +1,18 @@
+.home-save .home-save-art{flex-basis:340px;height:175px;margin:-14px 0;perspective:900px}
+.banner-content-card{position:absolute;width:145px;padding:10px;background:#fff;border:1px solid #e5e2dc;border-radius:10px;box-shadow:0 7px 18px rgba(55,44,32,.09);overflow:hidden}
+.banner-card-source{display:flex;align-items:center;gap:5px;font-size:8px;color:#68645e;margin-bottom:8px}
+.banner-card-source>.icon{margin-left:auto;width:12px;height:12px}
+.banner-content-card>strong{display:block;font-size:9px;line-height:1.5;font-weight:550;color:#37332d}
+.banner-video{left:9px;top:9px;transform:rotate(-14deg);z-index:1}
+.banner-video-thumb{position:relative;height:77px;margin-bottom:8px;background:#dce3dd;border-radius:5px;display:grid;place-items:center;overflow:hidden}
+.video-thumb-window{display:flex;gap:6px;width:84px;height:50px;padding:9px;background:#f6f5ee;border-radius:4px;transform:rotate(-5deg)}
+.video-thumb-window i{flex:1;background:#a8b7a2;border-radius:2px}.video-thumb-window i:nth-child(2){background:#e8b987}.video-thumb-window i:last-child{background:#c5b3cc}
+.banner-play{position:absolute;display:grid;place-items:center;width:29px;height:23px;border-radius:6px;background:#ef343d;color:#fff}.banner-play svg{width:16px;height:16px}
+.banner-video-thumb small{position:absolute;right:4px;bottom:4px;background:#343833;color:#fff;font-size:6px;padding:1px 3px;border-radius:2px}
+.banner-instagram{left:116px;top:-5px;transform:rotate(12deg);z-index:2}
+.banner-photo{position:relative;height:94px;border-radius:4px;background:#efddbf;overflow:hidden}.photo-sun{position:absolute;width:29px;height:29px;border-radius:50%;background:#fff2d6;right:17px;top:13px}.photo-hill{position:absolute;width:150px;height:80px;border-radius:50%;left:-44px;bottom:-37px;background:#99ab91;transform:rotate(24deg)}.photo-hill.front{background:#607660;left:39px;bottom:-48px;transform:rotate(-25deg)}
+.banner-post-footer{display:flex;align-items:center;margin-top:7px;color:#8a8075}.banner-post-footer i{flex:1}.banner-post-footer .icon{width:11px;height:11px}
+.banner-article{left:193px;top:30px;transform:rotate(-7deg);z-index:3;width:149px;min-height:144px;background:#fffdf9}
+.banner-article-category{display:block;color:#966639;font-size:7px;margin:12px 0 6px}.banner-article>strong{font-size:10px;line-height:1.55}.banner-article p{font-size:7px;line-height:1.65;color:#77716a;margin:7px 0 10px}.banner-article-line{display:block;background:#e8e5df;height:3px;margin-top:4px;border-radius:2px}.banner-article-line.short{width:65%}
+@media(max-width:850px){.home-save .home-save-art{flex-basis:290px;transform:scale(.85);transform-origin:right center}}
+@media(max-width:620px){.home-save .home-save-art{width:340px;right:-12px;top:63px;transform:scale(.5);transform-origin:right top}}

@@ -1,0 +1,670 @@
+{
+ "input": {
+  "query": "파스티 레시피",
+  "user_id": "u_alice"
+ },
+ "preprocessing": {
+  "normalized": "파스티 레시피",
+  "corrections": [
+   {
+    "source": "파스티",
+    "corrected": "파스타",
+    "kind": "spelling",
+    "confidence": 0.908333,
+    "evidence": [
+     "edit_quality",
+     "frequency_margin",
+     "context_support"
+    ]
+   }
+  ],
+  "correction_before": [
+   "파스티",
+   "레시피"
+  ],
+  "correction_after": [
+   "파스타",
+   "레시피"
+  ],
+  "morph_tokens": [
+   "파스티",
+   "레시피",
+   "파스타"
+  ],
+  "ngram_tokens": [
+   "파스",
+   "스티",
+   "티레",
+   "레시",
+   "시피",
+   "피파",
+   "스타"
+  ]
+ },
+ "components": [
+  {
+   "stage": "temporal_parse",
+   "component": "TemporalParser",
+   "model": null,
+   "mode": null,
+   "dimension": null,
+   "status": "success"
+  },
+  {
+   "stage": "facet_extract",
+   "component": "FacetExtractor",
+   "model": null,
+   "mode": null,
+   "dimension": null,
+   "status": "success"
+  },
+  {
+   "stage": "intent_classify",
+   "component": "IntentClassifier",
+   "model": null,
+   "mode": null,
+   "dimension": null,
+   "status": "success"
+  },
+  {
+   "stage": "bm25f_retrieve",
+   "component": "BM25FIndex",
+   "model": "morph+ngram",
+   "mode": null,
+   "dimension": null,
+   "status": "success"
+  },
+  {
+   "stage": "vector_retrieve",
+   "component": "HashingEmbedder",
+   "model": "hashing-v1",
+   "mode": "query",
+   "dimension": 384,
+   "status": "success"
+  },
+  {
+   "stage": "fusion",
+   "component": "fuse_rrf",
+   "model": null,
+   "mode": null,
+   "dimension": null,
+   "status": "success"
+  },
+  {
+   "stage": "feature_rerank",
+   "component": "RelevanceScorer",
+   "model": "relaxation-v2.2",
+   "mode": null,
+   "dimension": null,
+   "status": "success"
+  },
+  {
+   "stage": "relevance_gate",
+   "component": "RelevanceGate",
+   "model": "relaxation-v2.2",
+   "mode": null,
+   "dimension": null,
+   "status": "success"
+  },
+  {
+   "stage": "relaxation",
+   "component": "RelaxationPolicy",
+   "model": "relaxation-v2.2",
+   "mode": null,
+   "dimension": null,
+   "status": "success"
+  },
+  {
+   "stage": "cross_rerank",
+   "component": "CrossRerankStage",
+   "model": "bge-reranker-v2-m3",
+   "mode": null,
+   "dimension": null,
+   "status": "skipped:disabled"
+  }
+ ],
+ "understanding": {
+  "intent": "lookup",
+  "time_range": null,
+  "time_window": null,
+  "platforms": [],
+  "content_types": [],
+  "keywords": [
+   "파스타",
+   "레시피"
+  ],
+  "purpose_terms": [],
+  "semantic_query": "파스티 레시피"
+ },
+ "filter_plans": [
+  {
+   "plan_id": "strict",
+   "selected": true,
+   "allowed_relaxations": [],
+   "eligible_document_count": 160
+  }
+ ],
+ "retrieval": {
+  "strict": {
+   "morph": {
+    "count": 13,
+    "top": [
+     [
+      "c_alice_0041",
+      1,
+      5.583824
+     ],
+     [
+      "c_alice_0042",
+      2,
+      5.479192
+     ],
+     [
+      "c_alice_0057",
+      3,
+      4.964177
+     ],
+     [
+      "c_alice_0157",
+      4,
+      2.179214
+     ],
+     [
+      "c_alice_0149",
+      5,
+      2.150813
+     ],
+     [
+      "c_alice_0123",
+      6,
+      2.150148
+     ],
+     [
+      "c_alice_0044",
+      7,
+      2.144873
+     ],
+     [
+      "c_alice_0068",
+      8,
+      2.133353
+     ],
+     [
+      "c_alice_0014",
+      9,
+      2.034661
+     ],
+     [
+      "c_alice_0007",
+      10,
+      2.017461
+     ]
+    ]
+   },
+   "ngram": {
+    "count": 14,
+    "top": [
+     [
+      "c_alice_0041",
+      1,
+      10.815441
+     ],
+     [
+      "c_alice_0042",
+      2,
+      10.652485
+     ],
+     [
+      "c_alice_0057",
+      3,
+      9.39392
+     ],
+     [
+      "c_alice_0157",
+      4,
+      4.317019
+     ],
+     [
+      "c_alice_0068",
+      5,
+      4.261953
+     ],
+     [
+      "c_alice_0149",
+      6,
+      4.257717
+     ],
+     [
+      "c_alice_0123",
+      7,
+      4.253966
+     ],
+     [
+      "c_alice_0044",
+      8,
+      4.236916
+     ],
+     [
+      "c_alice_0014",
+      9,
+      4.060963
+     ],
+     [
+      "c_alice_0007",
+      10,
+      4.029004
+     ]
+    ]
+   },
+   "vector": {
+    "count": 100,
+    "top": [
+     [
+      "c_alice_0068",
+      1,
+      0.44475
+     ],
+     [
+      "c_alice_0123",
+      2,
+      0.433069
+     ],
+     [
+      "c_alice_0041",
+      3,
+      0.404301
+     ],
+     [
+      "c_alice_0044",
+      4,
+      0.386437
+     ],
+     [
+      "c_alice_0149",
+      5,
+      0.383099
+     ],
+     [
+      "c_alice_0042",
+      6,
+      0.381353
+     ],
+     [
+      "c_alice_0157",
+      7,
+      0.354743
+     ],
+     [
+      "c_alice_0057",
+      8,
+      0.342029
+     ],
+     [
+      "c_alice_0007",
+      9,
+      0.310728
+     ],
+     [
+      "c_alice_0028",
+      10,
+      0.27546
+     ]
+    ]
+   }
+  }
+ },
+ "fusion_top": {
+  "strict": [
+   [
+    "c_alice_0041",
+    0.042103,
+    {
+     "morph": 1,
+     "ngram": 1,
+     "vector": 3
+    }
+   ],
+   [
+    "c_alice_0042",
+    0.040958,
+    {
+     "morph": 2,
+     "ngram": 2,
+     "vector": 6
+    }
+   ],
+   [
+    "c_alice_0068",
+    0.04033,
+    {
+     "morph": 8,
+     "ngram": 5,
+     "vector": 1
+    }
+   ],
+   [
+    "c_alice_0123",
+    0.040236,
+    {
+     "morph": 6,
+     "ngram": 7,
+     "vector": 2
+    }
+   ],
+   [
+    "c_alice_0057",
+    0.040103,
+    {
+     "morph": 3,
+     "ngram": 3,
+     "vector": 8
+    }
+   ],
+   [
+    "c_alice_0157",
+    0.039925,
+    {
+     "morph": 4,
+     "ngram": 4,
+     "vector": 7
+    }
+   ],
+   [
+    "c_alice_0149",
+    0.03986,
+    {
+     "morph": 5,
+     "ngram": 6,
+     "vector": 5
+    }
+   ],
+   [
+    "c_alice_0044",
+    0.039374,
+    {
+     "morph": 7,
+     "ngram": 8,
+     "vector": 4
+    }
+   ],
+   [
+    "c_alice_0007",
+    0.03735,
+    {
+     "morph": 10,
+     "ngram": 10,
+     "vector": 9
+    }
+   ],
+   [
+    "c_alice_0014",
+    0.036887,
+    {
+     "morph": 9,
+     "ngram": 9,
+     "vector": 13
+    }
+   ]
+  ]
+ },
+ "rerank": {
+  "passed": 13,
+  "rejected": 37,
+  "top": [
+   [
+    "c_alice_0041",
+    0.779201,
+    true,
+    true,
+    "accepted"
+   ],
+   [
+    "c_alice_0042",
+    0.771204,
+    true,
+    true,
+    "accepted"
+   ],
+   [
+    "c_alice_0057",
+    0.757032,
+    true,
+    true,
+    "accepted"
+   ],
+   [
+    "c_alice_0068",
+    0.642561,
+    true,
+    true,
+    "accepted"
+   ],
+   [
+    "c_alice_0123",
+    0.637178,
+    true,
+    true,
+    "accepted"
+   ],
+   [
+    "c_alice_0044",
+    0.615354,
+    true,
+    true,
+    "accepted"
+   ],
+   [
+    "c_alice_0149",
+    0.613773,
+    true,
+    true,
+    "accepted"
+   ],
+   [
+    "c_alice_0157",
+    0.600245,
+    true,
+    true,
+    "accepted"
+   ],
+   [
+    "c_alice_0007",
+    0.578948,
+    true,
+    true,
+    "accepted"
+   ],
+   [
+    "c_alice_0028",
+    0.561664,
+    true,
+    true,
+    "accepted"
+   ]
+  ]
+ },
+ "relaxation": {
+  "selected_plan_id": "strict",
+  "applied": [],
+  "reason": "strict_candidate",
+  "attempts": [
+   [
+    "strict",
+    true,
+    "strict_candidate",
+    13
+   ]
+  ]
+ },
+ "cross_reranker": {
+  "configured": true,
+  "enabled": false,
+  "used": false,
+  "status": "skipped:disabled"
+ },
+ "final": [
+  [
+   1,
+   "c_alice_0041",
+   0.779201,
+   false,
+   [
+    "keyword",
+    "semantic"
+   ]
+  ],
+  [
+   2,
+   "c_alice_0042",
+   0.771204,
+   false,
+   [
+    "keyword",
+    "semantic"
+   ]
+  ],
+  [
+   3,
+   "c_alice_0057",
+   0.757032,
+   false,
+   [
+    "keyword",
+    "semantic"
+   ]
+  ],
+  [
+   4,
+   "c_alice_0068",
+   0.642561,
+   false,
+   [
+    "keyword",
+    "semantic"
+   ]
+  ],
+  [
+   5,
+   "c_alice_0123",
+   0.637178,
+   false,
+   [
+    "keyword",
+    "semantic"
+   ]
+  ],
+  [
+   6,
+   "c_alice_0044",
+   0.615354,
+   false,
+   [
+    "keyword",
+    "semantic"
+   ]
+  ],
+  [
+   7,
+   "c_alice_0149",
+   0.613773,
+   false,
+   [
+    "keyword",
+    "semantic"
+   ]
+  ],
+  [
+   8,
+   "c_alice_0157",
+   0.600245,
+   false,
+   [
+    "keyword",
+    "semantic"
+   ]
+  ],
+  [
+   9,
+   "c_alice_0007",
+   0.578948,
+   false,
+   [
+    "keyword",
+    "semantic"
+   ]
+  ],
+  [
+   10,
+   "c_alice_0028",
+   0.561664,
+   false,
+   [
+    "keyword",
+    "semantic"
+   ]
+  ]
+ ],
+ "log": [
+  [
+   "filter_resolution",
+   "success",
+   "filter_resolution"
+  ],
+  [
+   "temporal_parse",
+   "success",
+   "query_understanding"
+  ],
+  [
+   "facet_extract",
+   "success",
+   "query_understanding"
+  ],
+  [
+   "intent_classify",
+   "success",
+   "query_understanding"
+  ],
+  [
+   "bm25f_retrieve",
+   "success",
+   "candidate_retrieval"
+  ],
+  [
+   "vector_retrieve",
+   "success",
+   "candidate_retrieval"
+  ],
+  [
+   "fusion",
+   "success",
+   "fusion"
+  ],
+  [
+   "feature_rerank",
+   "success",
+   "feature_rerank_gate"
+  ],
+  [
+   "relevance_gate",
+   "success",
+   "feature_rerank_gate"
+  ],
+  [
+   "relaxation",
+   "success",
+   "relaxation_selection"
+  ],
+  [
+   "cross_rerank",
+   "skipped",
+   "cross_rerank"
+  ],
+  [
+   "finalize",
+   "success",
+   "finalize"
+  ]
+ ],
+ "degraded_reasons": []
+}

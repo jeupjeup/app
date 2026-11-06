@@ -1,0 +1,76 @@
+{
+  "frozen_config_sha256": "e63179ae5838cbe2674a3facde320bea0461b5ffa2ccb349296dd11444e542d4",
+  "format": 2,
+  "profile": {
+    "name": "tuning-qwen25-7b",
+    "engine": "local",
+    "model": "qwen2.5-7b-instruct-q4km",
+    "chunk_model": null,
+    "prompt_version": "analyze_local_v3b",
+    "chunk_prompt_version": "chunk_notes_local_v3b",
+    "repair_prompt_version": "repair_local_v3b",
+    "reduce_prompt_version": "reduce_local_v3b",
+    "max_output_tokens": 1536,
+    "chunk_max_output_tokens": 768,
+    "max_repairs": 2,
+    "timeouts": {
+      "analyze_s": 55.0,
+      "chunk_s": 45.0,
+      "repair_s": 30.0
+    },
+    "chunk": {
+      "single_max_tokens": 6000,
+      "chunk_target_tokens": 3000,
+      "overlap_tokens": 150,
+      "max_chunks": 8
+    },
+    "decoding": {
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0,
+      "min_p": 0.0,
+      "repeat_penalty": 1.0,
+      "seed": 20261102,
+      "n_batch": 512,
+      "n_ubatch": 512,
+      "n_threads": 4,
+      "constrained": "json_schema",
+      "decoding_schema_version": "ds-2"
+    },
+    "routes": [],
+    "effort": null
+  },
+  "prompts": {
+    "analyze_local_v3b": "36521ccc0f7f9c313b5f57c2b7d253a223ac6d1fa6c85f9cb8a5ce7968422261",
+    "chunk_notes_local_v3b": "138e8e574aaa7c0394fdf781b8d1d95deff6c18ca45e68e74be7deaeeeedcfce",
+    "reduce_local_v3b": "c175c155e0e8b68b95c3fe8c31eadb88ea01906b1df0e043fce7137986724c8a",
+    "repair_local_v3b": "945a455fa5c9464ecec878e0bc32b3bcfd22b460a82effd97335015309d6a7c0"
+  },
+  "decoding_policy": {
+    "ds-2": "4aa4a94fbff6d8fed9f4159876edbe443e9a64b1ff3e1da7095103483d534de0"
+  },
+  "models": {
+    "qwen2.5-7b-instruct-q4km": {
+      "model_id": "qwen2.5-7b-instruct-q4km",
+      "repo": "Qwen/Qwen2.5-7B-Instruct-GGUF",
+      "revision": "bb5d59e06d9551d752d08b292a50eb208b07ab1f",
+      "filename": "qwen2.5-7b-instruct-q4_k_m-00001-of-00002.gguf",
+      "sha256": "dfce12e3862a5283ccfb88221b48480e58745165de856439950d0f22590580db",
+      "extra_files": [
+        {
+          "filename": "qwen2.5-7b-instruct-q4_k_m-00002-of-00002.gguf",
+          "sha256": "539cf93f78e887edea1c04e2d7d8cdaca9d01dae9c9025bcb8accbe29df3d72a"
+        }
+      ],
+      "source": "hf_gguf",
+      "n_ctx": 16384,
+      "chat_template": "gguf",
+      "license": "apache-2.0",
+      "license_commercial_ok": true,
+      "file_sha256s": [
+        "dfce12e3862a5283ccfb88221b48480e58745165de856439950d0f22590580db",
+        "539cf93f78e887edea1c04e2d7d8cdaca9d01dae9c9025bcb8accbe29df3d72a"
+      ]
+    }
+  }
+}

@@ -1,0 +1,60 @@
+.archive-explorer { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 32px; align-items: start; }
+.explorer-filters { border-right: 1px solid #e5e0da; padding-right: 24px; }
+.explorer-filter-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-bottom: 16px; }
+.explorer-filter-heading h2 { margin: 0; font-size: 16px; font-weight: 650; color: #45382f; }
+.explorer-filter-heading button { border: 0; background: transparent; color: #8b511e; padding: 8px 0; font-size: 11px; white-space: nowrap; }
+.explorer-filter-group { border-top: 1px solid #e5e0da; padding: 16px 0; }
+.explorer-filter-group summary { display: flex; align-items: center; gap: 8px; cursor: pointer; list-style: none; font-size: 13px; font-weight: 600; color: #51463c; }
+.explorer-filter-group summary::-webkit-details-marker { display: none; }
+.explorer-filter-group summary > .icon { margin-left: auto; width: 15px; height: 15px; }
+.explorer-filter-group[open] summary > .icon { transform: rotate(180deg); }
+.explorer-filter-group summary > span { display: grid; place-items: center; min-width: 18px; height: 18px; border-radius: 6px; background: #fff0dd; color: #8b511e; font-size: 11px; }
+.explorer-filter-group fieldset { border: 0; padding: 10px 0 0; margin: 0; min-width: 0; }
+.explorer-filter-group fieldset label { display: flex; align-items: center; gap: 9px; min-height: 34px; color: #62564c; font-size: 12px; cursor: pointer; }
+.explorer-filter-group input { margin: 0; width: 14px; height: 14px; flex: none; accent-color: #a3652d; }
+.explorer-filter-group label:has(input:checked) { color: #8b511e; font-weight: 600; }
+.explorer-results { min-width: 0; }
+.explorer-toolbar { display: flex; align-items: center; justify-content: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; min-height: 36px; }
+.explorer-toolbar > label { display: flex; align-items: center; gap: 8px; color: #62564c; font-size: 12px; }
+.explorer-toolbar select { height: 36px; padding: 0 28px 0 10px; border: 1px solid #e5e0da; border-radius: 8px; background: #fff; color: #51463c; font-size: 12px; }
+.explorer-toolbar .view-toggle { display: flex; flex-shrink: 0; }
+.explorer-toolbar .view-toggle button { width: auto; white-space: nowrap; min-height: 34px; padding: 0 10px; font-size: 12px; }
+.archive-explorer .archive-library-grid, .archive-explorer .search-result-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.archive-explorer .archive-library-grid.is-list { grid-template-columns: 1fr; }
+.explorer-filter-toggle { display: none; }
+.explorer-filters :is(button, input, summary):focus-visible, .explorer-toolbar :is(button, select):focus-visible { outline: 2px solid #a3652d; outline-offset: 3px; }
+@media (max-width: 1170px) {
+  .archive-explorer { grid-template-columns: 200px minmax(0, 1fr); gap: 24px; }
+  .explorer-filters { padding-right: 16px; }
+  .archive-explorer .archive-library-grid, .archive-explorer .search-result-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 850px) {
+  .archive-explorer { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .explorer-filter-toggle { display: flex; align-items: center; justify-content: space-between; min-height: 44px; border: 1px solid #e5e0da; border-radius: 10px; padding: 0 14px; background: #fff; color: #51463c; font-size: 13px; }
+  .explorer-filters { display: none; border: 1px solid #e5e0da; border-radius: 12px; padding: 16px; }
+  .explorer-filters.expanded { display: block; }
+  .explorer-toolbar { justify-content: space-between; gap: 8px; }
+}
+@media (max-width: 620px) {
+  .archive-explorer .is-list .card-art { width: 112px; min-width: 112px; }
+}
+
+/* Control shape follows the choice: visual types, a source list, status chips, visibility segments. */
+.explorer-filter-group[data-layout="tiles"] fieldset { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; padding-top: 12px; }
+.explorer-filter-group[data-layout="tiles"] label { position: relative; flex-direction: column; justify-content: center; gap: 6px; min-height: 62px; padding: 8px 4px; border: 1px solid #e5e0da; border-radius: 8px; background: #fff; font-size: 11px; }
+.explorer-filter-group[data-layout="tiles"] label:first-of-type { grid-column: 1 / -1; flex-direction: row; min-height: 34px; }
+.explorer-filter-group[data-layout="tiles"] label > .icon { width: 18px; height: 18px; }
+.explorer-filter-group[data-layout="chips"] fieldset { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 12px; }
+.explorer-filter-group[data-layout="chips"] label { position: relative; gap: 6px; min-height: 32px; padding: 6px 9px; border: 1px solid #e5e0da; border-radius: 6px; background: #fff; font-size: 11px; }
+.explorer-filter-group[data-layout="segments"] fieldset { display: flex; padding: 3px; margin-top: 12px; gap: 2px; background: #edeae5; border-radius: 8px; }
+.explorer-filter-group[data-layout="segments"] label { position: relative; flex: 1; justify-content: center; padding: 7px 3px; min-height: 34px; font-size: 10px; text-align: center; border-radius: 6px; }
+.explorer-filter-group[data-layout="segments"] label:has(input:checked) { background: #fff; color: #70451f; }
+.explorer-filter-group:is([data-layout="tiles"], [data-layout="chips"]) label:has(input:checked) { border-color: #b88049; background: #fff2e2; color: #784718; }
+.explorer-filter-group:is([data-layout="tiles"], [data-layout="chips"], [data-layout="segments"]) input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.explorer-filter-group label:has(input:focus-visible) { outline: 2px solid #a3652d; outline-offset: 2px; }
+.explorer-filter-group[data-layout="list"] fieldset label { min-height: 32px; padding: 0 4px; border-radius: 4px; }
+.explorer-filter-group label:hover { background-color: #f4eee7; }
+.filter-status-dot { width: 6px; height: 6px; flex: none; border-radius: 50%; background: #a58250; }
+.filter-status-dot.ready { background: #688568; }
+.filter-status-dot.analysis_failed { background: #b46555; }
+.filter-status-dot.analysis_rejected { background: #858080; }

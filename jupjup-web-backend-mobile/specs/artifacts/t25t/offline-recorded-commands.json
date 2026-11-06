@@ -1,0 +1,90 @@
+[
+  {
+    "argv": [
+      "uv",
+      "run",
+      "jupjup",
+      "eval",
+      "ingest",
+      "--mode",
+      "recorded",
+      "--profile",
+      "tuning-qwen25-7b",
+      "--split",
+      "dev",
+      "--linkage",
+      "none",
+      "--frozen-config",
+      "8d899e6a516997ce23ae5268ee186580228b5828131df3215eeef8e4b713f04b",
+      "--out",
+      "reports/t25t/offline-recorded-tuning-qwen25-7b-1"
+    ],
+    "exit_code": 1
+  },
+  {
+    "argv": [
+      "uv",
+      "run",
+      "jupjup",
+      "eval",
+      "ingest",
+      "--mode",
+      "recorded",
+      "--profile",
+      "tuning-qwen25-7b",
+      "--split",
+      "dev",
+      "--linkage",
+      "none",
+      "--frozen-config",
+      "8d899e6a516997ce23ae5268ee186580228b5828131df3215eeef8e4b713f04b",
+      "--out",
+      "reports/t25t/offline-recorded-tuning-qwen25-7b-2"
+    ],
+    "exit_code": 1
+  },
+  {
+    "argv": [
+      "uv",
+      "run",
+      "jupjup",
+      "eval",
+      "ingest",
+      "--mode",
+      "recorded",
+      "--profile",
+      "tuning-kanana-8b",
+      "--split",
+      "dev",
+      "--linkage",
+      "none",
+      "--frozen-config",
+      "c228aa98a94c89ac638ab715aa2573d96adb79560a753c12cfa9cf6703292e53",
+      "--out",
+      "reports/t25t/offline-recorded-tuning-kanana-8b-1"
+    ],
+    "exit_code": 1
+  },
+  {
+    "argv": [
+      "uv",
+      "run",
+      "jupjup",
+      "eval",
+      "ingest",
+      "--mode",
+      "recorded",
+      "--profile",
+      "tuning-kanana-8b",
+      "--split",
+      "dev",
+      "--linkage",
+      "none",
+      "--frozen-config",
+      "c228aa98a94c89ac638ab715aa2573d96adb79560a753c12cfa9cf6703292e53",
+      "--out",
+      "reports/t25t/offline-recorded-tuning-kanana-8b-2"
+    ],
+    "exit_code": 1
+  }
+]

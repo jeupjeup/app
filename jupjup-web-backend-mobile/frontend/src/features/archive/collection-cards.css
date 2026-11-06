@@ -1,0 +1,21 @@
+.collection-management-grid .collection-folder-card { position: relative; padding: 0; min-height: 210px; overflow: hidden; }
+.collection-folder-card .collection-open { display: flex; flex-direction: column; align-items: stretch; width: 100%; height: 100%; min-height: 210px; padding: 22px; border: 0; background: transparent; text-align: left; }
+.collection-folder-card .collection-card-top { margin-bottom: 22px; }
+.collection-folder-card .collection-open > strong { color: #45382f; font-size: 17px; line-height: 1.5; font-weight: 600; overflow-wrap: anywhere; }
+.collection-folder-card .collection-open > small { color: #766c62; font-size: 12px; margin-top: 6px; }
+.collection-folder-card .collection-folder-link { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #eee8e1; margin-top: 22px; padding-top: 14px; color: #87603c; font-size: 12px; }
+.collection-folder-card .collection-manage-action { position: absolute; top: 22px; right: 18px; display: grid; place-items: center; width: 34px; height: 34px; border: 0; border-radius: 8px; background: transparent; color: #7e7267; }
+.collection-folder-card .collection-manage-action:hover { background: #f3eee7; color: #513e2d; }
+.archive-card .card-context-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 10px; margin-top: 14px; padding-top: 8px; border-top: 1px solid #eee8e1; }
+.archive-card .card-context-row .card-collections { flex: 1; margin: 0; padding: 0; border: 0; }
+.collection-remove-action { display: inline-flex; align-items: center; justify-content: center; gap: 4px; min-height: 32px; padding: 4px 6px; border: 0; border-radius: 6px; background: transparent; color: #83766b; font-size: 11px; white-space: nowrap; }
+.collection-remove-action .icon { width: 13px; height: 13px; }
+.collection-remove-action:hover { background: #fff0eb; color: #9b4b3b; }
+.collection-remove-action:disabled { opacity: .5; cursor: wait; }
+:is(.collection-remove-action, .collection-manage-action, .collection-open):focus-visible { outline: 2px solid #a66c35; outline-offset: -3px; }
+
+/* Keep the collection and its action on one quiet footer row. */
+.archive-content .archive-card .card-context-row { display: flex; flex-wrap: nowrap; align-items: center; gap: 8px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #eee8e1; }
+.archive-content .archive-card .card-context-row .card-collections { flex: 1 1 auto; min-width: 0; gap: 8px; margin: 0; padding: 0; border: 0; }
+.archive-content .archive-card .card-context-row .card-collections span { overflow: hidden; text-overflow: ellipsis; }
+.archive-content .archive-card .collection-remove-action { flex: 0 0 auto; min-height: 36px; padding: 0 8px; color: #70665c; font-size: 12px; }

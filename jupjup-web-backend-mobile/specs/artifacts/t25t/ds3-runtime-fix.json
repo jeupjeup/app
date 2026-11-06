@@ -1,0 +1,12 @@
+{
+  "failure_exit_code": -11,
+  "runtime": "llama-cpp-python 0.3.36",
+  "component": "SchemaConverter._generate_constant_rule",
+  "cause": "JSON quote/backslash needs a second GBNF literal escape",
+  "scope": "ds-3 converter instance only",
+  "schema_semantics_changed": false,
+  "native_synthetic_compile": "passed: quotes/backslashes/newlines/Korean/emoji",
+  "unit_tests": "107 passed",
+  "ruff": "passed",
+  "mypy": "104 source files passed"
+}

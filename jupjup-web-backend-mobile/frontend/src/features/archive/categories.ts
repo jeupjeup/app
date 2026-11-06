@@ -1,0 +1,2 @@
+const categories: Record<string, string> = { food_drink: '음식·음료', place_travel: '장소·여행', shopping: '쇼핑', study_research: '학습·연구', work: '업무', news_issue: '뉴스·이슈', howto_recipe: '방법·레시피', culture_media: '문화·미디어', health_fitness: '건강·운동', finance: '금융', tech: '기술', life_tip: '생활 정보', other: '기타' }
+export const categoryName = (value: unknown) => typeof value === 'string' ? categories[value] || '기타' : '기타'

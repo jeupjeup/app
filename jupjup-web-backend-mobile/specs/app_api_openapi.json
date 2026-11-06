@@ -1,0 +1,3559 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "줍줍저장소 API",
+    "version": "1.0.0",
+    "description": "server/index.mjs와 schema.sql을 기준으로 작성. 기존 BE가 없어 추가한 Node 26+/SQLite 서버. 모든 응답은 실제 DB에서 생성하며 예시는 설명용이다. 요청 JSON 객체 최대 16KB. POST/PATCH는 application/json 및 JSON 본문 필요(빈 요청은 {}). 인증/비밀번호 경로는 IP당 30요청/분 제한. CORS는 CORS_ORIGINS 허용 목록 적용. 지원되지 않는 기능: 소셜 OAuth, AI 분석/의미 검색, 원격 메타데이터/이미지/관련 추천, 푸시 알림, 오프라인 쓰기 동기화, 파일 업로드/다운로드. 이 기능을 성공 처리하는 가짜 API는 없다. JSON 예시는 모두 설명용이며 실제 계정/저장 데이터가 아니다.",
+    "license": {
+      "name": "MIT",
+      "identifier": "MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001/api",
+      "description": "개발용; 실기기는 LAN 주소, 운영은 HTTPS 배포 주소로 교체"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "health",
+        "summary": "서버 상태",
+        "description": "DB 초기화 후 서버가 수신 중인지 확인. 실제 라우트 /api/health.",
+        "x-frontend-pages": [],
+        "x-integration-status": "implemented",
+        "responses": {
+          "200": {
+            "description": "성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "const": "ok",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                },
+                "example": {
+                  "status": "ok"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "operationId": "register",
+        "summary": "이메일 회원가입",
+        "description": "이메일 소문자 정규화. scrypt+랜덤 salt. 필수 동의 시각/선택 알림 설정 저장. 30일 세션 발급. 이메일 소유 확인 기능은 아직 없음.",
+        "x-frontend-pages": [
+          "/login/signup"
+        ],
+        "x-integration-status": "implemented",
+        "responses": {
+          "201": {
+            "description": "성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                },
+                "example": {
+                  "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "expiresAt": "2026-12-03T04:00:00.000Z",
+                  "user": {
+                    "id": "00000000-0000-4000-8000-000000000001",
+                    "email": "user@example.com",
+                    "nickname": "줍줍 사용자",
+                    "notificationsEnabled": false
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_ERROR / INVALID_JSON / INVALID_PASSWORD",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "EMAIL_EXISTS / DUPLICATE_CONTENT / CONTENT_DELETED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "EMAIL_EXISTS",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "PAYLOAD_TOO_LARGE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "UNSUPPORTED_MEDIA_TYPE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED / PASSWORD_LOCKED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "RATE_LIMITED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Register"
+              },
+              "example": {
+                "email": "user@example.com",
+                "password": "Password1!",
+                "nickname": "줍줍 사용자",
+                "requiredConsent": true,
+                "notificationsEnabled": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "login",
+        "summary": "이메일 로그인",
+        "description": "",
+        "x-frontend-pages": [
+          "/login"
+        ],
+        "x-integration-status": "implemented",
+        "responses": {
+          "200": {
+            "description": "성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                },
+                "example": {
+                  "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "expiresAt": "2026-12-03T04:00:00.000Z",
+                  "user": {
+                    "id": "00000000-0000-4000-8000-000000000001",
+                    "email": "user@example.com",
+                    "nickname": "줍줍 사용자",
+                    "notificationsEnabled": false
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_ERROR / INVALID_JSON / INVALID_PASSWORD",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED / INVALID_CREDENTIALS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "PAYLOAD_TOO_LARGE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "UNSUPPORTED_MEDIA_TYPE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED / PASSWORD_LOCKED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "RATE_LIMITED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              },
+              "example": {
+                "email": "user@example.com",
+                "password": "Password1!"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "operationId": "logout",
+        "summary": "현재 세션 폐기",
+        "description": "",
+        "x-frontend-pages": [
+          "/mypage/account"
+        ],
+        "x-integration-status": "implemented",
+        "responses": {
+          "204": {
+            "description": "성공; 응답 본문 없음"
+          },
+          "400": {
+            "description": "VALIDATION_ERROR / INVALID_JSON / INVALID_PASSWORD",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED / INVALID_CREDENTIALS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "PAYLOAD_TOO_LARGE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "UNSUPPORTED_MEDIA_TYPE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED / PASSWORD_LOCKED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "RATE_LIMITED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {}
+            }
+          }
+        }
+      }
+    },
+    "/state": {
+      "get": {
+        "operationId": "getState",
+        "summary": "전체 사용자 상태",
+        "description": "로그인/시작/포그라운드 복귀/새로고침/변경 후 호출. 30일 지난 휴지통은 삭제. 페이지네이션 없음.",
+        "x-frontend-pages": [
+          "/home",
+          "/library",
+          "/library/[id]",
+          "/home/notifications",
+          "/mypage",
+          "/mypage/account",
+          "/mypage/recent",
+          "/mypage/trash"
+        ],
+        "x-integration-status": "implemented",
+        "responses": {
+          "200": {
+            "description": "성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/State"
+                },
+                "example": {
+                  "user": {
+                    "id": "00000000-0000-4000-8000-000000000001",
+                    "email": "user@example.com",
+                    "nickname": "줍줍 사용자",
+                    "notificationsEnabled": false
+                  },
+                  "contents": [
+                    {
+                      "id": "00000000-0000-4000-8000-000000000002",
+                      "title": "example.com",
+                      "url": "https://example.com/article",
+                      "memo": "여행 준비",
+                      "type": "기타",
+                      "source": "example.com",
+                      "description": "",
+                      "tags": [],
+                      "savedAt": "2026-11-03T04:00:00.000Z",
+                      "status": "ready"
+                    }
+                  ],
+                  "notices": [
+                    {
+                      "id": "00000000-0000-4000-8000-000000000003",
+                      "title": "정보를 저장했어요",
+                      "description": "example.com",
+                      "date": "2026-11-03T04:00:00.000Z",
+                      "read": false
+                    }
+                  ],
+                  "searchHistory": [
+                    "여행"
+                  ],
+                  "savedCount": 1
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED / INVALID_CREDENTIALS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me": {
+      "get": {
+        "operationId": "getMe",
+        "summary": "내 프로필",
+        "description": "FE는 /state의 user를 재사용.",
+        "x-frontend-pages": [],
+        "x-integration-status": "implemented",
+        "responses": {
+          "200": {
+            "description": "성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "example": {
+                  "id": "00000000-0000-4000-8000-000000000001",
+                  "email": "user@example.com",
+                  "nickname": "줍줍 사용자",
+                  "notificationsEnabled": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED / INVALID_CREDENTIALS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateMe",
+        "summary": "닉네임 변경",
+        "description": "",
+        "x-frontend-pages": [
+          "/mypage/account"
+        ],
+        "x-integration-status": "implemented",
+        "responses": {
+          "200": {
+            "description": "성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "example": {
+                  "id": "00000000-0000-4000-8000-000000000001",
+                  "email": "user@example.com",
+                  "nickname": "줍줍 사용자",
+                  "notificationsEnabled": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_ERROR / INVALID_JSON / INVALID_PASSWORD",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED / INVALID_CREDENTIALS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "PAYLOAD_TOO_LARGE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "UNSUPPORTED_MEDIA_TYPE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Nickname"
+              },
+              "example": {
+                "nickname": "새 이름"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteMe",
+        "summary": "계정과 연관 데이터 영구 삭제",
+        "description": "FK CASCADE: 계정/세션/콘텐츠/알림/검색기록 삭제. UI에서 탈퇴 확인 후 호출.",
+        "x-frontend-pages": [
+          "/mypage/account"
+        ],
+        "x-integration-status": "implemented",
+        "responses": {
+          "204": {
+            "description": "성공; 응답 본문 없음"
+          },
+          "401": {
+            "description": "UNAUTHORIZED / INVALID_CREDENTIALS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me/password/verify": {
+      "post": {
+        "operationId": "verifyPassword",
+        "summary": "기존 비밀번호 검증",
+        "description": "누적 5회 오류 시 해당 계정 비밀번호 변경/검증을 24시간 제한. 성공 시 횟수 초기화. 로그인 제한과는 별개.",
+        "x-frontend-pages": [
+          "/mypage/password"
+        ],
+        "x-integration-status": "implemented",
+        "responses": {
+          "204": {
+            "description": "성공; 응답 본문 없음"
+          },
+          "400": {
+            "description": "VALIDATION_ERROR / INVALID_JSON / INVALID_PASSWORD",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED / INVALID_CREDENTIALS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "PAYLOAD_TOO_LARGE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "UNSUPPORTED_MEDIA_TYPE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED / PASSWORD_LOCKED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "RATE_LIMITED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyPassword"
+              },
+              "example": {
+                "currentPassword": "Password1!"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me/password": {
+      "patch": {
+        "operationId": "changePassword",
+        "summary": "비밀번호 변경",
+        "description": "현재 비밀번호를 다시 검증하고 변경한다. 현재 세션을 제외한 모든 세션 폐기.",
+        "x-frontend-pages": [
+          "/mypage/password"
+        ],
+        "x-integration-status": "implemented",
+        "responses": {
+          "204": {
+            "description": "성공; 응답 본문 없음"
+          },
+          "400": {
+            "description": "VALIDATION_ERROR / INVALID_JSON / INVALID_PASSWORD",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED / INVALID_CREDENTIALS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "PAYLOAD_TOO_LARGE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "UNSUPPORTED_MEDIA_TYPE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED / PASSWORD_LOCKED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "RATE_LIMITED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePassword"
+              },
+              "example": {
+                "currentPassword": "Password1!",
+                "newPassword": "Changed1!"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/contents": {
+      "post": {
+        "operationId": "createContent",
+        "summary": "URL 북마크 저장",
+        "description": "실제 DB 저장. AI 분석/메타데이터 수집은 하지 않는다. title/source=URL 호스트, type=기타, status=ready, description=\"\", tags=[]. 같은 사용자 활성 URL 중복은 409. 저장 알림도 트랜잭션으로 생성.",
+        "x-frontend-pages": [
+          "/home",
+          "/home/notifications"
+        ],
+        "x-integration-status": "implemented",
+        "responses": {
+          "201": {
+            "description": "성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Content"
+                },
+                "example": {
+                  "id": "00000000-0000-4000-8000-000000000002",
+                  "title": "example.com",
+                  "url": "https://example.com/article",
+                  "memo": "여행 준비",
+                  "type": "기타",
+                  "source": "example.com",
+                  "description": "",
+                  "tags": [],
+                  "savedAt": "2026-11-03T04:00:00.000Z",
+                  "status": "ready"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_ERROR / INVALID_JSON / INVALID_PASSWORD",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED / INVALID_CREDENTIALS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "EMAIL_EXISTS / DUPLICATE_CONTENT / CONTENT_DELETED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "EMAIL_EXISTS",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "PAYLOAD_TOO_LARGE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "UNSUPPORTED_MEDIA_TYPE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContent"
+              },
+              "example": {
+                "url": "https://example.com/article",
+                "memo": "여행 준비"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "listContent",
+        "summary": "콘텐츠 목록·키워드 검색",
+        "description": "FE는 /state의 전체 contents로 동일한 로컬 필터를 수행한다. 이 API는 별도 소비자용. 전체 결과 반환; 페이지네이션 없음.",
+        "x-frontend-pages": [],
+        "x-integration-status": "implemented",
+        "responses": {
+          "200": {
+            "description": "성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContentList"
+                },
+                "example": {
+                  "items": [
+                    {
+                      "id": "00000000-0000-4000-8000-000000000002",
+                      "title": "example.com",
+                      "url": "https://example.com/article",
+                      "memo": "여행 준비",
+                      "type": "기타",
+                      "source": "example.com",
+                      "description": "",
+                      "tags": [],
+                      "savedAt": "2026-11-03T04:00:00.000Z",
+                      "status": "ready"
+                    }
+                  ],
+                  "total": 1
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED / INVALID_CREDENTIALS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_ERROR / INVALID_JSON / INVALID_PASSWORD",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "description": "제목/메모/설명/태그 대소문자 무시 부분일치"
+            }
+          },
+          {
+            "name": "collection",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "장소",
+                "여행",
+                "음식",
+                "의류",
+                "제품",
+                "회사"
+              ]
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "영상",
+                "이미지",
+                "텍스트",
+                "기타"
+              ]
+            }
+          },
+          {
+            "name": "deleted",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "false",
+                "true",
+                "all"
+              ],
+              "default": "false"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "newest",
+                "oldest",
+                "recent"
+              ],
+              "default": "newest"
+            }
+          }
+        ]
+      }
+    },
+    "/contents/{id}": {
+      "get": {
+        "operationId": "getContent",
+        "summary": "콘텐츠 상세",
+        "description": "FE는 /state에서 상세 데이터를 재사용. deletedAt이 있으면 휴지통 항목.",
+        "x-frontend-pages": [],
+        "x-integration-status": "implemented",
+        "responses": {
+          "200": {
+            "description": "성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Content"
+                },
+                "example": {
+                  "id": "00000000-0000-4000-8000-000000000002",
+                  "title": "example.com",
+                  "url": "https://example.com/article",
+                  "memo": "여행 준비",
+                  "type": "기타",
+                  "source": "example.com",
+                  "description": "",
+                  "tags": [],
+                  "savedAt": "2026-11-03T04:00:00.000Z",
+                  "status": "ready"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED / INVALID_CREDENTIALS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "소유자에게만 접근 허용. 다른 사용자 소유와 존재하지 않는 ID는 동일하게 404."
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateContent",
+        "summary": "제목·메모·유형·컬렉션 수정",
+        "description": "전달된 필드만 수정. collection:null로 분류 해제. 삭제된 콘텐츠 수정은 409.",
+        "x-frontend-pages": [
+          "/library/[id]"
+        ],
+        "x-integration-status": "implemented",
+        "responses": {
+          "200": {
+            "description": "성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Content"
+                },
+                "example": {
+                  "id": "00000000-0000-4000-8000-000000000002",
+                  "title": "example.com",
+                  "url": "https://example.com/article",
+                  "memo": "여행 준비",
+                  "type": "기타",
+                  "source": "example.com",
+                  "description": "",
+                  "tags": [],
+                  "savedAt": "2026-11-03T04:00:00.000Z",
+                  "status": "ready"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_ERROR / INVALID_JSON / INVALID_PASSWORD",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED / INVALID_CREDENTIALS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "EMAIL_EXISTS / DUPLICATE_CONTENT / CONTENT_DELETED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "EMAIL_EXISTS",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "PAYLOAD_TOO_LARGE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "UNSUPPORTED_MEDIA_TYPE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateContent"
+              },
+              "example": {
+                "title": "여행 준비",
+                "memo": "나중에 읽기",
+                "type": "텍스트",
+                "collection": "여행"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "소유자에게만 접근 허용. 다른 사용자 소유와 존재하지 않는 ID는 동일하게 404."
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteContent",
+        "summary": "콘텐츠를 휴지통으로 이동",
+        "description": "반복 삭제 시 최초 deletedAt 유지. 30일 후 다음 API 요청 시 자동 정리.",
+        "x-frontend-pages": [
+          "/library/[id]"
+        ],
+        "x-integration-status": "implemented",
+        "responses": {
+          "204": {
+            "description": "성공; 응답 본문 없음"
+          },
+          "401": {
+            "description": "UNAUTHORIZED / INVALID_CREDENTIALS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "소유자에게만 접근 허용. 다른 사용자 소유와 존재하지 않는 ID는 동일하게 404."
+          }
+        ]
+      }
+    },
+    "/contents/{id}/restore": {
+      "post": {
+        "operationId": "restoreContent",
+        "summary": "휴지통 콘텐츠 복구",
+        "description": "",
+        "x-frontend-pages": [
+          "/mypage/trash"
+        ],
+        "x-integration-status": "implemented",
+        "responses": {
+          "200": {
+            "description": "성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Content"
+                },
+                "example": {
+                  "id": "00000000-0000-4000-8000-000000000002",
+                  "title": "example.com",
+                  "url": "https://example.com/article",
+                  "memo": "여행 준비",
+                  "type": "기타",
+                  "source": "example.com",
+                  "description": "",
+                  "tags": [],
+                  "savedAt": "2026-11-03T04:00:00.000Z",
+                  "status": "ready"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_ERROR / INVALID_JSON / INVALID_PASSWORD",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED / INVALID_CREDENTIALS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "EMAIL_EXISTS / DUPLICATE_CONTENT / CONTENT_DELETED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "EMAIL_EXISTS",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "PAYLOAD_TOO_LARGE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "UNSUPPORTED_MEDIA_TYPE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "소유자에게만 접근 허용. 다른 사용자 소유와 존재하지 않는 ID는 동일하게 404."
+          }
+        ]
+      }
+    },
+    "/contents/{id}/view": {
+      "post": {
+        "operationId": "viewContent",
+        "summary": "최근 조회 시각 기록",
+        "description": "",
+        "x-frontend-pages": [
+          "/library/[id]"
+        ],
+        "x-integration-status": "implemented",
+        "responses": {
+          "204": {
+            "description": "성공; 응답 본문 없음"
+          },
+          "400": {
+            "description": "VALIDATION_ERROR / INVALID_JSON / INVALID_PASSWORD",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED / INVALID_CREDENTIALS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "EMAIL_EXISTS / DUPLICATE_CONTENT / CONTENT_DELETED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "EMAIL_EXISTS",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "PAYLOAD_TOO_LARGE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "UNSUPPORTED_MEDIA_TYPE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "소유자에게만 접근 허용. 다른 사용자 소유와 존재하지 않는 ID는 동일하게 404."
+          }
+        ]
+      }
+    },
+    "/trash": {
+      "delete": {
+        "operationId": "emptyTrash",
+        "summary": "휴지통 전체 영구 삭제",
+        "description": "",
+        "x-frontend-pages": [
+          "/mypage/trash"
+        ],
+        "x-integration-status": "implemented",
+        "responses": {
+          "204": {
+            "description": "성공; 응답 본문 없음"
+          },
+          "401": {
+            "description": "UNAUTHORIZED / INVALID_CREDENTIALS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notices": {
+      "get": {
+        "operationId": "listNotices",
+        "summary": "알림 조회",
+        "description": "FE는 /state.notices 재사용. 앱 내부 알림; 푸시 알림 아님.",
+        "x-frontend-pages": [],
+        "x-integration-status": "implemented",
+        "responses": {
+          "200": {
+            "description": "성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notices"
+                },
+                "example": {
+                  "items": [
+                    {
+                      "id": "00000000-0000-4000-8000-000000000003",
+                      "title": "정보를 저장했어요",
+                      "description": "example.com",
+                      "date": "2026-11-03T04:00:00.000Z",
+                      "read": false
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED / INVALID_CREDENTIALS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notices/read": {
+      "post": {
+        "operationId": "readAllNotices",
+        "summary": "알림 모두 읽음",
+        "description": "",
+        "x-frontend-pages": [
+          "/home/notifications"
+        ],
+        "x-integration-status": "implemented",
+        "responses": {
+          "204": {
+            "description": "성공; 응답 본문 없음"
+          },
+          "400": {
+            "description": "VALIDATION_ERROR / INVALID_JSON / INVALID_PASSWORD",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED / INVALID_CREDENTIALS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "PAYLOAD_TOO_LARGE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "UNSUPPORTED_MEDIA_TYPE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {}
+            }
+          }
+        }
+      }
+    },
+    "/notices/{id}/read": {
+      "post": {
+        "operationId": "readNotice",
+        "summary": "알림 읽음",
+        "description": "",
+        "x-frontend-pages": [
+          "/home/notifications"
+        ],
+        "x-integration-status": "implemented",
+        "responses": {
+          "204": {
+            "description": "성공; 응답 본문 없음"
+          },
+          "400": {
+            "description": "VALIDATION_ERROR / INVALID_JSON / INVALID_PASSWORD",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED / INVALID_CREDENTIALS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "PAYLOAD_TOO_LARGE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "UNSUPPORTED_MEDIA_TYPE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "소유자에게만 접근 허용. 다른 사용자 소유와 존재하지 않는 ID는 동일하게 404."
+          }
+        ]
+      }
+    },
+    "/search-history": {
+      "get": {
+        "operationId": "getSearchHistory",
+        "summary": "최근 검색어 조회",
+        "description": "FE는 /state.searchHistory 재사용. 최대 10개, 최근 순, 중복 제거.",
+        "x-frontend-pages": [],
+        "x-integration-status": "implemented",
+        "responses": {
+          "200": {
+            "description": "성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/History"
+                },
+                "example": {
+                  "items": [
+                    "여행"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED / INVALID_CREDENTIALS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "addSearchHistory",
+        "summary": "검색어 저장",
+        "description": "",
+        "x-frontend-pages": [
+          "/home",
+          "/library"
+        ],
+        "x-integration-status": "implemented",
+        "responses": {
+          "200": {
+            "description": "성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/History"
+                },
+                "example": {
+                  "items": [
+                    "여행"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_ERROR / INVALID_JSON / INVALID_PASSWORD",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED / INVALID_CREDENTIALS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "PAYLOAD_TOO_LARGE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "UNSUPPORTED_MEDIA_TYPE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchQuery"
+              },
+              "example": {
+                "query": "여행"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "clearSearchHistory",
+        "summary": "최근 검색어 전체 삭제",
+        "description": "",
+        "x-frontend-pages": [
+          "/home"
+        ],
+        "x-integration-status": "implemented",
+        "responses": {
+          "204": {
+            "description": "성공; 응답 본문 없음"
+          },
+          "401": {
+            "description": "UNAUTHORIZED / INVALID_CREDENTIALS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_FORBIDDEN",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "요청을 처리할 수 없습니다."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "opaque random token (30 days)"
+      }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "nickname": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 25
+          },
+          "notificationsEnabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "nickname",
+          "notificationsEnabled"
+        ],
+        "examples": [
+          {
+            "id": "00000000-0000-4000-8000-000000000001",
+            "email": "user@example.com",
+            "nickname": "줍줍 사용자",
+            "notificationsEnabled": false
+          }
+        ]
+      },
+      "Content": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "memo": {
+            "type": "string",
+            "maxLength": 70
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "영상",
+              "이미지",
+              "텍스트",
+              "기타"
+            ]
+          },
+          "collection": {
+            "type": "string",
+            "enum": [
+              "장소",
+              "여행",
+              "음식",
+              "의류",
+              "제품",
+              "회사"
+            ]
+          },
+          "source": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "savedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-11-03T04:00:00.000Z"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ready",
+              "analyzing",
+              "failed",
+              "unavailable"
+            ]
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-11-03T04:00:00.000Z"
+          },
+          "viewedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-11-03T04:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "url",
+          "memo",
+          "type",
+          "source",
+          "description",
+          "tags",
+          "savedAt",
+          "status"
+        ],
+        "description": "API에 image/pendingSync는 없다. 현재 서버는 ready 상태의 URL 북마크만 생성한다. description/tags는 분석 결과를 위조하지 않고 빈 값이다. collection/deletedAt/viewedAt은 값이 없으면 생략한다.",
+        "examples": [
+          {
+            "id": "00000000-0000-4000-8000-000000000002",
+            "title": "example.com",
+            "url": "https://example.com/article",
+            "memo": "여행 준비",
+            "type": "기타",
+            "source": "example.com",
+            "description": "",
+            "tags": [],
+            "savedAt": "2026-11-03T04:00:00.000Z",
+            "status": "ready"
+          }
+        ]
+      },
+      "Notice": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-11-03T04:00:00.000Z"
+          },
+          "read": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "description",
+          "date",
+          "read"
+        ],
+        "examples": [
+          {
+            "id": "00000000-0000-4000-8000-000000000003",
+            "title": "정보를 저장했어요",
+            "description": "example.com",
+            "date": "2026-11-03T04:00:00.000Z",
+            "read": false
+          }
+        ]
+      },
+      "Session": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "32 random bytes, opaque bearer token. DB에는 SHA-256만 저장."
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-11-03T04:00:00.000Z"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
+        },
+        "required": [
+          "token",
+          "expiresAt",
+          "user"
+        ],
+        "examples": [
+          {
+            "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "expiresAt": "2026-12-03T04:00:00.000Z",
+            "user": {
+              "id": "00000000-0000-4000-8000-000000000001",
+              "email": "user@example.com",
+              "nickname": "줍줍 사용자",
+              "notificationsEnabled": false
+            }
+          }
+        ]
+      },
+      "State": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+          "contents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Content"
+            }
+          },
+          "notices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Notice"
+            }
+          },
+          "searchHistory": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 10
+          },
+          "savedCount": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "user",
+          "contents",
+          "notices",
+          "searchHistory",
+          "savedCount"
+        ],
+        "description": "인증 사용자 전체 스냅샷. 휴지통 포함. 페이지네이션 없음; FE가 검색/정렬/필터/컬렉션/최근 조회를 파생한다. savedCount는 휴지통을 제외한 현재 개수.",
+        "examples": [
+          {
+            "user": {
+              "id": "00000000-0000-4000-8000-000000000001",
+              "email": "user@example.com",
+              "nickname": "줍줍 사용자",
+              "notificationsEnabled": false
+            },
+            "contents": [
+              {
+                "id": "00000000-0000-4000-8000-000000000002",
+                "title": "example.com",
+                "url": "https://example.com/article",
+                "memo": "여행 준비",
+                "type": "기타",
+                "source": "example.com",
+                "description": "",
+                "tags": [],
+                "savedAt": "2026-11-03T04:00:00.000Z",
+                "status": "ready"
+              }
+            ],
+            "notices": [
+              {
+                "id": "00000000-0000-4000-8000-000000000003",
+                "title": "정보를 저장했어요",
+                "description": "example.com",
+                "date": "2026-11-03T04:00:00.000Z",
+                "read": false
+              }
+            ],
+            "searchHistory": [
+              "여행"
+            ],
+            "savedCount": 1
+          }
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "error"
+        ]
+      },
+      "Register": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 254
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 20,
+            "pattern": "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*<>])[A-Za-z\\d!@#$%^&*<>]{8,20}$",
+            "writeOnly": true,
+            "example": "Password1!"
+          },
+          "nickname": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 25
+          },
+          "requiredConsent": {
+            "const": true,
+            "type": "boolean"
+          },
+          "notificationsEnabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "email",
+          "password",
+          "nickname",
+          "requiredConsent"
+        ]
+      },
+      "Login": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 254
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "CreateContent": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 4096,
+            "description": "HTTP/HTTPS만 허용. 인증정보가 포함된 URL은 거부. URL 정규화 후 fragment 제거."
+          },
+          "memo": {
+            "type": "string",
+            "maxLength": 70,
+            "default": ""
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "UpdateContent": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "memo": {
+            "type": "string",
+            "maxLength": 70
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "영상",
+              "이미지",
+              "텍스트",
+              "기타"
+            ]
+          },
+          "collection": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "장소",
+              "여행",
+              "음식",
+              "의류",
+              "제품",
+              "회사",
+              null
+            ]
+          }
+        },
+        "required": []
+      },
+      "VerifyPassword": {
+        "type": "object",
+        "properties": {
+          "currentPassword": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "currentPassword"
+        ]
+      },
+      "ChangePassword": {
+        "type": "object",
+        "properties": {
+          "currentPassword": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "writeOnly": true
+          },
+          "newPassword": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 20,
+            "pattern": "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*<>])[A-Za-z\\d!@#$%^&*<>]{8,20}$",
+            "writeOnly": true,
+            "example": "Password1!"
+          }
+        },
+        "required": [
+          "currentPassword",
+          "newPassword"
+        ]
+      },
+      "Nickname": {
+        "type": "object",
+        "properties": {
+          "nickname": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 25
+          }
+        },
+        "required": [
+          "nickname"
+        ]
+      },
+      "SearchQuery": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "History": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 10
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "examples": [
+          {
+            "items": [
+              "여행"
+            ]
+          }
+        ]
+      },
+      "Notices": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Notice"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "examples": [
+          {
+            "items": [
+              {
+                "id": "00000000-0000-4000-8000-000000000003",
+                "title": "정보를 저장했어요",
+                "description": "example.com",
+                "date": "2026-11-03T04:00:00.000Z",
+                "read": false
+              }
+            ]
+          }
+        ]
+      },
+      "ContentList": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Content"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ],
+        "examples": [
+          {
+            "items": [
+              {
+                "id": "00000000-0000-4000-8000-000000000002",
+                "title": "example.com",
+                "url": "https://example.com/article",
+                "memo": "여행 준비",
+                "type": "기타",
+                "source": "example.com",
+                "description": "",
+                "tags": [],
+                "savedAt": "2026-11-03T04:00:00.000Z",
+                "status": "ready"
+              }
+            ],
+            "total": 1
+          }
+        ]
+      }
+    }
+  }
+}

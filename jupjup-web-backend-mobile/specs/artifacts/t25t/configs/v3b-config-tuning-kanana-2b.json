@@ -1,0 +1,70 @@
+{
+  "frozen_config_sha256": "84d17d49e55da6b1380a1806391beae6a37ab955568c9c2fb6089398812f9425",
+  "format": 2,
+  "profile": {
+    "name": "tuning-kanana-2b",
+    "engine": "local",
+    "model": "kanana-1.5-2.1b-instruct-q4km",
+    "chunk_model": null,
+    "prompt_version": "analyze_local_v3b",
+    "chunk_prompt_version": "chunk_notes_local_v3b",
+    "repair_prompt_version": "repair_local_v3b",
+    "reduce_prompt_version": "reduce_local_v3b",
+    "max_output_tokens": 1536,
+    "chunk_max_output_tokens": 768,
+    "max_repairs": 2,
+    "timeouts": {
+      "analyze_s": 55.0,
+      "chunk_s": 45.0,
+      "repair_s": 30.0
+    },
+    "chunk": {
+      "single_max_tokens": 6000,
+      "chunk_target_tokens": 3000,
+      "overlap_tokens": 150,
+      "max_chunks": 8
+    },
+    "decoding": {
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0,
+      "min_p": 0.0,
+      "repeat_penalty": 1.0,
+      "seed": 20261102,
+      "n_batch": 512,
+      "n_ubatch": 512,
+      "n_threads": 4,
+      "constrained": "json_schema",
+      "decoding_schema_version": "ds-2"
+    },
+    "routes": [],
+    "effort": null
+  },
+  "prompts": {
+    "analyze_local_v3b": "36521ccc0f7f9c313b5f57c2b7d253a223ac6d1fa6c85f9cb8a5ce7968422261",
+    "chunk_notes_local_v3b": "138e8e574aaa7c0394fdf781b8d1d95deff6c18ca45e68e74be7deaeeeedcfce",
+    "reduce_local_v3b": "c175c155e0e8b68b95c3fe8c31eadb88ea01906b1df0e043fce7137986724c8a",
+    "repair_local_v3b": "945a455fa5c9464ecec878e0bc32b3bcfd22b460a82effd97335015309d6a7c0"
+  },
+  "decoding_policy": {
+    "ds-2": "4aa4a94fbff6d8fed9f4159876edbe443e9a64b1ff3e1da7095103483d534de0"
+  },
+  "models": {
+    "kanana-1.5-2.1b-instruct-q4km": {
+      "model_id": "kanana-1.5-2.1b-instruct-q4km",
+      "repo": "kakaocorp/kanana-1.5-2.1b-instruct-2505",
+      "revision": "7df4bc35ccd610e451809d7106e1c3cf82bfd44c",
+      "filename": "kanana-1.5-2.1b-instruct-2505-Q4_K_M.gguf",
+      "sha256": "5baf76ee093908cdb37b20b116c8a74aebcb6e8d2e097fb9c0980d6b7584ea60",
+      "extra_files": [],
+      "source": "local_convert",
+      "n_ctx": 16384,
+      "chat_template": "gguf",
+      "license": "apache-2.0",
+      "license_commercial_ok": true,
+      "file_sha256s": [
+        "5baf76ee093908cdb37b20b116c8a74aebcb6e8d2e097fb9c0980d6b7584ea60"
+      ]
+    }
+  }
+}

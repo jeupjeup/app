@@ -1,0 +1,127 @@
+{
+  "split": "dev",
+  "queries": 150,
+  "repeat": 3,
+  "rows": [
+    {
+      "device": "mps",
+      "max_length": 256,
+      "window": 12,
+      "calls": 450,
+      "p50_ms": 69.4,
+      "p95_ms": 85.1,
+      "max_ms": 256.6,
+      "rss_peak_increase_mb": 765.2
+    },
+    {
+      "device": "mps",
+      "max_length": 256,
+      "window": 20,
+      "calls": 450,
+      "p50_ms": 116.0,
+      "p95_ms": 144.5,
+      "max_ms": 241.8,
+      "rss_peak_increase_mb": 765.2
+    },
+    {
+      "device": "mps",
+      "max_length": 256,
+      "window": 32,
+      "calls": 450,
+      "p50_ms": 194.3,
+      "p95_ms": 227.9,
+      "max_ms": 272.6,
+      "rss_peak_increase_mb": 765.2
+    },
+    {
+      "device": "mps",
+      "max_length": 384,
+      "window": 12,
+      "calls": 450,
+      "p50_ms": 70.7,
+      "p95_ms": 87.5,
+      "max_ms": 102.9,
+      "rss_peak_increase_mb": 84.0
+    },
+    {
+      "device": "mps",
+      "max_length": 384,
+      "window": 20,
+      "calls": 450,
+      "p50_ms": 118.6,
+      "p95_ms": 144.3,
+      "max_ms": 178.3,
+      "rss_peak_increase_mb": 84.0
+    },
+    {
+      "device": "mps",
+      "max_length": 384,
+      "window": 32,
+      "calls": 450,
+      "p50_ms": 188.1,
+      "p95_ms": 218.9,
+      "max_ms": 317.8,
+      "rss_peak_increase_mb": 84.0
+    },
+    {
+      "device": "cpu",
+      "max_length": 256,
+      "window": 12,
+      "calls": 450,
+      "p50_ms": 541.3,
+      "p95_ms": 723.0,
+      "max_ms": 794.6,
+      "rss_peak_increase_mb": 748.6
+    },
+    {
+      "device": "cpu",
+      "max_length": 256,
+      "window": 20,
+      "calls": 450,
+      "p50_ms": 934.8,
+      "p95_ms": 1211.6,
+      "max_ms": 1289.1,
+      "rss_peak_increase_mb": 748.6
+    },
+    {
+      "device": "cpu",
+      "max_length": 256,
+      "window": 32,
+      "calls": 450,
+      "p50_ms": 1539.4,
+      "p95_ms": 1799.1,
+      "max_ms": 1950.4,
+      "rss_peak_increase_mb": 748.6
+    },
+    {
+      "device": "cpu",
+      "max_length": 384,
+      "window": 12,
+      "calls": 450,
+      "p50_ms": 542.0,
+      "p95_ms": 713.5,
+      "max_ms": 838.7,
+      "rss_peak_increase_mb": 122.3
+    },
+    {
+      "device": "cpu",
+      "max_length": 384,
+      "window": 20,
+      "calls": 450,
+      "p50_ms": 920.5,
+      "p95_ms": 1168.0,
+      "max_ms": 1317.3,
+      "rss_peak_increase_mb": 122.3
+    },
+    {
+      "device": "cpu",
+      "max_length": 384,
+      "window": 32,
+      "calls": 450,
+      "p50_ms": 1528.5,
+      "p95_ms": 1793.8,
+      "max_ms": 2061.2,
+      "rss_peak_increase_mb": 122.3
+    }
+  ]
+}

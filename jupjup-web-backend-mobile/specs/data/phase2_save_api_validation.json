@@ -1,0 +1,823 @@
+{
+  "mock-dev": {
+    "counts": {
+      "seeds": 200,
+      "queries": 158,
+      "challenge_queries": 16,
+      "lexicon_cases": 139,
+      "ranked_queries": 119,
+      "browse_queries": 8,
+      "negative_queries": 15
+    },
+    "overall": {
+      "recall@5": 0.9419,
+      "recall@10": 0.961975,
+      "mrr@10": 0.995798,
+      "ndcg@10": 0.979497,
+      "success@1": 0.991597,
+      "n_ranked": 119.0,
+      "true_empty_rate": 1.0,
+      "false_empty_rate": 0.0,
+      "category_recall@10_min": 0.883796
+    },
+    "safety": {
+      "isolation_violations": 0,
+      "filter_violations": 0
+    },
+    "gate": {
+      "passed": true,
+      "reasons": [],
+      "checks": [
+        {
+          "name": "recall@10",
+          "value": 0.961975,
+          "op": ">=",
+          "threshold": 0.75,
+          "passed": true
+        },
+        {
+          "name": "recall@5",
+          "value": 0.9419,
+          "op": ">=",
+          "threshold": 0.65,
+          "passed": true
+        },
+        {
+          "name": "mrr@10",
+          "value": 0.995798,
+          "op": ">=",
+          "threshold": 0.6,
+          "passed": true
+        },
+        {
+          "name": "ndcg@10",
+          "value": 0.979497,
+          "op": ">=",
+          "threshold": 0.65,
+          "passed": true
+        },
+        {
+          "name": "success@1",
+          "value": 0.991597,
+          "op": ">=",
+          "threshold": 0.5,
+          "passed": true
+        },
+        {
+          "name": "category_recall@10_min",
+          "value": 0.883796,
+          "op": ">=",
+          "threshold": 0.55,
+          "passed": true
+        },
+        {
+          "name": "time_exact",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.95,
+          "passed": true
+        },
+        {
+          "name": "platform_f1",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.97,
+          "passed": true
+        },
+        {
+          "name": "content_type_f1",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.95,
+          "passed": true
+        },
+        {
+          "name": "keyword_inclusion",
+          "value": 0.983193,
+          "op": ">=",
+          "threshold": 0.9,
+          "passed": true
+        },
+        {
+          "name": "true_empty_rate",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.7,
+          "passed": true
+        },
+        {
+          "name": "false_empty_rate",
+          "value": 0.0,
+          "op": "<=",
+          "threshold": 0.05,
+          "passed": true
+        },
+        {
+          "name": "isolation_violations",
+          "value": 0.0,
+          "op": "==",
+          "threshold": 0.0,
+          "passed": true
+        },
+        {
+          "name": "filter_violations",
+          "value": 0.0,
+          "op": "==",
+          "threshold": 0.0,
+          "passed": true
+        },
+        {
+          "name": "browse_precision@10",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.95,
+          "passed": true
+        },
+        {
+          "name": "browse_sort_accuracy",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 1.0,
+          "passed": true
+        },
+        {
+          "name": "browse_filter_compliance",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 1.0,
+          "passed": true
+        }
+      ],
+      "regression": [
+        {
+          "name": "regression:recall@10",
+          "value": 0.961975,
+          "op": ">=",
+          "threshold": 0.943571,
+          "passed": true
+        },
+        {
+          "name": "regression:mrr@10",
+          "value": 0.995798,
+          "op": ">=",
+          "threshold": 0.981597,
+          "passed": true
+        },
+        {
+          "name": "regression:ndcg@10",
+          "value": 0.979497,
+          "op": ">=",
+          "threshold": 0.964195,
+          "passed": true
+        },
+        {
+          "name": "regression:time_exact",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.99,
+          "passed": true
+        },
+        {
+          "name": "regression:platform_f1",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.99,
+          "passed": true
+        }
+      ]
+    }
+  },
+  "mock-test": {
+    "counts": {
+      "seeds": 200,
+      "queries": 101,
+      "challenge_queries": 8,
+      "lexicon_cases": 139,
+      "ranked_queries": 75,
+      "browse_queries": 8,
+      "negative_queries": 10
+    },
+    "overall": {
+      "recall@5": 0.928074,
+      "recall@10": 0.942,
+      "mrr@10": 0.986667,
+      "ndcg@10": 0.958865,
+      "success@1": 0.986667,
+      "n_ranked": 75.0,
+      "true_empty_rate": 1.0,
+      "false_empty_rate": 0.012048,
+      "category_recall@10_min": 0.78125
+    },
+    "safety": {
+      "isolation_violations": 0,
+      "filter_violations": 0
+    },
+    "gate": {
+      "passed": true,
+      "reasons": [],
+      "checks": [
+        {
+          "name": "recall@10",
+          "value": 0.942,
+          "op": ">=",
+          "threshold": 0.75,
+          "passed": true
+        },
+        {
+          "name": "recall@5",
+          "value": 0.928074,
+          "op": ">=",
+          "threshold": 0.65,
+          "passed": true
+        },
+        {
+          "name": "mrr@10",
+          "value": 0.986667,
+          "op": ">=",
+          "threshold": 0.6,
+          "passed": true
+        },
+        {
+          "name": "ndcg@10",
+          "value": 0.958865,
+          "op": ">=",
+          "threshold": 0.65,
+          "passed": true
+        },
+        {
+          "name": "success@1",
+          "value": 0.986667,
+          "op": ">=",
+          "threshold": 0.5,
+          "passed": true
+        },
+        {
+          "name": "category_recall@10_min",
+          "value": 0.78125,
+          "op": ">=",
+          "threshold": 0.55,
+          "passed": true
+        },
+        {
+          "name": "time_exact",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.95,
+          "passed": true
+        },
+        {
+          "name": "platform_f1",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.97,
+          "passed": true
+        },
+        {
+          "name": "content_type_f1",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.95,
+          "passed": true
+        },
+        {
+          "name": "keyword_inclusion",
+          "value": 0.933333,
+          "op": ">=",
+          "threshold": 0.9,
+          "passed": true
+        },
+        {
+          "name": "true_empty_rate",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.7,
+          "passed": true
+        },
+        {
+          "name": "false_empty_rate",
+          "value": 0.012048,
+          "op": "<=",
+          "threshold": 0.05,
+          "passed": true
+        },
+        {
+          "name": "isolation_violations",
+          "value": 0.0,
+          "op": "==",
+          "threshold": 0.0,
+          "passed": true
+        },
+        {
+          "name": "filter_violations",
+          "value": 0.0,
+          "op": "==",
+          "threshold": 0.0,
+          "passed": true
+        },
+        {
+          "name": "browse_precision@10",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.95,
+          "passed": true
+        },
+        {
+          "name": "browse_sort_accuracy",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 1.0,
+          "passed": true
+        },
+        {
+          "name": "browse_filter_compliance",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 1.0,
+          "passed": true
+        }
+      ],
+      "regression": [
+        {
+          "name": "regression:recall@10",
+          "value": 0.942,
+          "op": ">=",
+          "threshold": 0.932,
+          "passed": true
+        },
+        {
+          "name": "regression:mrr@10",
+          "value": 0.986667,
+          "op": ">=",
+          "threshold": 0.976667,
+          "passed": true
+        },
+        {
+          "name": "regression:ndcg@10",
+          "value": 0.958865,
+          "op": ">=",
+          "threshold": 0.948865,
+          "passed": true
+        },
+        {
+          "name": "regression:time_exact",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.99,
+          "passed": true
+        },
+        {
+          "name": "regression:platform_f1",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.99,
+          "passed": true
+        }
+      ]
+    }
+  },
+  "recorded-dev": {
+    "counts": {
+      "seeds": 200,
+      "queries": 158,
+      "challenge_queries": 16,
+      "lexicon_cases": 139,
+      "ranked_queries": 119,
+      "browse_queries": 8,
+      "negative_queries": 15
+    },
+    "overall": {
+      "recall@5": 0.949463,
+      "recall@10": 0.971218,
+      "mrr@10": 1.0,
+      "ndcg@10": 0.98599,
+      "success@1": 1.0,
+      "n_ranked": 119.0,
+      "true_empty_rate": 1.0,
+      "false_empty_rate": 0.0,
+      "category_recall@10_min": 0.889352
+    },
+    "safety": {
+      "isolation_violations": 0,
+      "filter_violations": 0
+    },
+    "gate": {
+      "passed": true,
+      "reasons": [],
+      "checks": [
+        {
+          "name": "recall@10",
+          "value": 0.971218,
+          "op": ">=",
+          "threshold": 0.9,
+          "passed": true
+        },
+        {
+          "name": "recall@5",
+          "value": 0.949463,
+          "op": ">=",
+          "threshold": 0.85,
+          "passed": true
+        },
+        {
+          "name": "mrr@10",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.75,
+          "passed": true
+        },
+        {
+          "name": "ndcg@10",
+          "value": 0.98599,
+          "op": ">=",
+          "threshold": 0.8,
+          "passed": true
+        },
+        {
+          "name": "success@1",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.65,
+          "passed": true
+        },
+        {
+          "name": "category_recall@10_min",
+          "value": 0.889352,
+          "op": ">=",
+          "threshold": 0.8,
+          "passed": true
+        },
+        {
+          "name": "time_exact",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.95,
+          "passed": true
+        },
+        {
+          "name": "platform_f1",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.97,
+          "passed": true
+        },
+        {
+          "name": "content_type_f1",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.95,
+          "passed": true
+        },
+        {
+          "name": "keyword_inclusion",
+          "value": 0.983193,
+          "op": ">=",
+          "threshold": 0.9,
+          "passed": true
+        },
+        {
+          "name": "true_empty_rate",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.8,
+          "passed": true
+        },
+        {
+          "name": "false_empty_rate",
+          "value": 0.0,
+          "op": "<=",
+          "threshold": 0.03,
+          "passed": true
+        },
+        {
+          "name": "isolation_violations",
+          "value": 0.0,
+          "op": "==",
+          "threshold": 0.0,
+          "passed": true
+        },
+        {
+          "name": "filter_violations",
+          "value": 0.0,
+          "op": "==",
+          "threshold": 0.0,
+          "passed": true
+        },
+        {
+          "name": "browse_precision@10",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.95,
+          "passed": true
+        },
+        {
+          "name": "browse_sort_accuracy",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 1.0,
+          "passed": true
+        },
+        {
+          "name": "browse_filter_compliance",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 1.0,
+          "passed": true
+        }
+      ],
+      "regression": [
+        {
+          "name": "regression:recall@10",
+          "value": 0.971218,
+          "op": ">=",
+          "threshold": 0.956457,
+          "passed": true
+        },
+        {
+          "name": "regression:mrr@10",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.99,
+          "passed": true
+        },
+        {
+          "name": "regression:ndcg@10",
+          "value": 0.98599,
+          "op": ">=",
+          "threshold": 0.969304,
+          "passed": true
+        },
+        {
+          "name": "regression:time_exact",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.99,
+          "passed": true
+        },
+        {
+          "name": "regression:platform_f1",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.99,
+          "passed": true
+        }
+      ]
+    }
+  },
+  "recorded-test": {
+    "counts": {
+      "seeds": 200,
+      "queries": 101,
+      "challenge_queries": 8,
+      "lexicon_cases": 139,
+      "ranked_queries": 75,
+      "browse_queries": 8,
+      "negative_queries": 10
+    },
+    "overall": {
+      "recall@5": 0.954074,
+      "recall@10": 0.972,
+      "mrr@10": 0.991111,
+      "ndcg@10": 0.980055,
+      "success@1": 0.986667,
+      "n_ranked": 75.0,
+      "true_empty_rate": 1.0,
+      "false_empty_rate": 0.0,
+      "category_recall@10_min": 0.89
+    },
+    "safety": {
+      "isolation_violations": 0,
+      "filter_violations": 0
+    },
+    "gate": {
+      "passed": true,
+      "reasons": [],
+      "checks": [
+        {
+          "name": "recall@10",
+          "value": 0.972,
+          "op": ">=",
+          "threshold": 0.9,
+          "passed": true
+        },
+        {
+          "name": "recall@5",
+          "value": 0.954074,
+          "op": ">=",
+          "threshold": 0.85,
+          "passed": true
+        },
+        {
+          "name": "mrr@10",
+          "value": 0.991111,
+          "op": ">=",
+          "threshold": 0.75,
+          "passed": true
+        },
+        {
+          "name": "ndcg@10",
+          "value": 0.980055,
+          "op": ">=",
+          "threshold": 0.8,
+          "passed": true
+        },
+        {
+          "name": "success@1",
+          "value": 0.986667,
+          "op": ">=",
+          "threshold": 0.65,
+          "passed": true
+        },
+        {
+          "name": "category_recall@10_min",
+          "value": 0.89,
+          "op": ">=",
+          "threshold": 0.8,
+          "passed": true
+        },
+        {
+          "name": "time_exact",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.95,
+          "passed": true
+        },
+        {
+          "name": "platform_f1",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.97,
+          "passed": true
+        },
+        {
+          "name": "content_type_f1",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.95,
+          "passed": true
+        },
+        {
+          "name": "keyword_inclusion",
+          "value": 0.933333,
+          "op": ">=",
+          "threshold": 0.9,
+          "passed": true
+        },
+        {
+          "name": "true_empty_rate",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.8,
+          "passed": true
+        },
+        {
+          "name": "false_empty_rate",
+          "value": 0.0,
+          "op": "<=",
+          "threshold": 0.03,
+          "passed": true
+        },
+        {
+          "name": "isolation_violations",
+          "value": 0.0,
+          "op": "==",
+          "threshold": 0.0,
+          "passed": true
+        },
+        {
+          "name": "filter_violations",
+          "value": 0.0,
+          "op": "==",
+          "threshold": 0.0,
+          "passed": true
+        },
+        {
+          "name": "browse_precision@10",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.95,
+          "passed": true
+        },
+        {
+          "name": "browse_sort_accuracy",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 1.0,
+          "passed": true
+        },
+        {
+          "name": "browse_filter_compliance",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 1.0,
+          "passed": true
+        }
+      ],
+      "regression": [
+        {
+          "name": "regression:recall@10",
+          "value": 0.972,
+          "op": ">=",
+          "threshold": 0.972,
+          "passed": true
+        },
+        {
+          "name": "regression:mrr@10",
+          "value": 0.991111,
+          "op": ">=",
+          "threshold": 0.976667,
+          "passed": true
+        },
+        {
+          "name": "regression:ndcg@10",
+          "value": 0.980055,
+          "op": ">=",
+          "threshold": 0.97075,
+          "passed": true
+        },
+        {
+          "name": "regression:time_exact",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.99,
+          "passed": true
+        },
+        {
+          "name": "regression:platform_f1",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.99,
+          "passed": true
+        }
+      ]
+    }
+  },
+  "ingest-mock-test": {
+    "counts": {
+      "sources": 32,
+      "dev": 0,
+      "test": 32,
+      "injection_cases": 2,
+      "retry_exercised": 1
+    },
+    "overall": {
+      "schema_first_pass_rate": 0.96875,
+      "schema_final_pass_rate": 1.0,
+      "average_retries": 0.03125,
+      "tag_precision": null,
+      "tag_recall": null,
+      "tag_f1": null,
+      "entity_precision": null,
+      "entity_recall": null,
+      "entity_f1": null,
+      "location_f1": null,
+      "category_accuracy": null,
+      "save_intent_accuracy": null,
+      "summary_key_fact_recall": null,
+      "unsupported_sentence_rate": null,
+      "injection_resistance": 1.0,
+      "input_tokens_per_item": 3690.59375,
+      "output_tokens_per_item": 499.84375,
+      "cost_usd_per_item": 0.0,
+      "latency_p50_ms": 0.0,
+      "latency_p95_ms": 0.0,
+      "search_recall@10": null,
+      "search_ndcg@10": null
+    },
+    "gate": {
+      "passed": true,
+      "reasons": [],
+      "checks": [
+        {
+          "name": "schema_final_pass_rate",
+          "value": 1.0,
+          "op": "==",
+          "threshold": 1.0,
+          "passed": true
+        },
+        {
+          "name": "injection_resistance",
+          "value": 1.0,
+          "op": "==",
+          "threshold": 1.0,
+          "passed": true
+        }
+      ],
+      "regression": [
+        {
+          "name": "regression:schema_final_pass_rate",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.99,
+          "passed": true
+        },
+        {
+          "name": "regression:injection_resistance",
+          "value": 1.0,
+          "op": ">=",
+          "threshold": 0.99,
+          "passed": true
+        }
+      ]
+    }
+  }
+}

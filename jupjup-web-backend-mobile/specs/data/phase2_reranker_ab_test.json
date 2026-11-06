@@ -1,0 +1,335 @@
+{
+ "config": {
+  "mode": "recorded",
+  "split": "test",
+  "arms": [
+   {
+    "name": "A0",
+    "cross_rerank": false,
+    "query_assist": false,
+    "search_overrides": {}
+   },
+   {
+    "name": "A1",
+    "cross_rerank": true,
+    "query_assist": false,
+    "search_overrides": {}
+   }
+  ],
+  "bootstrap_iterations": 1000,
+  "bootstrap_seed": 20261030,
+  "baseline_arm": "A0"
+ },
+ "comparisons": [
+  {
+   "baseline": "A0",
+   "candidate": "A1",
+   "deltas": [
+    {
+     "metric": "recall@10",
+     "delta": -0.01,
+     "ci_low": -0.026667,
+     "ci_high": 0.0,
+     "wins": 0,
+     "losses": 2,
+     "ties": 73,
+     "sign_test_p": 0.5
+    },
+    {
+     "metric": "mrr@10",
+     "delta": 0.002222,
+     "ci_low": 0.0,
+     "ci_high": 0.006667,
+     "wins": 1,
+     "losses": 0,
+     "ties": 74,
+     "sign_test_p": 1.0
+    },
+    {
+     "metric": "ndcg@10",
+     "delta": 0.000655,
+     "ci_low": -0.001722,
+     "ci_high": 0.003772,
+     "wins": 2,
+     "losses": 3,
+     "ties": 70,
+     "sign_test_p": 1.0
+    },
+    {
+     "metric": "success@1",
+     "delta": 0.0,
+     "ci_low": 0.0,
+     "ci_high": 0.0,
+     "wins": 0,
+     "losses": 0,
+     "ties": 75,
+     "sign_test_p": 1.0
+    },
+    {
+     "metric": "true_empty",
+     "delta": 0.0,
+     "ci_low": 0.0,
+     "ci_high": 0.0,
+     "wins": 0,
+     "losses": 0,
+     "ties": 10,
+     "sign_test_p": 1.0
+    },
+    {
+     "metric": "false_empty",
+     "delta": 0.0,
+     "ci_low": 0.0,
+     "ci_high": 0.0,
+     "wins": 0,
+     "losses": 0,
+     "ties": 75,
+     "sign_test_p": 1.0
+    }
+   ],
+   "subset_deltas": {
+    "challenge": [
+     {
+      "metric": "recall@10",
+      "delta": -0.0625,
+      "ci_low": -0.1875,
+      "ci_high": 0.0,
+      "wins": 0,
+      "losses": 1,
+      "ties": 7,
+      "sign_test_p": 1.0
+     },
+     {
+      "metric": "mrr@10",
+      "delta": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "ties": 8,
+      "sign_test_p": 1.0
+     },
+     {
+      "metric": "ndcg@10",
+      "delta": -0.010335,
+      "ci_low": -0.031005,
+      "ci_high": 0.0,
+      "wins": 0,
+      "losses": 1,
+      "ties": 7,
+      "sign_test_p": 1.0
+     },
+     {
+      "metric": "success@1",
+      "delta": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "ties": 8,
+      "sign_test_p": 1.0
+     },
+     {
+      "metric": "false_empty",
+      "delta": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "ties": 8,
+      "sign_test_p": 1.0
+     }
+    ]
+   },
+   "category_deltas": {
+    "ambiguous": 0.0,
+    "colloquial": 0.0,
+    "content_type": 0.0,
+    "exact": 0.0,
+    "filter_conflict": 0.0,
+    "isolation": 0.0,
+    "multi": -0.025,
+    "platform": -0.013158,
+    "purpose": -0.083333,
+    "semantic": 0.0,
+    "temporal": 0.0,
+    "typo": -0.03125
+   },
+   "candidate_absolute": {
+    "challenge_positive_recall@10": 0.875,
+    "isolation_violations": 0.0,
+    "filter_violations": 0.0
+   },
+   "candidate_gate_passed": true,
+   "changed_queries": [
+    {
+     "query_id": "ch_0022",
+     "query": "애월 펜션 예약한거 캡쳐 해둔거",
+     "metric": "recall@10",
+     "baseline": 1.0,
+     "candidate": 0.5,
+     "baseline_top": "c_alice_0116",
+     "candidate_top": "c_alice_0116"
+    },
+    {
+     "query_id": "ch_0022",
+     "query": "애월 펜션 예약한거 캡쳐 해둔거",
+     "metric": "ndcg@10",
+     "baseline": 1.0,
+     "candidate": 0.9173194127129571,
+     "baseline_top": "c_alice_0116",
+     "candidate_top": "c_alice_0116"
+    },
+    {
+     "query_id": "q_0037",
+     "query": "성수동까페",
+     "metric": "ndcg@10",
+     "baseline": 0.9234889393342034,
+     "candidate": 0.9139352379679663,
+     "baseline_top": "c_alice_0031",
+     "candidate_top": "c_alice_0031"
+    },
+    {
+     "query_id": "q_0045",
+     "query": "카톡으로 받은 회이 장소",
+     "metric": "recall@10",
+     "baseline": 1.0,
+     "candidate": 0.75,
+     "baseline_top": "c_alice_0146",
+     "candidate_top": "c_alice_0146"
+    },
+    {
+     "query_id": "q_0045",
+     "query": "카톡으로 받은 회이 장소",
+     "metric": "mrr@10",
+     "baseline": 0.3333333333333333,
+     "candidate": 0.5,
+     "baseline_top": "c_alice_0146",
+     "candidate_top": "c_alice_0146"
+    },
+    {
+     "query_id": "q_0045",
+     "query": "카톡으로 받은 회이 장소",
+     "metric": "ndcg@10",
+     "baseline": 0.6399506300887976,
+     "candidate": 0.7221490886826393,
+     "baseline_top": "c_alice_0146",
+     "candidate_top": "c_alice_0146"
+    },
+    {
+     "query_id": "q_0150",
+     "query": "데이트하러 갈 전시",
+     "metric": "recall@10",
+     "baseline": 1.0,
+     "candidate": 0.5,
+     "baseline_top": "c_alice_0156",
+     "candidate_top": "c_alice_0156"
+    },
+    {
+     "query_id": "q_0150",
+     "query": "데이트하러 갈 전시",
+     "metric": "ndcg@10",
+     "baseline": 0.9639988080961093,
+     "candidate": 0.9173194127129571,
+     "baseline_top": "c_alice_0156",
+     "candidate_top": "c_alice_0156"
+    },
+    {
+     "query_id": "q_0161",
+     "query": "디저트 맛집",
+     "metric": "ndcg@10",
+     "baseline": 0.41576331235681796,
+     "candidate": 0.452053837710772,
+     "baseline_top": "c_alice_0036",
+     "candidate_top": "c_alice_0036"
+    },
+    {
+     "query_id": "q_0182",
+     "query": "제주 여행 관련 다 보여줘",
+     "metric": "ndcg@10",
+     "baseline": 0.9595073909626246,
+     "candidate": 0.9463883921781673,
+     "baseline_top": "c_alice_0139",
+     "candidate_top": "c_alice_0139"
+    }
+   ],
+   "top1_changes": [
+    {
+     "query_id": "q_0038",
+     "query": "기휴변화 논문",
+     "metric": "top1",
+     "baseline": 0.0,
+     "candidate": 0.0,
+     "baseline_top": "c_alice_0114",
+     "candidate_top": "c_alice_0096"
+    }
+   ],
+   "rerank_status": {
+    "none": 8,
+    "scored": 93
+   },
+   "decision": {
+    "verdict": "REJECT",
+    "rules": [
+     {
+      "name": "1_absolute",
+      "passed": false,
+      "detail": "gate_passed=True challenge_positive_recall@10=0.875 isolation_violations=0.0 filter_violations=0.0"
+     },
+     {
+      "name": "2_allowed_drop",
+      "passed": false,
+      "detail": "recall@10=-0.0100 mrr@10=+0.0022 ndcg@10=+0.0007 true_empty=+0.0000 false_empty=+0.0000 category_min=-0.0833"
+     },
+     {
+      "name": "3_improvement",
+      "passed": false,
+      "detail": "ndcg@10+0.02=False success@1+0.03=False challenge_recall@10+0.05=False seesaw=False"
+     },
+     {
+      "name": "4_confidence",
+      "passed": false,
+      "detail": "recall@10.ci_low=-0.0267 mrr@10.ci_low=+0.0000 ndcg@10.ci_low=-0.0017 true_empty.ci_low=+0.0000"
+     },
+     {
+      "name": "5_latency",
+      "passed": true,
+      "detail": "device=mps rerank_p95=147.8/150ms search_p95=174.4/300ms"
+     },
+     {
+      "name": "6_operations",
+      "passed": true,
+      "detail": "skip_rate=0.0000 rss_increase_mb=295.7"
+     }
+    ]
+   }
+  }
+ ],
+ "overall": {
+  "A0": {
+   "recall@5": 0.954074,
+   "recall@10": 0.972,
+   "mrr@10": 0.991111,
+   "ndcg@10": 0.980055,
+   "success@1": 0.986667,
+   "n_ranked": 75.0,
+   "true_empty_rate": 1.0,
+   "false_empty_rate": 0.0,
+   "category_recall@10_min": 0.89
+  },
+  "A1": {
+   "recall@5": 0.949407,
+   "recall@10": 0.962,
+   "mrr@10": 0.993333,
+   "ndcg@10": 0.98071,
+   "success@1": 0.986667,
+   "n_ranked": 75.0,
+   "true_empty_rate": 1.0,
+   "false_empty_rate": 0.0,
+   "category_recall@10_min": 0.865
+  }
+ },
+ "gate": {
+  "A0": true,
+  "A1": true
+ }
+}

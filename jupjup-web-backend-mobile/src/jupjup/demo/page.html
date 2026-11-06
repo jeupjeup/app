@@ -1,0 +1,1147 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>줍줍저장소 · 검색 데모</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #eef3f8;
+      --surface: #ffffff;
+      --surface-soft: #f7f9fc;
+      --ink: #152235;
+      --muted: #53657b;
+      --faint: #5f7186;
+      --line: #d6e0ea;
+      --accent: #1467e8;
+      --accent-strong: #0d4fae;
+      --accent-soft: #e8f1ff;
+      --good: #13715a;
+      --warn: #9a4f0c;
+      --token-bg: #edf2f6;
+      --token-ink: #33475e;
+      --radius: 14px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 280px;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      line-height: 1.55;
+    }
+
+    button, input, select { min-width: 0; font: inherit; }
+    button, select { cursor: pointer; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .shell {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+      padding: 32px 0 72px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mark {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      background: var(--ink);
+      color: var(--surface);
+      font-size: 18px;
+      font-weight: 850;
+      letter-spacing: -0.03em;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+    h1, h2, h3 { font-family: "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; font-weight: 800; }
+    h1 { font-size: clamp(1.45rem, 3vw, 2rem); letter-spacing: -0.03em; line-height: 1.1; }
+
+    .dev-note {
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    .search-stage {
+      padding: clamp(20px, 4vw, 38px);
+      border-radius: 22px;
+      background: var(--surface);
+      box-shadow: 0 18px 50px rgba(37, 64, 92, .11);
+    }
+
+    .search-stage h2 {
+      max-width: 680px;
+      margin-bottom: 22px;
+      font-size: clamp(1.6rem, 5vw, 3.25rem);
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+      text-wrap: balance;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+
+    .query-input {
+      width: 100%;
+      min-height: 58px;
+      padding: 0 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-soft);
+      color: var(--ink);
+      font-size: 1.05rem;
+      outline: none;
+      transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    .query-input::placeholder { color: var(--faint); opacity: 1; }
+    .query-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px var(--accent-soft);
+      background: var(--surface);
+    }
+
+    .submit {
+      min-width: 112px;
+      min-height: 58px;
+      padding: 0 22px;
+      border: 0;
+      border-radius: var(--radius);
+      background: var(--accent);
+      color: white;
+      font-weight: 760;
+      transition: background .18s ease, transform .18s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .submit:hover { background: var(--accent-strong); }
+    .submit:active { transform: scale(.98); }
+    .submit:disabled { cursor: wait; opacity: .68; }
+
+    .controls {
+      display: grid;
+      grid-template-columns: minmax(150px, 1fr) minmax(250px, 1.5fr);
+      gap: 12px;
+      max-width: 640px;
+      margin-top: 14px;
+    }
+
+    label { display: grid; gap: 6px; color: var(--muted); font-size: .78rem; font-weight: 720; }
+
+    select, .now-input {
+      width: 100%;
+      min-height: 42px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--surface-soft);
+      color: var(--ink);
+      outline: none;
+    }
+
+    select:focus, .now-input:focus, .chip:focus-visible, .submit:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
+      outline-offset: 2px;
+    }
+
+    .examples { margin-top: 22px; }
+    .examples-title { margin-bottom: 10px; color: var(--muted); font-size: .78rem; font-weight: 720; }
+    .chip-list { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .chip {
+      max-width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      font-size: .82rem;
+      line-height: 1.35;
+      text-align: left;
+      white-space: normal;
+      transition: color .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .chip:hover { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-strong); }
+
+    .status {
+      min-height: 28px;
+      margin: 16px 2px 0;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    .status.error { color: #b23a3a; }
+
+    .journey {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      max-width: 620px;
+      margin: 18px auto 0;
+      color: var(--faint);
+      font-size: .76rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .journey::before {
+      position: absolute;
+      top: 8px;
+      left: 16.66%;
+      right: 16.66%;
+      height: 1px;
+      background: var(--line);
+      content: "";
+    }
+
+    .step { position: relative; display: grid; justify-items: center; gap: 7px; }
+    .step::before {
+      z-index: 1;
+      width: 17px;
+      height: 17px;
+      border: 5px solid var(--bg);
+      border-radius: 50%;
+      background: var(--faint);
+      box-shadow: 0 0 0 1px var(--line);
+      content: "";
+    }
+
+    .step[aria-current="step"] { color: var(--ink); }
+    .step[aria-current="step"]::before { background: var(--ink); }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(250px, 330px) minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+      margin-top: 24px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .understanding {
+      position: sticky;
+      top: 20px;
+      padding: 20px;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .panel-head h2 { font-size: 1.05rem; letter-spacing: -0.02em; }
+    .panel-head span { color: var(--faint); font-size: .78rem; }
+
+    .empty-copy { color: var(--muted); font-size: .92rem; }
+    .facts { display: grid; gap: 0; margin: 0; }
+
+    .fact {
+      display: grid;
+      grid-template-columns: 76px minmax(0, 1fr);
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .fact:last-child { border-bottom: 0; padding-bottom: 0; }
+    .fact dt { color: var(--faint); font-size: .77rem; font-weight: 720; }
+    .fact dd { min-width: 0; margin: 0; color: var(--ink); font-size: .87rem; overflow-wrap: anywhere; }
+
+    .tokens { display: flex; flex-wrap: wrap; gap: 5px; }
+
+    .token {
+      display: inline-flex;
+      align-items: center;
+      min-height: 25px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--token-bg);
+      color: var(--token-ink);
+      font-size: .76rem;
+      font-weight: 680;
+    }
+
+    .results { min-width: 0; }
+    .results-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 4px 2px 14px;
+    }
+    .results-head h2 { font-size: 1.15rem; letter-spacing: -0.025em; }
+    .timing { color: var(--faint); font-size: .8rem; font-variant-numeric: tabular-nums; }
+
+    .result-list { display: grid; gap: 12px; }
+    .result-list.fresh { animation: reveal .34s cubic-bezier(.2,.8,.2,1) both; }
+
+    @keyframes reveal {
+      from { opacity: .35; transform: translateY(7px); filter: blur(2px); }
+      to { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+
+    .result-card {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr);
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .rank {
+      display: grid;
+      place-items: center;
+      align-self: start;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: var(--surface);
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .result-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+    .result-card h3 { font-size: 1.03rem; line-height: 1.35; letter-spacing: -0.02em; }
+    .score { flex: 0 0 auto; color: var(--faint); font-size: .75rem; font-variant-numeric: tabular-nums; }
+    .meta { margin-top: 5px; color: var(--muted); font-size: .8rem; }
+    .summary { max-width: 70ch; margin-top: 12px; color: var(--muted); font-size: .9rem; }
+    .tag-row, .reason-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .tag { color: var(--muted); font-size: .75rem; }
+    .tag::before { content: "#"; color: var(--good); }
+
+    .reason {
+      padding: 4px 8px;
+      border-radius: 7px;
+      background: var(--surface-soft);
+      color: var(--muted);
+      font-size: .72rem;
+    }
+
+    .deleted { color: var(--warn); font-weight: 680; }
+
+    .empty-results {
+      padding: 50px 24px;
+      border: 1px dashed var(--line);
+      border-radius: var(--radius);
+      background: color-mix(in srgb, var(--surface) 78%, transparent);
+      text-align: center;
+    }
+
+    .empty-results strong { display: block; margin-bottom: 7px; font-size: 1.05rem; }
+    .empty-results p { color: var(--muted); font-size: .88rem; }
+    .suggestions { display: grid; gap: 6px; margin: 16px auto 0; max-width: 420px; padding: 0; list-style: none; }
+    .suggestion { color: var(--accent-strong); font-size: .82rem; }
+    .relaxed-note { margin-top: 8px; color: var(--warn); font-size: .76rem; font-weight: 680; }
+    .browse-note {
+      padding: 10px 12px;
+      border-radius: 9px;
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      font-size: .82rem;
+      font-weight: 700;
+    }
+
+    .draft-note { margin-top: 28px; color: var(--faint); font-size: .75rem; text-align: center; }
+
+    /* ---- 검색 과정 패널 ---- */
+    .trace { margin-top: 24px; padding: 0; overflow: hidden; }
+    .trace > summary, .trace-group > summary, .more > summary { cursor: pointer; list-style: none; }
+    .trace > summary::-webkit-details-marker, .trace-group > summary::-webkit-details-marker,
+    .more > summary::-webkit-details-marker { display: none; }
+    .trace > summary {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    .trace > summary h2 { font-size: 1.05rem; letter-spacing: -0.02em; }
+    .trace > summary h2::before { content: "▸ "; color: var(--faint); }
+    .trace[open] > summary h2::before { content: "▾ "; }
+    .trace-meta { color: var(--faint); font-size: .78rem; font-variant-numeric: tabular-nums; }
+    .trace-body { padding: 16px 20px 20px; }
+    .trace-tools { display: flex; gap: 8px; margin-bottom: 14px; }
+    .trace-tools button {
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+      color: var(--muted);
+      font-size: .76rem;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      margin: 0 0 16px;
+      padding: 0;
+      list-style: none;
+    }
+    .step-card {
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 3px;
+      min-width: 0;
+      padding: 10px 11px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface-soft);
+    }
+    .step-card .no { color: var(--accent-strong); font-size: .7rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .step-card .name { font-size: .8rem; font-weight: 800; line-height: 1.3; }
+    .step-card .key { color: var(--muted); font-size: .74rem; line-height: 1.4; overflow-wrap: anywhere; }
+    .step-card .ms { color: var(--faint); font-size: .7rem; font-variant-numeric: tabular-nums; }
+    .step-card.state-skipped { opacity: .72; }
+    .step-card.state-degraded { border-color: var(--warn); }
+    .trace-group { border-top: 1px solid var(--line); }
+    .trace-group > summary { display: flex; gap: 10px; align-items: baseline; padding: 11px 0; }
+    .trace-group > summary b { font-size: .92rem; }
+    .trace-group > summary span { color: var(--faint); font-size: .76rem; }
+    .trace-group > summary::before { content: "▸"; color: var(--faint); }
+    .trace-group[open] > summary::before { content: "▾"; }
+    .group-body { display: grid; gap: 14px; padding: 0 0 16px 18px; }
+    .sub h4 { margin: 0 0 6px; font-size: .82rem; }
+    .sub h4 .ms { margin-left: 6px; color: var(--faint); font-weight: 600; font-size: .72rem; }
+    .kv { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 3px 12px; margin: 0; font-size: .8rem; }
+    .kv dt { color: var(--faint); font-weight: 700; }
+    .kv dd { margin: 0; overflow-wrap: anywhere; }
+    .tbl-wrap { overflow-x: auto; }
+    table.tbl { width: 100%; border-collapse: collapse; font-size: .75rem; font-variant-numeric: tabular-nums; }
+    .tbl th, .tbl td { padding: 4px 7px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    .tbl th { color: var(--faint); font-weight: 750; white-space: nowrap; }
+    .tbl td.num { text-align: right; white-space: nowrap; }
+    .tbl tr.sel td { background: var(--accent-soft); }
+    .ok { color: var(--good); font-weight: 750; }
+    .no-pass { color: var(--warn); font-weight: 750; }
+    .more > summary { margin-top: 4px; color: var(--accent-strong); font-size: .74rem; }
+    .retr-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .74rem; }
+    pre.json {
+      max-height: 220px;
+      margin: 0;
+      padding: 8px;
+      overflow: auto;
+      border-radius: 8px;
+      background: var(--surface-soft);
+      font-size: .7rem;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 1000px) {
+      .retr-grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 760px) {
+      .kv { grid-template-columns: 1fr; }
+      .group-body { padding-left: 0; }
+    }
+
+    @media print {
+      :root {
+        color-scheme: light;
+        --bg: #ffffff; --surface: #ffffff; --surface-soft: #f5f7fa; --ink: #111a26; --muted: #3c4b5d;
+        --faint: #55667a; --line: #cfd8e2; --accent-strong: #0d4fae; --accent-soft: #e8f1ff;
+        --good: #13715a; --warn: #9a4f0c;
+      }
+      body { background: #fff; }
+      .search-stage .examples, .journey, .trace-tools, .draft-note { display: none; }
+      .search-stage, .panel { box-shadow: none; }
+      .understanding { position: static; }
+      .step-card, .sub, tr { break-inside: avoid; }
+      pre.json { max-height: none; }
+    }
+
+    @media (max-width: 760px) {
+      .shell { width: auto; margin-inline: 12px; padding-top: 20px; }
+      .topbar { margin-bottom: 18px; }
+      .dev-note { display: none; }
+      .search-stage { min-width: 0; overflow: hidden; border-radius: 18px; }
+      .search-row { grid-template-columns: 1fr; }
+      .submit { width: 100%; }
+      .controls { grid-template-columns: 1fr; }
+      .workspace { grid-template-columns: 1fr; }
+      .understanding { position: static; }
+      .result-card { grid-template-columns: 36px minmax(0, 1fr); padding: 15px; gap: 10px; }
+      .rank { width: 32px; height: 32px; }
+      .result-top { display: block; }
+      .score { display: block; margin-top: 4px; }
+      .chip-list { display: grid; justify-items: start; }
+      .chip { width: fit-content; }
+      .has-results .examples { display: none; }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --bg: #0d1520;
+        --surface: #151f2c;
+        --surface-soft: #1a2635;
+        --ink: #edf4fc;
+        --muted: #afbed0;
+        --faint: #a4b3c5;
+        --line: #314054;
+        --accent: #78aefb;
+        --accent-strong: #b9d6ff;
+        --accent-soft: #1c3558;
+        --good: #78d6b8;
+        --warn: #ffbd73;
+        --token-bg: #243244;
+        --token-ink: #d1dbea;
+      }
+      .search-stage { box-shadow: 0 18px 54px rgba(0, 0, 0, .28); }
+      .submit { color: #07111f; background: #8bb9fb; }
+      .submit:hover { background: #a9ccff; }
+      .mark, .rank { background: #e5eef9; color: #101b28; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!--
+    THESIS: 흐릿한 기억이 해석 범례를 거쳐 저장물에 도착하는 한 화면; 대시보드형 카드 격자를 거부한다.
+    OWN-WORLD: 푸른 회색 작업면, 흰 기록지, 원형 순위 표식, 행동에만 쓰는 코발트.
+    STORY: 자연어를 입력하고, 해석된 경로를 확인하고, 근거가 붙은 결과를 고른다.
+    FIRST VIEWPORT: 브랜드와 큰 검색면이 상단을 차지하고, 아래는 해석 범례와 결과 경로의 2열 구성이다.
+    FORM: 개인 기록물의 기억 경로표, assigned direction 4, seed 5ff89de4.
+    FINISH: unreviewed and undocumented is unfinished;
+    this build ends with the finish review, the verdict, and DESIGN.md
+  -->
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">줍</div>
+        <h1>줍줍저장소</h1>
+      </div>
+      <p class="dev-note">로컬 검색 데모 · {{DEMO_MODE}}</p>
+    </header>
+
+    <section class="search-stage" aria-labelledby="search-heading">
+      <h2 id="search-heading">어렴풋한 기억도<br>찾을 수 있게.</h2>
+      <form id="search-form">
+        <div class="search-row">
+          <label class="sr-only" for="query">검색 질의</label>
+          <input id="query" class="query-input" name="query" type="search" maxlength="200"
+                 placeholder="기억나는 대로 말해보세요." autocomplete="off" required>
+          <button id="submit" class="submit" type="submit">찾아보기</button>
+        </div>
+        <div class="controls">
+          <label>사용자
+            <select id="user" name="user_id">
+              <option value="u_alice">u_alice · 160개</option>
+              <option value="u_bob">u_bob · 30개</option>
+              <option value="u_carol">u_carol · 10개</option>
+            </select>
+          </label>
+          <label>기준 시각
+            <input id="now" class="now-input" name="now" type="text"
+                   value="2026-10-15T12:00+09:00" spellcheck="false" required>
+          </label>
+        </div>
+      </form>
+
+      <div class="examples">
+        <p class="examples-title">이런 기억으로 시작해 보세요</p>
+        <div class="chip-list" aria-label="데모 질의">
+          <button class="chip" type="button">지난달 인스타에서 본 성수동 카페</button>
+          <button class="chip" type="button">작년 여름에 캡처해둔 제주 숙소</button>
+          <button class="chip" type="button">유툽에서 본 파스타 레시피 그거</button>
+          <button class="chip" type="button">과제에 쓰려던 기후변화 논문</button>
+          <button class="chip" type="button">로우커피 핸드드립 원두</button>
+        </div>
+      </div>
+      <p id="status" class="status" role="status" aria-live="polite">질의를 입력하거나 예시를 골라 보세요.</p>
+    </section>
+
+    <nav class="journey" aria-label="검색 흐름">
+      <span id="step-input" class="step" aria-current="step">기억 입력</span>
+      <span id="step-understand" class="step">단서 해석</span>
+      <span id="step-results" class="step">저장물 도착</span>
+    </nav>
+
+    <div class="workspace">
+      <aside class="panel understanding" aria-labelledby="understanding-title">
+        <div class="panel-head">
+          <h2 id="understanding-title">질의 해석</h2>
+          <span>기억의 단서</span>
+        </div>
+        <div id="facts" class="empty-copy">검색하면 기간, 플랫폼과 핵심 단서를 여기에 정리해 드려요.</div>
+      </aside>
+
+      <section class="results" aria-labelledby="results-title">
+        <div class="results-head">
+          <h2 id="results-title">검색 결과</h2>
+          <span id="timing" class="timing"></span>
+        </div>
+        <div id="result-list" class="result-list">
+          <div class="empty-results">
+            <strong>아직 검색 전이에요.</strong>
+            <p>기억나는 표현을 편하게 적어 보세요.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <details id="trace" class="panel trace" open hidden>
+      <summary>
+        <h2>검색 과정</h2>
+        <span id="trace-meta" class="trace-meta"></span>
+      </summary>
+      <div class="trace-body">
+        <div class="trace-tools">
+          <button type="button" id="trace-expand">모두 펼치기</button>
+          <button type="button" id="trace-collapse">묶음 접기</button>
+        </div>
+        <ol id="trace-steps" class="steps" aria-label="검색 단계 요약"></ol>
+        <div id="trace-groups"></div>
+      </div>
+    </details>
+
+    <p class="draft-note">골든 데이터는 초안, 사용자 검수 전입니다. 이 화면은 dev 전용 로컬 데모입니다.</p>
+  </main>
+
+  <script>
+    const form = document.querySelector('#search-form');
+    const queryInput = document.querySelector('#query');
+    const userInput = document.querySelector('#user');
+    const nowInput = document.querySelector('#now');
+    const submitButton = document.querySelector('#submit');
+    const status = document.querySelector('#status');
+    let facts = document.querySelector('#facts');
+    let resultList = document.querySelector('#result-list');
+    const timing = document.querySelector('#timing');
+    const journeySteps = document.querySelectorAll('.step');
+
+    const element = (tag, className, text) => {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== undefined && text !== null) node.textContent = text;
+      return node;
+    };
+
+    const dateOnly = (value) => value ? value.slice(0, 10) : '';
+    const joinOrNone = (items) => items.length ? items.join(', ') : '없음';
+
+    function tokenList(items) {
+      const wrap = element('div', 'tokens');
+      if (!items.length) {
+        wrap.append(element('span', '', '없음'));
+        return wrap;
+      }
+      items.forEach((item) => wrap.append(element('span', 'token', item)));
+      return wrap;
+    }
+
+    function factRow(label, content) {
+      const row = element('div', 'fact');
+      row.append(element('dt', '', label));
+      const value = element('dd');
+      value.append(content instanceof Node ? content : document.createTextNode(content));
+      row.append(value);
+      return row;
+    }
+
+    function renderUnderstanding(data) {
+      const u = data.understanding;
+      const list = element('dl', 'facts');
+      list.append(factRow('의도', u.intent === 'browse' ? '모아보기' : '찾기'));
+      const period = u.time_range
+        ? [
+            u.time_range.expression,
+            `${dateOnly(u.time_range.start)} ~ ${dateOnly(u.time_range.end)}`,
+            u.time_range.fuzzy ? '근사' : '',
+          ].filter(Boolean).join(' · ')
+        : '없음';
+      list.append(factRow('기간', period));
+      const windowText = u.time_window
+        ? `${dateOnly(u.time_window.start)} ~ ${dateOnly(u.time_window.end)}`
+        : '없음';
+      list.append(factRow('필터 창', windowText));
+      list.append(factRow('플랫폼', joinOrNone(u.platforms.map((x) => `${x.label} · ${x.strength}`))));
+      list.append(factRow('유형', joinOrNone(u.content_types.map((x) => `${x.label} · ${x.strength}`))));
+      list.append(factRow('키워드', tokenList(u.keywords)));
+      if (u.purpose_terms.length) list.append(factRow('목적', tokenList(u.purpose_terms)));
+      list.append(factRow('의미 질의', u.semantic_query || '없음'));
+      facts.replaceWith(list);
+      list.id = 'facts';
+      facts = list;
+    }
+
+    function renderResults(data) {
+      const list = element('div', 'result-list fresh');
+      list.id = 'result-list';
+      if (!data.results.length) {
+        const empty = element('div', 'empty-results');
+        empty.append(element('strong', '', data.empty_state?.message || '다른 표현으로 다시 찾아볼까요?'));
+        empty.append(element('p', '', '기간이나 플랫폼 표현을 빼고 다시 검색해 보세요.'));
+        if (data.empty_state?.suggestions?.length) {
+          const suggestions = element('ul', 'suggestions');
+          data.empty_state.suggestions.forEach((suggestion) => {
+            suggestions.append(element('li', 'suggestion', suggestion.label));
+          });
+          empty.append(suggestions);
+        }
+        if (data.applied_relaxations?.length) {
+          empty.append(element('p', 'relaxed-note', `시도한 완화: ${data.applied_relaxations.join(', ')}`));
+        }
+        list.append(empty);
+      } else {
+        if (data.browse) {
+          list.append(element('p', 'browse-note', '둘러보기 결과 · 선택한 조건의 저장물을 최신순으로 보여드려요.'));
+        }
+        data.results.forEach((item) => {
+          const card = element('article', 'result-card');
+          card.append(element('div', 'rank', String(item.rank)));
+          const body = element('div');
+          const top = element('div', 'result-top');
+          const title = element('h3', '', item.title);
+          top.append(title, element('span', 'score', `score ${item.score.toFixed(4)}`));
+          body.append(top);
+          const metaText = `${item.platform_label} · ${item.content_type_label} · 저장 ${dateOnly(item.saved_at)}`;
+          const meta = element('p', 'meta', metaText);
+          if (!item.original_available) meta.append(element('span', 'deleted', ' · 원본 삭제됨'));
+          body.append(meta);
+          if (item.relaxed) body.append(element('p', 'relaxed-note', '검색 조건을 넓혀 찾은 결과'));
+          if (item.summary) body.append(element('p', 'summary', item.summary));
+          if (item.tags.length) {
+            const tags = element('div', 'tag-row');
+            item.tags.forEach((tag) => tags.append(element('span', 'tag', tag)));
+            body.append(tags);
+          }
+          if (item.reasons.length) {
+            const reasons = element('div', 'reason-row');
+            item.reasons.forEach((reason) => {
+              const detail = reason.terms.length ? reason.terms.join(', ') : reason.detail;
+              reasons.append(element('span', 'reason', detail ? `${reason.label} · ${detail}` : reason.label));
+            });
+            body.append(reasons);
+          }
+          card.append(body);
+          list.append(card);
+        });
+      }
+      resultList.replaceWith(list);
+      resultList = list;
+      timing.textContent = `${data.results.length}건 · ${Number(data.timing_ms.total || 0).toFixed(1)}ms`;
+    }
+
+    // ---- 검색 과정: 모든 값은 응답의 trace(SearchService explain 결과)에서 읽는다. ----
+    const tracePanel = document.querySelector('#trace');
+    const traceSteps = document.querySelector('#trace-steps');
+    let traceGroups = document.querySelector('#trace-groups');
+    const traceMeta = document.querySelector('#trace-meta');
+    const TABLE_LIMIT = 10;
+
+    const ms = (value) => (value === null || value === undefined ? '—' : `${Number(value).toFixed(2)}ms`);
+    const num = (value, digits = 4) => (value === null || value === undefined ? '—' : Number(value).toFixed(digits));
+    const listText = (items) => (items && items.length ? items.join(', ') : '없음');
+    const jsonText = (value) => (value === null || value === undefined ? '없음' : JSON.stringify(value, null, 2));
+
+    function kv(rows) {
+      const dl = element('dl', 'kv');
+      rows.forEach(([label, value]) => {
+        dl.append(element('dt', '', label));
+        const dd = element('dd');
+        dd.append(value instanceof Node ? value : document.createTextNode(String(value)));
+        dl.append(dd);
+      });
+      return dl;
+    }
+
+    function pre(value) {
+      return element('pre', 'json', jsonText(value));
+    }
+
+    function table(headers, rows, rowClass) {
+      const build = (slice) => {
+        const t = element('table', 'tbl');
+        const head = element('tr');
+        headers.forEach((h) => head.append(element('th', '', h.label)));
+        const thead = element('thead');
+        thead.append(head);
+        const tbody = element('tbody');
+        slice.forEach((row) => {
+          const tr = element('tr', rowClass ? rowClass(row) : '');
+          headers.forEach((h) => {
+            const v = h.get(row);
+            const td = element('td', h.num ? 'num' : '');
+            td.append(v instanceof Node ? v : document.createTextNode(v === null || v === undefined ? '—' : String(v)));
+            tr.append(td);
+          });
+          tbody.append(tr);
+        });
+        t.append(thead, tbody);
+        const wrap = element('div', 'tbl-wrap');
+        wrap.append(t);
+        return wrap;
+      };
+      const box = element('div');
+      if (!rows.length) {
+        box.append(element('p', 'empty-copy', '후보 없음'));
+        return box;
+      }
+      box.append(build(rows.slice(0, TABLE_LIMIT)));
+      if (rows.length > TABLE_LIMIT) {
+        const more = element('details', 'more');
+        more.append(element('summary', '', `나머지 ${rows.length - TABLE_LIMIT}개 펼치기`));
+        more.append(build(rows.slice(TABLE_LIMIT)));
+        box.append(more);
+      }
+      return box;
+    }
+
+    function sub(title, timing, ...children) {
+      const box = element('div', 'sub');
+      const h = element('h4', '', title);
+      if (timing !== undefined) h.append(element('span', 'ms', timing));
+      box.append(h, ...children);
+      return box;
+    }
+
+    function group(no, title, hint, ...children) {
+      const d = element('details', 'trace-group');
+      d.open = true;
+      const s = element('summary');
+      s.append(element('b', '', `${no}. ${title}`), element('span', '', hint));
+      const body = element('div', 'group-body');
+      body.append(...children);
+      d.append(s, body);
+      return d;
+    }
+
+    function selectedPlan(plans) {
+      return plans.find((p) => p.selected) || plans.find((p) => p.plan_id === 'strict') || plans[0] || null;
+    }
+
+    const titleCell = (row) => `${row.title} (${row.content_id})`;
+
+    function retrievalBlock(plan) {
+      const grid = element('div', 'retr-grid');
+      plan.retrievers.forEach((r) => {
+        const label = r.name === 'vector' ? '벡터 (유사도)' : r.name === 'morph' ? 'BM25F 형태소' : r.name === 'ngram' ? 'BM25F n-gram' : r.name;
+        grid.append(sub(`${label} · 후보 ${r.candidate_count}개`, undefined, table([
+          { label: '순위', get: (c) => c.rank, num: true },
+          { label: '문서', get: titleCell },
+          { label: '점수', get: (c) => num(c.score), num: true },
+          { label: '일치 필드', get: (c) => Object.keys(c.matched_fields).join(', ') || '—' },
+        ], r.candidates)));
+      });
+      return grid;
+    }
+
+    function fusionTable(plan) {
+      return table([
+        { label: '순위', get: (c) => c.rank, num: true },
+        { label: '문서', get: titleCell },
+        { label: 'RRF', get: (c) => num(c.rrf_score, 5), num: true },
+        { label: '형태소', get: (c) => c.ranks.morph ?? '—', num: true },
+        { label: 'n-gram', get: (c) => c.ranks.ngram ?? '—', num: true },
+        { label: '벡터', get: (c) => c.ranks.vector ?? '—', num: true },
+        { label: '벡터 유사도', get: (c) => (c.raw_scores.vector === undefined ? '—' : num(c.raw_scores.vector)), num: true },
+      ], plan.candidates);
+    }
+
+    function renderTrace(data) {
+      const t = data.trace;
+      const ev = t.evidence;
+      const an = t.analysis;
+      const pp = t.preprocessing;
+      const mp = t.model_processing;
+      const log = t.execution_log;
+      const u = an.understanding.value;
+      const strictFilter = ev.filtering.plans.find((p) => p.plan_id === 'strict');
+      const retrPlan = selectedPlan(ev.retrieval.plans);
+      const fusePlan = selectedPlan(ev.fusion.plans);
+      const counts = retrPlan ? retrPlan.retrievers.map((r) => `${r.name} ${r.candidate_count}`).join(' · ') : '건너뜀';
+      const statusOf = (stage) => (log.entries.find((e) => e.stage === stage) || {}).status || '';
+      const facets = [...u.platforms, ...u.content_types].map((f) => `${f.label}:${f.strength}`);
+
+      const steps = [
+        [pp.normalization, `교정 ${pp.normalization.corrections.length}건`, 'temporal_parse'],
+        [an.understanding, `${u.intent} · ${u.time_range ? u.time_range.expression : '기간 없음'}${facets.length ? ' · ' + facets.join(', ') : ''}`, 'intent_classify'],
+        [ev.filtering, `${ev.filtering.isolated_user_id} · strict 대상 ${strictFilter ? strictFilter.eligible_document_count : '—'}건 · 계획 ${ev.filtering.plans.length}개`, 'filter_resolution'],
+        [ev.retrieval, retrPlan ? `${retrPlan.plan_id}: ${counts}` : '건너뜀 (둘러보기)', 'bm25f_retrieve'],
+        [ev.fusion, `${ev.fusion.method} k=${ev.fusion.k} · ${fusePlan ? fusePlan.candidate_count : 0}개`, 'fusion'],
+        [ev.reranking, `전체 계획 후보 ${ev.reranking.candidate_count} · 통과 ${ev.reranking.passed_count} / 탈락 ${ev.reranking.rejected_count}`, 'relevance_gate'],
+        [ev.relaxation, `${ev.relaxation.selected_plan_id || '선택 없음'} · ${ev.relaxation.applied_relaxations.length ? ev.relaxation.applied_relaxations.join(', ') : '완화 없음'}`, 'relaxation'],
+        [mp.cross_reranker, mp.cross_reranker.used ? `사용 (${mp.cross_reranker.status})` : `꺼짐 (${mp.cross_reranker.enabled ? mp.cross_reranker.status || '미실행' : 'disabled'})`, 'cross_rerank'],
+        [an.final, `${an.final.result_count}건`, 'finalize'],
+      ];
+      traceSteps.replaceChildren();
+      steps.forEach(([step, key, stage]) => {
+        const li = element('li', `step-card state-${statusOf(stage)}`);
+        li.append(
+          element('span', 'no', String(step.number).padStart(2, '0')),
+          element('span', 'name', step.title),
+          element('span', 'key', key),
+          element('span', 'ms', `${ms(step.timing_ms)} · ${step.timing_scope}`),
+        );
+        traceSteps.append(li);
+      });
+      const timeCard = element('li', 'step-card');
+      timeCard.append(
+        element('span', 'no', '10'),
+        element('span', 'name', '단계별 소요 시간'),
+        element('span', 'key', Object.entries(t.timing_ms).filter(([k]) => k !== 'total').map(([k, v]) => `${k} ${Number(v).toFixed(1)}`).join(' · ')),
+        element('span', 'ms', `total ${ms(t.timing_ms.total)}`),
+      );
+      traceSteps.append(timeCard);
+
+      // 1) 입력
+      const g1 = group(1, '입력', '원본 질의 · 사용자 · 기준 시각', kv([
+        ['원본 질의', t.input_data.query],
+        ['사용자 (격리 범위)', t.input_data.user_id],
+        ['기준 시각', t.input_data.now],
+      ]));
+
+      // 2) 전처리
+      const corr = pp.normalization.corrections;
+      const g2 = group(2, '전처리', 'normalize_text · 오타 교정 · Kiwi 형태소 · n-gram',
+        sub(pp.normalization.title, ms(pp.normalization.timing_ms) + ' (질의 이해 구간 공유)', kv([
+          ['원문', pp.normalization.original],
+          ['normalize_text 결과', pp.normalization.normalized],
+          ['교정 전 (Kiwi 키워드)', listText(pp.correction_before)],
+          ['교정 후', listText(pp.correction_after)],
+          ['교정 내역', corr.length ? corr.map((c) => `${c.source} → ${c.corrected} (${c.kind}, ${num(c.confidence, 3)}, ${c.evidence.join('/') || '근거 없음'})`).join(' ; ') : '없음'],
+          ['BM25F 형태소 질의 토큰', tokenList(pp.morph_tokens)],
+          ['BM25F n-gram 질의 토큰', tokenList(pp.ngram_tokens)],
+        ])));
+
+      // 3) 모델 처리
+      const g3 = group(3, '모델 처리', '사용한 구성 요소 · 모델 · 모드 · 입력/출력',
+        table([
+          { label: '단계', get: (c) => c.stage },
+          { label: '구성 요소', get: (c) => c.component || '없음' },
+          { label: '모델/버전', get: (c) => c.model || '—' },
+          { label: '모드·차원', get: (c) => [c.provider_mode, c.mode, c.dimension ? `${c.dimension}d` : null, c.minimum_relevance_gain !== null ? `min_gain ${c.minimum_relevance_gain}` : null].filter(Boolean).join(' · ') || '—' },
+          { label: '상태', get: (c) => c.status },
+          { label: '시간 구간', get: (c) => c.timing_key || '—' },
+        ], mp.components),
+        (() => {
+          const more = element('details', 'more');
+          more.append(element('summary', '', '단계별 입력·출력 원본 펼치기'));
+          mp.components.forEach((c) => more.append(sub(c.stage, undefined, kv([['입력', pre(c.input)], ['출력', pre(c.output)]]))));
+          return more;
+        })(),
+        sub(mp.cross_reranker.title, ms(mp.cross_reranker.timing_ms), kv([
+          ['구성됨', mp.cross_reranker.configured ? '예' : '아니오'],
+          ['켜짐', mp.cross_reranker.enabled ? '예' : '아니오 (기본 꺼짐)'],
+          ['사용', mp.cross_reranker.used ? '예' : '아니오'],
+          ['상태', mp.cross_reranker.status || '실행 안 함'],
+        ])));
+
+      // 4) 분석 결과
+      const g4 = group(4, '분석 결과', '질의 이해 · 최종 결과',
+        sub(an.understanding.title, ms(an.understanding.timing_ms) + ' (질의 이해 구간)', kv([
+          ['의도', u.intent],
+          ['기간 표현', u.time_range ? `${u.time_range.expression}${u.time_range.fuzzy ? ' (근사)' : ''}` : '없음'],
+          ['기간', u.time_range ? `${u.time_range.start} ~ ${u.time_range.end}` : '없음'],
+          ['계산된 기간 창', u.time_window ? `${u.time_window.start} ~ ${u.time_window.end}` : '없음'],
+          ['플랫폼 facet', listText(u.platforms.map((f) => `${f.label}(${f.value}) · ${f.strength}`))],
+          ['유형 facet', listText(u.content_types.map((f) => `${f.label}(${f.value}) · ${f.strength}`))],
+          ['키워드', tokenList(u.keywords)],
+          ['목적어', tokenList(u.purpose_terms)],
+          ['의미 질의', u.semantic_query || '없음'],
+          ['경고', listText(an.understanding.warnings)],
+        ])),
+        sub(`${an.final.title} · ${an.final.result_count}건`, ms(an.final.timing_ms), table([
+          { label: '순위', get: (r) => r.rank, num: true },
+          { label: '문서', get: titleCell },
+          { label: '점수', get: (r) => num(r.score), num: true },
+          { label: '완화', get: (r) => (r.relaxed ? '예' : '아니오') },
+          { label: '매칭 이유', get: (r) => r.reasons.map((x) => `${x.label}${x.terms.length ? ':' + x.terms.join(',') : x.detail ? ':' + x.detail : ''}`).join(' · ') || '—' },
+        ], an.final.results)));
+
+      // 5) 근거
+      const otherPlans = (plans, render) => {
+        const rest = plans.filter((p) => p !== selectedPlan(plans));
+        if (!rest.length) return element('span');
+        const more = element('details', 'more');
+        more.append(element('summary', '', `다른 완화 계획 ${rest.length}개 펼치기`));
+        rest.forEach((p) => more.append(sub(`계획 ${p.plan_id}`, undefined, render(p))));
+        return more;
+      };
+      const rr = ev.reranking;
+      const g5 = group(5, '근거', 'BM25·벡터 순위 · RRF · 특징값 · 게이트 · 완화 결정',
+        sub(`${ev.filtering.title} · 사용자 ${ev.filtering.isolated_user_id}`, ms(ev.filtering.timing_ms), table([
+          { label: '계획', get: (p) => p.plan_id },
+          { label: '선택', get: (p) => (p.selected ? '선택' : '') },
+          { label: '허용 완화', get: (p) => listText(p.allowed_relaxations) },
+          { label: 'hard 필터', get: (p) => element('span', 'mono', JSON.stringify(p.hard_filter)) },
+          { label: '대상 문서 수', get: (p) => p.eligible_document_count, num: true },
+        ], ev.filtering.plans, (p) => (p.selected ? 'sel' : ''))),
+        sub(`${ev.retrieval.title}${retrPlan ? ' · 계획 ' + retrPlan.plan_id : ''}`, ms(ev.retrieval.timing_ms),
+          retrPlan ? retrievalBlock(retrPlan) : element('p', 'empty-copy', '필터 전용 둘러보기라 후보 검색을 건너뛰었어요.'),
+          otherPlans(ev.retrieval.plans, retrievalBlock)),
+        sub(`${ev.fusion.title} · ${ev.fusion.method} k=${ev.fusion.k} · 가중치 ${Object.entries(ev.fusion.weights).map(([k, v]) => `${k}=${v}`).join(', ')}${fusePlan ? ' · 계획 ' + fusePlan.plan_id : ''}`, ms(ev.fusion.timing_ms),
+          fusePlan ? fusionTable(fusePlan) : element('p', 'empty-copy', '건너뜀'),
+          otherPlans(ev.fusion.plans, fusionTable)),
+        sub(`${rr.title} · 후보 ${rr.candidate_count} · 통과 ${rr.passed_count} · 탈락 ${rr.rejected_count}`, ms(rr.timing_ms), table([
+          { label: '순위', get: (c) => c.rank, num: true },
+          { label: '문서', get: titleCell },
+          { label: '관련도', get: (c) => num(c.final_score), num: true },
+          { label: '의미', get: (c) => num(c.features.semantic_raw), num: true },
+          { label: '원형 어휘', get: (c) => num(c.features.original_lexical), num: true },
+          { label: '교정 어휘', get: (c) => num(c.features.canonical_lexical), num: true },
+          { label: '구문', get: (c) => num(c.features.phrase), num: true },
+          { label: '목적', get: (c) => num(c.features.purpose), num: true },
+          { label: 'facet 비용', get: (c) => num(c.features.facet_cost), num: true },
+          { label: '효용', get: (c) => num(c.features.utility), num: true },
+          { label: '게이트', get: (c) => (c.gate ? element('span', c.gate.accepted ? 'ok' : 'no-pass', `${c.gate.accepted ? '통과' : '탈락'} · ${c.gate.reason} (≥${num(c.gate.threshold, 3)}, ${c.gate.evidence_profile})`) : '—') },
+          { label: '최종 선택', get: (c) => (c.selected ? '선택' : '') },
+        ], rr.candidates, (c) => (c.selected ? 'sel' : ''))),
+        sub(`${ev.relaxation.title} · 선택 계획 ${ev.relaxation.selected_plan_id || '없음'} · 적용 완화 ${listText(ev.relaxation.applied_relaxations)} · 이유 ${ev.relaxation.reason}`, ms(ev.relaxation.timing_ms), table([
+          { label: '계획', get: (a) => a.plan_id },
+          { label: '검색 후보', get: (a) => a.retrieved_candidate_count, num: true },
+          { label: '범위 내', get: (a) => a.candidate_count, num: true },
+          { label: '게이트 통과', get: (a) => a.eligible_count, num: true },
+          { label: '1위', get: (a) => a.top_id || '—' },
+          { label: '채택', get: (a) => (a.accepted ? '예' : '아니오') },
+          { label: '이유', get: (a) => a.reason },
+          { label: '게이트 탈락 사유', get: (a) => (a.gate_rejections || []).map((g) => `${g.reason}×${g.count}`).join(', ') || '—' },
+        ], ev.relaxation.attempted_plans, (a) => (a.plan_id === ev.relaxation.selected_plan_id ? 'sel' : ''))));
+
+      // 6) 실행 로그
+      const g6 = group(6, '실행 로그', '단계별 상태 · timing_ms · degraded · 오류',
+        table([
+          { label: '단계', get: (e) => e.stage },
+          { label: '상태', get: (e) => element('span', e.status === 'success' ? 'ok' : e.status === 'skipped' ? '' : 'no-pass', e.status + (e.detail ? `:${e.detail}` : '')) },
+          { label: '시간 구간', get: (e) => e.timing_key || '—' },
+          { label: 'timing_ms', get: (e) => ms(e.timing_ms), num: true },
+        ], log.entries),
+        kv([
+          ['degraded', log.degraded ? `예 (${listText(log.degraded_reasons)})` : '아니오'],
+          ['오류', listText(log.errors)],
+          ['timing_ms 원본', element('span', 'mono', Object.entries(t.timing_ms).map(([k, v]) => `${k}=${v}`).join('  '))],
+        ]));
+
+      const groups = element('div');
+      groups.id = 'trace-groups';
+      groups.append(g1, g2, g3, g4, g5, g6);
+      traceGroups.replaceWith(groups);
+      traceGroups = groups;
+      traceMeta.textContent = `${t.input_data.user_id} · 총 ${ms(t.timing_ms.total)} · 결과 ${an.final.result_count}건`;
+      tracePanel.hidden = false;
+    }
+
+    const setAll = (open, selector) => tracePanel.querySelectorAll(selector).forEach((d) => { d.open = open; });
+    document.querySelector('#trace-expand').addEventListener('click', () => setAll(true, 'details'));
+    document.querySelector('#trace-collapse').addEventListener('click', () => setAll(false, '.trace-group'));
+    window.addEventListener('beforeprint', () => { tracePanel.open = true; setAll(true, '.trace-group'); });
+
+    async function runSearch() {
+      const query = queryInput.value.trim();
+      if (!query) {
+        status.className = 'status error';
+        status.textContent = '기억나는 단어를 하나 이상 입력해 주세요.';
+        queryInput.focus();
+        return;
+      }
+      submitButton.disabled = true;
+      submitButton.textContent = '찾는 중…';
+      status.className = 'status';
+      status.textContent = '저장물과 기억의 단서를 맞춰 보고 있어요.';
+      try {
+        const response = await fetch('/demo/search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query, user_id: userInput.value, now: nowInput.value }),
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          const message = data.error?.message || data.detail?.[0]?.msg || '검색 요청을 처리하지 못했어요.';
+          throw new Error(message);
+        }
+        renderUnderstanding(data);
+        renderResults(data);
+        renderTrace(data);
+        document.body.classList.add('has-results');
+        journeySteps.forEach((step) => step.removeAttribute('aria-current'));
+        document.querySelector('#step-results').setAttribute('aria-current', 'step');
+        status.textContent = data.degraded
+          ? `일부 검색 기능을 건너뛰었어요: ${data.degraded_reasons.join(', ')}`
+          : data.browse
+            ? `${userInput.value}의 저장물을 조건에 맞춰 둘러보고 있어요.`
+            : `${userInput.value}의 저장물에서 검색했어요.`;
+        if (window.matchMedia('(max-width: 760px)').matches) {
+          requestAnimationFrame(() => {
+            document.querySelector('.journey').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        }
+      } catch (error) {
+        status.className = 'status error';
+        status.textContent = `${error.message} 입력값을 확인하고 다시 시도해 주세요.`;
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = '찾아보기';
+      }
+    }
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      runSearch();
+    });
+
+    document.querySelectorAll('.chip').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        queryInput.value = chip.textContent;
+        runSearch();
+      });
+    });
+  </script>
+</body>
+</html>

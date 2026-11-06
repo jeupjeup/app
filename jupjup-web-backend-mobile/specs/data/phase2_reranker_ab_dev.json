@@ -1,0 +1,535 @@
+{
+ "config": {
+  "mode": "recorded",
+  "split": "dev",
+  "arms": [
+   {
+    "name": "A0",
+    "cross_rerank": false,
+    "query_assist": false,
+    "search_overrides": {}
+   },
+   {
+    "name": "A1",
+    "cross_rerank": true,
+    "query_assist": false,
+    "search_overrides": {}
+   }
+  ],
+  "bootstrap_iterations": 1000,
+  "bootstrap_seed": 20261030,
+  "baseline_arm": "A0"
+ },
+ "comparisons": [
+  {
+   "baseline": "A0",
+   "candidate": "A1",
+   "deltas": [
+    {
+     "metric": "recall@10",
+     "delta": -0.031513,
+     "ci_low": -0.065126,
+     "ci_high": -0.006303,
+     "wins": 0,
+     "losses": 5,
+     "ties": 114,
+     "sign_test_p": 0.0625
+    },
+    {
+     "metric": "mrr@10",
+     "delta": -0.02521,
+     "ci_low": -0.058824,
+     "ci_high": 0.0,
+     "wins": 0,
+     "losses": 3,
+     "ties": 116,
+     "sign_test_p": 0.25
+    },
+    {
+     "metric": "ndcg@10",
+     "delta": -0.026646,
+     "ci_low": -0.060187,
+     "ci_high": -0.001384,
+     "wins": 1,
+     "losses": 9,
+     "ties": 109,
+     "sign_test_p": 0.021484
+    },
+    {
+     "metric": "success@1",
+     "delta": -0.02521,
+     "ci_low": -0.058824,
+     "ci_high": 0.0,
+     "wins": 0,
+     "losses": 3,
+     "ties": 116,
+     "sign_test_p": 0.25
+    },
+    {
+     "metric": "true_empty",
+     "delta": 0.0,
+     "ci_low": 0.0,
+     "ci_high": 0.0,
+     "wins": 0,
+     "losses": 0,
+     "ties": 15,
+     "sign_test_p": 1.0
+    },
+    {
+     "metric": "false_empty",
+     "delta": 0.016807,
+     "ci_low": 0.0,
+     "ci_high": 0.042017,
+     "wins": 2,
+     "losses": 0,
+     "ties": 117,
+     "sign_test_p": 0.5
+    }
+   ],
+   "subset_deltas": {
+    "challenge": [
+     {
+      "metric": "recall@10",
+      "delta": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "ties": 14,
+      "sign_test_p": 1.0
+     },
+     {
+      "metric": "mrr@10",
+      "delta": -0.035714,
+      "ci_low": -0.107143,
+      "ci_high": 0.0,
+      "wins": 0,
+      "losses": 1,
+      "ties": 13,
+      "sign_test_p": 1.0
+     },
+     {
+      "metric": "ndcg@10",
+      "delta": -0.023663,
+      "ci_low": -0.079086,
+      "ci_high": 0.008099,
+      "wins": 1,
+      "losses": 1,
+      "ties": 12,
+      "sign_test_p": 1.0
+     },
+     {
+      "metric": "success@1",
+      "delta": -0.071429,
+      "ci_low": -0.214286,
+      "ci_high": 0.0,
+      "wins": 0,
+      "losses": 1,
+      "ties": 13,
+      "sign_test_p": 1.0
+     },
+     {
+      "metric": "true_empty",
+      "delta": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "ties": 2,
+      "sign_test_p": 1.0
+     },
+     {
+      "metric": "false_empty",
+      "delta": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "ties": 14,
+      "sign_test_p": 1.0
+     }
+    ]
+   },
+   "category_deltas": {
+    "ambiguous": -0.115385,
+    "colloquial": -0.013889,
+    "content_type": -0.030303,
+    "exact": 0.0,
+    "filter_conflict": 0.0,
+    "isolation": 0.0,
+    "multi": -0.04,
+    "platform": 0.0,
+    "purpose": 0.0,
+    "semantic": -0.160714,
+    "temporal": 0.0,
+    "typo": 0.0
+   },
+   "candidate_absolute": {
+    "challenge_positive_recall@10": 0.940476,
+    "challenge_negative_true_empty": 1.0,
+    "isolation_violations": 0.0,
+    "filter_violations": 0.0
+   },
+   "candidate_gate_passed": false,
+   "changed_queries": [
+    {
+     "query_id": "ch_0001",
+     "query": "IG에서 본 coffee shop dessert 그거",
+     "metric": "mrr@10",
+     "baseline": 1.0,
+     "candidate": 0.5,
+     "baseline_top": "c_alice_0001",
+     "candidate_top": "c_alice_0036"
+    },
+    {
+     "query_id": "ch_0001",
+     "query": "IG에서 본 coffee shop dessert 그거",
+     "metric": "ndcg@10",
+     "baseline": 1.0,
+     "candidate": 0.6309297535714575,
+     "baseline_top": "c_alice_0001",
+     "candidate_top": "c_alice_0036"
+    },
+    {
+     "query_id": "ch_0001",
+     "query": "IG에서 본 coffee shop dessert 그거",
+     "metric": "success@1",
+     "baseline": 1.0,
+     "candidate": 0.0,
+     "baseline_top": "c_alice_0001",
+     "candidate_top": "c_alice_0036"
+    },
+    {
+     "query_id": "ch_0004",
+     "query": "과제용 기후위기 페이퍼 모아둔 거",
+     "metric": "ndcg@10",
+     "baseline": 0.9421945763140684,
+     "candidate": 0.9799889788426704,
+     "baseline_top": "c_alice_0096",
+     "candidate_top": "c_alice_0096"
+    },
+    {
+     "query_id": "q_0021",
+     "query": "그 영화 예매했던 거",
+     "metric": "recall@10",
+     "baseline": 1.0,
+     "candidate": 0.5,
+     "baseline_top": "c_alice_0147",
+     "candidate_top": "c_alice_0147"
+    },
+    {
+     "query_id": "q_0021",
+     "query": "그 영화 예매했던 거",
+     "metric": "ndcg@10",
+     "baseline": 1.0,
+     "candidate": 0.9173194127129571,
+     "baseline_top": "c_alice_0147",
+     "candidate_top": "c_alice_0147"
+    },
+    {
+     "query_id": "q_0026",
+     "query": "언젠가 저장한 선크림",
+     "metric": "recall@10",
+     "baseline": 1.0,
+     "candidate": 0.0,
+     "baseline_top": "c_alice_0022",
+     "candidate_top": null
+    },
+    {
+     "query_id": "q_0026",
+     "query": "언젠가 저장한 선크림",
+     "metric": "mrr@10",
+     "baseline": 1.0,
+     "candidate": 0.0,
+     "baseline_top": "c_alice_0022",
+     "candidate_top": null
+    },
+    {
+     "query_id": "q_0026",
+     "query": "언젠가 저장한 선크림",
+     "metric": "ndcg@10",
+     "baseline": 1.0,
+     "candidate": 0.0,
+     "baseline_top": "c_alice_0022",
+     "candidate_top": null
+    },
+    {
+     "query_id": "q_0026",
+     "query": "언젠가 저장한 선크림",
+     "metric": "success@1",
+     "baseline": 1.0,
+     "candidate": 0.0,
+     "baseline_top": "c_alice_0022",
+     "candidate_top": null
+    },
+    {
+     "query_id": "q_0026",
+     "query": "언젠가 저장한 선크림",
+     "metric": "false_empty",
+     "baseline": 0.0,
+     "candidate": 1.0,
+     "baseline_top": "c_alice_0022",
+     "candidate_top": null
+    },
+    {
+     "query_id": "q_0061",
+     "query": "까페 추천 저장한 거 다 보여줘",
+     "metric": "ndcg@10",
+     "baseline": 0.6263382675224426,
+     "candidate": 0.6778125180380269,
+     "baseline_top": "c_alice_0032",
+     "candidate_top": "c_alice_0032"
+    },
+    {
+     "query_id": "q_0064",
+     "query": "인스타 감성 카페",
+     "metric": "recall@10",
+     "baseline": 1.0,
+     "candidate": 0.75,
+     "baseline_top": "c_alice_0002",
+     "candidate_top": "c_alice_0002"
+    },
+    {
+     "query_id": "q_0064",
+     "query": "인스타 감성 카페",
+     "metric": "ndcg@10",
+     "baseline": 0.9701406173883328,
+     "candidate": 0.9047037093444522,
+     "baseline_top": "c_alice_0002",
+     "candidate_top": "c_alice_0002"
+    },
+    {
+     "query_id": "q_0072",
+     "query": "데이트하러 갈 만한 데 저장한 거",
+     "metric": "ndcg@10",
+     "baseline": 0.9631405415421671,
+     "candidate": 0.943624545688305,
+     "baseline_top": "c_alice_0034",
+     "candidate_top": "c_alice_0034"
+    },
+    {
+     "query_id": "q_0160",
+     "query": "성수 커피숍",
+     "metric": "ndcg@10",
+     "baseline": 0.9436867180363001,
+     "candidate": 0.906112309270356,
+     "baseline_top": "c_alice_0031",
+     "candidate_top": "c_alice_0031"
+    },
+    {
+     "query_id": "q_0162",
+     "query": "스파게티 만드는 법",
+     "metric": "recall@10",
+     "baseline": 1.0,
+     "candidate": 0.0,
+     "baseline_top": "c_alice_0041",
+     "candidate_top": null
+    },
+    {
+     "query_id": "q_0162",
+     "query": "스파게티 만드는 법",
+     "metric": "mrr@10",
+     "baseline": 1.0,
+     "candidate": 0.0,
+     "baseline_top": "c_alice_0041",
+     "candidate_top": null
+    },
+    {
+     "query_id": "q_0162",
+     "query": "스파게티 만드는 법",
+     "metric": "ndcg@10",
+     "baseline": 1.0,
+     "candidate": 0.0,
+     "baseline_top": "c_alice_0041",
+     "candidate_top": null
+    },
+    {
+     "query_id": "q_0162",
+     "query": "스파게티 만드는 법",
+     "metric": "success@1",
+     "baseline": 1.0,
+     "candidate": 0.0,
+     "baseline_top": "c_alice_0041",
+     "candidate_top": null
+    },
+    {
+     "query_id": "q_0162",
+     "query": "스파게티 만드는 법",
+     "metric": "false_empty",
+     "baseline": 0.0,
+     "candidate": 1.0,
+     "baseline_top": "c_alice_0041",
+     "candidate_top": null
+    },
+    {
+     "query_id": "q_0166",
+     "query": "지구온난화 연구",
+     "metric": "ndcg@10",
+     "baseline": 0.9798021136765694,
+     "candidate": 0.9655530723696182,
+     "baseline_top": "c_alice_0096",
+     "candidate_top": "c_alice_0096"
+    },
+    {
+     "query_id": "q_0167",
+     "query": "다리 운동 영상",
+     "metric": "recall@10",
+     "baseline": 1.0,
+     "candidate": 0.0,
+     "baseline_top": "c_alice_0040",
+     "candidate_top": "c_alice_0051"
+    },
+    {
+     "query_id": "q_0167",
+     "query": "다리 운동 영상",
+     "metric": "mrr@10",
+     "baseline": 1.0,
+     "candidate": 0.0,
+     "baseline_top": "c_alice_0040",
+     "candidate_top": "c_alice_0051"
+    },
+    {
+     "query_id": "q_0167",
+     "query": "다리 운동 영상",
+     "metric": "ndcg@10",
+     "baseline": 1.0,
+     "candidate": 0.0,
+     "baseline_top": "c_alice_0040",
+     "candidate_top": "c_alice_0051"
+    },
+    {
+     "query_id": "q_0167",
+     "query": "다리 운동 영상",
+     "metric": "success@1",
+     "baseline": 1.0,
+     "candidate": 0.0,
+     "baseline_top": "c_alice_0040",
+     "candidate_top": "c_alice_0051"
+    },
+    {
+     "query_id": "q_0186",
+     "query": "숙소 예약 캡처 전부",
+     "metric": "ndcg@10",
+     "baseline": 1.0,
+     "candidate": 0.9971445088258525,
+     "baseline_top": "c_alice_0129",
+     "candidate_top": "c_alice_0129"
+    }
+   ],
+   "top1_changes": [
+    {
+     "query_id": "ch_0001",
+     "query": "IG에서 본 coffee shop dessert 그거",
+     "metric": "top1",
+     "baseline": 0.0,
+     "candidate": 0.0,
+     "baseline_top": "c_alice_0001",
+     "candidate_top": "c_alice_0036"
+    },
+    {
+     "query_id": "q_0026",
+     "query": "언젠가 저장한 선크림",
+     "metric": "top1",
+     "baseline": 0.0,
+     "candidate": 1.0,
+     "baseline_top": "c_alice_0022",
+     "candidate_top": null
+    },
+    {
+     "query_id": "q_0162",
+     "query": "스파게티 만드는 법",
+     "metric": "top1",
+     "baseline": 0.0,
+     "candidate": 1.0,
+     "baseline_top": "c_alice_0041",
+     "candidate_top": null
+    },
+    {
+     "query_id": "q_0167",
+     "query": "다리 운동 영상",
+     "metric": "top1",
+     "baseline": 0.0,
+     "candidate": 0.0,
+     "baseline_top": "c_alice_0040",
+     "candidate_top": "c_alice_0051"
+    },
+    {
+     "query_id": "q_0185",
+     "query": "인공지능 관련 기사 다",
+     "metric": "top1",
+     "baseline": 0.0,
+     "candidate": 0.0,
+     "baseline_top": "c_alice_0094",
+     "candidate_top": "c_alice_0074"
+    }
+   ],
+   "rerank_status": {
+    "none": 8,
+    "scored": 150
+   },
+   "decision": {
+    "verdict": "REJECT",
+    "rules": [
+     {
+      "name": "1_absolute",
+      "passed": false,
+      "detail": "gate_passed=False challenge_positive_recall@10=0.940476 challenge_negative_true_empty=1.0 isolation_violations=0.0 filter_violations=0.0"
+     },
+     {
+      "name": "2_allowed_drop",
+      "passed": false,
+      "detail": "recall@10=-0.0315 mrr@10=-0.0252 ndcg@10=-0.0266 true_empty=+0.0000 false_empty=+0.0168 category_min=-0.1607"
+     },
+     {
+      "name": "3_improvement",
+      "passed": false,
+      "detail": "ndcg@10+0.02=False success@1+0.03=False challenge_recall@10+0.05=False seesaw=False"
+     },
+     {
+      "name": "4_confidence",
+      "passed": false,
+      "detail": "recall@10.ci_low=-0.0651 mrr@10.ci_low=-0.0588 ndcg@10.ci_low=-0.0602 true_empty.ci_low=+0.0000"
+     },
+     {
+      "name": "5_latency",
+      "passed": true,
+      "detail": "device=mps rerank_p95=147.8/150ms search_p95=174.4/300ms"
+     },
+     {
+      "name": "6_operations",
+      "passed": true,
+      "detail": "skip_rate=0.0000 rss_increase_mb=295.7"
+     }
+    ]
+   }
+  }
+ ],
+ "overall": {
+  "A0": {
+   "recall@5": 0.949463,
+   "recall@10": 0.971218,
+   "mrr@10": 1.0,
+   "ndcg@10": 0.98599,
+   "success@1": 1.0,
+   "n_ranked": 119.0,
+   "true_empty_rate": 1.0,
+   "false_empty_rate": 0.0,
+   "category_recall@10_min": 0.889352
+  },
+  "A1": {
+   "recall@5": 0.920892,
+   "recall@10": 0.939706,
+   "mrr@10": 0.97479,
+   "ndcg@10": 0.959345,
+   "success@1": 0.97479,
+   "n_ranked": 119.0,
+   "true_empty_rate": 1.0,
+   "false_empty_rate": 0.015748,
+   "category_recall@10_min": 0.779762
+  }
+ },
+ "gate": {
+  "A0": true,
+  "A1": false
+ }
+}

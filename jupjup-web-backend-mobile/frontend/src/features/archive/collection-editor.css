@@ -1,0 +1,22 @@
+.collection-editor-form { gap: 24px; }
+.collection-editor-form .collection-name-help { display: block; margin-top: 8px; color: #766c63; font-size: 12px; line-height: 1.6; }
+.collection-editor-form .collection-color-picker legend { font-size: 13px; }
+.collection-editor-form .collection-color-options { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+.collection-editor-form .collection-color-option { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; margin: 0; padding: 14px 4px 10px; min-height: 88px; border: 1px solid #e8e2db; border-radius: 10px; background: #fff; font-size: 12px; font-weight: 500; color: #62564b; }
+.collection-editor-form .collection-color-option input[type="radio"] { position: absolute; width: 1px; height: 1px; padding: 0; margin: 0; opacity: 0; }
+.collection-editor-form .collection-color-option > span[aria-hidden="true"] { display: block; width: 28px; height: 28px; border: 1px solid #00000014; border-radius: 50%; }
+.collection-editor-form .collection-color-option:has(input:checked) { background: #fcf8f2; border-color: #a46b36; box-shadow: none; color: #7d4b1f; }
+.collection-editor-form .collection-color-option:has(input:checked)::after { content: ''; position: absolute; right: 7px; top: 7px; width: 5px; height: 9px; border: solid #825126; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.collection-editor-form .collection-color-option:focus-within { outline: 2px solid #a66c35; outline-offset: 3px; }
+.collection-editor-form .collection-custom-color { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 12px; padding: 10px 12px; border: 1px solid #e8e2db; border-radius: 9px; }
+.collection-editor-form .custom-color-option { flex: 1; flex-direction: row; justify-content: flex-start; min-height: 32px; padding: 0; border: 0; background: transparent; }
+.collection-editor-form .custom-color-option input[type="radio"] { position: static; opacity: 1; width: 15px; height: 15px; padding: 0; margin: 0; box-shadow: none; }
+.collection-editor-form .custom-color-option:has(input:checked) { background: transparent; }
+.collection-editor-form .custom-color-option::after { display: none; }
+.collection-editor-form .collection-custom-color input[type="color"] { flex: 0 0 40px; width: 40px; height: 32px; padding: 3px; border: 1px solid #ded6cc; border-radius: 6px; cursor: pointer; }
+.collection-editor-form .collection-color-preview { margin-top: 12px; font-size: 12px; line-height: 1.5; color: #766c63; }
+.collection-editor-form .dialog-footer { margin-top: 0; padding-top: 20px; border-top: 1px solid #eee8e1; }
+.collection-editor-form .dialog-footer .danger-button { margin-right: auto; }
+.collection-editor-form .dialog-footer .button { min-height: 42px; padding-inline: 20px; font-size: 13px; }
+.collection-editor-form fieldset:disabled { opacity: .6; }
+@media (max-width: 380px) { .collection-editor-form .collection-color-options { gap: 6px; } .collection-editor-form .collection-color-option { font-size: 11px; } }

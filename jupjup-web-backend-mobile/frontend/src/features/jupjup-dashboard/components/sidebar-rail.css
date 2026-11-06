@@ -1,0 +1,34 @@
+.sidebar.sidebar-rail {
+  width: 88px;
+  flex-basis: 88px;
+  padding: 24px 8px;
+  background: #f8f8f7;
+  overflow-y: auto;
+}
+.sidebar-rail .logo {
+  justify-content: center;
+  padding: 0;
+  margin-bottom: 28px;
+}
+.sidebar-rail .brand-icon { width: 32px; height: 32px; }
+.sidebar-rail .nav-items { gap: 8px; }
+.sidebar.sidebar-rail .nav-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 7px;
+  min-height: 72px;
+  padding: 10px 2px;
+  text-align: center;
+  color: #777d80;
+  border-radius: 12px;
+}
+.sidebar-rail .nav-item .icon { width: 23px; height: 23px; stroke-width: 1.9; }
+.sidebar-rail .nav-item .nav-text { font-size: 11px; line-height: 1.4; white-space: nowrap; }
+.sidebar.sidebar-rail .nav-item:hover { background: #eeefed; color: #3e4548; }
+.sidebar.sidebar-rail .nav-item.active { background: #fff0df; color: #9a5e26; font-weight: 600; }
+.sidebar-rail .nav-item:focus-visible { outline: 2px solid #a66c35; outline-offset: 2px; }
+@media (max-width: 850px) {
+  .sidebar.sidebar-rail { width: 88px; height: 100dvh; }
+}

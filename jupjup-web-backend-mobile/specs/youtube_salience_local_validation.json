@@ -1,0 +1,560 @@
+{
+  "scope": "사용자 제공 단서로 재구성한 metadata, 실제 설명 전문 캡처 아님. 외부 요청 없음.",
+  "role_selection_and_downstream_validation": {
+    "provenance": "사용자가 제공한 문제 영상의 제목·설명 단서를 재구성한 회귀 입력. 실제 설명 전문 캡처가 아님. 외부 요청 없음.",
+    "metadata": {
+      "title": "모든 레디언트는 결국 저를 통합니다",
+      "description": "숲 생방송 링크\n광고/팀 문의\n#발로란트 #김된모\n\nMusic: Lost Sky - Dreams pt. II [NCS Release]\nMusic provided by NoCopyrightSounds.\nFree Download / Stream: NCS\nWhen you are using this track, please add the following credits:\nLost Sky - Dreams pt. II\nMusic provided by NoCopyrightSounds.\nFree Download / Stream: NCS\nWhen you are using this track, please add the following credits:\nLost Sky - Dreams pt. II\nMusic provided by NoCopyrightSounds.\nFree Download / Stream: NCS\n",
+      "title_source": "videoDetails.title",
+      "description_source": "videoDetails.shortDescription",
+      "description_status": "available",
+      "title_truncated": false,
+      "description_truncated": false,
+      "transcript_reason": "empty_captions"
+    },
+    "gaming": {
+      "salience": {
+        "version": "youtube_salience_v1",
+        "source_scope": "youtube_metadata",
+        "basis": "title_description",
+        "primary": [
+          {
+            "id": 0,
+            "field": "title",
+            "start": 0,
+            "end": 19,
+            "text": "모든 레디언트는 결국 저를 통합니다"
+          },
+          {
+            "id": 3,
+            "field": "description",
+            "start": 17,
+            "end": 28,
+            "text": "#발로란트 #김된모\n"
+          }
+        ],
+        "auxiliary": [
+          {
+            "id": 1,
+            "field": "description",
+            "start": 0,
+            "end": 9,
+            "text": "숲 생방송 링크\n"
+          },
+          {
+            "id": 2,
+            "field": "description",
+            "start": 9,
+            "end": 17,
+            "text": "광고/팀 문의\n"
+          },
+          {
+            "id": 4,
+            "field": "description",
+            "start": 29,
+            "end": 75,
+            "text": "Music: Lost Sky - Dreams pt. II [NCS Release]\n"
+          },
+          {
+            "id": 5,
+            "field": "description",
+            "start": 75,
+            "end": 112,
+            "text": "Music provided by NoCopyrightSounds.\n"
+          },
+          {
+            "id": 6,
+            "field": "description",
+            "start": 112,
+            "end": 140,
+            "text": "Free Download / Stream: NCS\n"
+          },
+          {
+            "id": 7,
+            "field": "description",
+            "start": 140,
+            "end": 205,
+            "text": "When you are using this track, please add the following credits:\n"
+          },
+          {
+            "id": 8,
+            "field": "description",
+            "start": 205,
+            "end": 230,
+            "text": "Lost Sky - Dreams pt. II\n"
+          },
+          {
+            "id": 9,
+            "field": "description",
+            "start": 230,
+            "end": 267,
+            "text": "Music provided by NoCopyrightSounds.\n"
+          },
+          {
+            "id": 10,
+            "field": "description",
+            "start": 267,
+            "end": 295,
+            "text": "Free Download / Stream: NCS\n"
+          },
+          {
+            "id": 11,
+            "field": "description",
+            "start": 295,
+            "end": 360,
+            "text": "When you are using this track, please add the following credits:\n"
+          },
+          {
+            "id": 12,
+            "field": "description",
+            "start": 360,
+            "end": 385,
+            "text": "Lost Sky - Dreams pt. II\n"
+          },
+          {
+            "id": 13,
+            "field": "description",
+            "start": 385,
+            "end": 422,
+            "text": "Music provided by NoCopyrightSounds.\n"
+          },
+          {
+            "id": 14,
+            "field": "description",
+            "start": 422,
+            "end": 450,
+            "text": "Free Download / Stream: NCS\n"
+          }
+        ],
+        "decisions": {
+          "block_0": "primary_topic",
+          "block_1": "promotion_contact_link",
+          "block_2": "promotion_contact_link",
+          "block_3": "primary_topic",
+          "block_4": "background_music_credit",
+          "block_5": "background_music_credit",
+          "block_6": "background_music_credit",
+          "block_7": "background_music_credit",
+          "block_8": "background_music_credit",
+          "block_9": "background_music_credit",
+          "block_10": "background_music_credit",
+          "block_11": "background_music_credit",
+          "block_12": "background_music_credit",
+          "block_13": "background_music_credit",
+          "block_14": "background_music_credit"
+        },
+        "meta": {
+          "model": "kanana-1.5-2.1b-instruct-q4km@5baf76ee0939~bbdbf37b",
+          "prompt_version": "youtube_salience_v1",
+          "attempts": 1,
+          "input_tokens": 1160,
+          "output_tokens": 148,
+          "cost_usd": 0.0,
+          "latency_ms": 4105.528,
+          "first_pass_ok": true,
+          "partial": false,
+          "repairs": []
+        }
+      },
+      "after_error": {
+        "message": "분석 출력 검증과 재요청을 소진했습니다",
+        "details": {
+          "attempts": 3,
+          "repair_attempts": 2,
+          "issues": [
+            {
+              "path": "$.representative_tags[1]",
+              "code": "tag_forbidden",
+              "message": "플랫폼명 단독 태그를 제거했습니다",
+              "fixable": true
+            },
+            {
+              "path": "$.representative_tags",
+              "code": "schema_too_short",
+              "message": "List should have at least 3 items after validation, not 2",
+              "fixable": false
+            }
+          ]
+        }
+      }
+    },
+    "music": {
+      "salience": {
+        "version": "youtube_salience_v1",
+        "source_scope": "youtube_metadata",
+        "basis": "title_description",
+        "primary": [
+          {
+            "id": 0,
+            "field": "title",
+            "start": 0,
+            "end": 38,
+            "text": "Lost Sky - Dreams pt. II [NCS Release]"
+          }
+        ],
+        "auxiliary": [
+          {
+            "id": 1,
+            "field": "description",
+            "start": 0,
+            "end": 39,
+            "text": "Lost Sky - Dreams pt. II [NCS Release]\n"
+          },
+          {
+            "id": 2,
+            "field": "description",
+            "start": 39,
+            "end": 76,
+            "text": "Music provided by NoCopyrightSounds.\n"
+          }
+        ],
+        "decisions": {
+          "block_0": "primary_topic",
+          "block_1": "background_music_credit",
+          "block_2": "license_boilerplate"
+        },
+        "meta": {
+          "model": "kanana-1.5-2.1b-instruct-q4km@5baf76ee0939~bbdbf37b",
+          "prompt_version": "youtube_salience_v1",
+          "attempts": 1,
+          "input_tokens": 705,
+          "output_tokens": 30,
+          "cost_usd": 0.0,
+          "latency_ms": 1216.77,
+          "first_pass_ok": true,
+          "partial": false,
+          "repairs": []
+        }
+      },
+      "after_error": {
+        "message": "분석 출력 검증과 재요청을 소진했습니다",
+        "details": {
+          "attempts": 3,
+          "repair_attempts": 2,
+          "issues": [
+            {
+              "path": "$.representative_tags[0]",
+              "code": "tag_forbidden",
+              "message": "플랫폼명 단독 태그를 제거했습니다",
+              "fixable": true
+            },
+            {
+              "path": "$.representative_tags",
+              "code": "schema_too_short",
+              "message": "List should have at least 3 items after validation, not 2",
+              "fixable": false
+            }
+          ]
+        }
+      }
+    }
+  },
+  "later_captured_run_before_user_stop": {
+    "provenance": "사용자가 제공한 문제 영상의 제목·설명 단서를 재구성한 회귀 입력. 실제 설명 전문 캡처가 아님. 외부 요청 없음.",
+    "metadata": {
+      "title": "모든 레디언트는 결국 저를 통합니다",
+      "description": "숲 생방송 링크\n광고/팀 문의\n#발로란트 #김된모\n\nMusic: Lost Sky - Dreams pt. II [NCS Release]\nMusic provided by NoCopyrightSounds.\nFree Download / Stream: NCS\nWhen you are using this track, please add the following credits:\nLost Sky - Dreams pt. II\nMusic provided by NoCopyrightSounds.\nFree Download / Stream: NCS\nWhen you are using this track, please add the following credits:\nLost Sky - Dreams pt. II\nMusic provided by NoCopyrightSounds.\nFree Download / Stream: NCS\n",
+      "title_source": "videoDetails.title",
+      "description_source": "videoDetails.shortDescription",
+      "description_status": "available",
+      "title_truncated": false,
+      "description_truncated": false,
+      "transcript_reason": "empty_captions"
+    },
+    "gaming": {
+      "salience": {
+        "version": "youtube_salience_v1",
+        "source_scope": "youtube_metadata",
+        "basis": "title_description",
+        "primary": [
+          {
+            "id": 0,
+            "field": "title",
+            "start": 0,
+            "end": 19,
+            "text": "모든 레디언트는 결국 저를 통합니다"
+          },
+          {
+            "id": 3,
+            "field": "description",
+            "start": 17,
+            "end": 28,
+            "text": "#발로란트 #김된모\n"
+          }
+        ],
+        "auxiliary": [
+          {
+            "id": 1,
+            "field": "description",
+            "start": 0,
+            "end": 9,
+            "text": "숲 생방송 링크\n"
+          },
+          {
+            "id": 2,
+            "field": "description",
+            "start": 9,
+            "end": 17,
+            "text": "광고/팀 문의\n"
+          },
+          {
+            "id": 4,
+            "field": "description",
+            "start": 29,
+            "end": 75,
+            "text": "Music: Lost Sky - Dreams pt. II [NCS Release]\n"
+          },
+          {
+            "id": 5,
+            "field": "description",
+            "start": 75,
+            "end": 112,
+            "text": "Music provided by NoCopyrightSounds.\n"
+          },
+          {
+            "id": 6,
+            "field": "description",
+            "start": 112,
+            "end": 140,
+            "text": "Free Download / Stream: NCS\n"
+          },
+          {
+            "id": 7,
+            "field": "description",
+            "start": 140,
+            "end": 205,
+            "text": "When you are using this track, please add the following credits:\n"
+          },
+          {
+            "id": 8,
+            "field": "description",
+            "start": 205,
+            "end": 230,
+            "text": "Lost Sky - Dreams pt. II\n"
+          },
+          {
+            "id": 9,
+            "field": "description",
+            "start": 230,
+            "end": 267,
+            "text": "Music provided by NoCopyrightSounds.\n"
+          },
+          {
+            "id": 10,
+            "field": "description",
+            "start": 267,
+            "end": 295,
+            "text": "Free Download / Stream: NCS\n"
+          },
+          {
+            "id": 11,
+            "field": "description",
+            "start": 295,
+            "end": 360,
+            "text": "When you are using this track, please add the following credits:\n"
+          },
+          {
+            "id": 12,
+            "field": "description",
+            "start": 360,
+            "end": 385,
+            "text": "Lost Sky - Dreams pt. II\n"
+          },
+          {
+            "id": 13,
+            "field": "description",
+            "start": 385,
+            "end": 422,
+            "text": "Music provided by NoCopyrightSounds.\n"
+          },
+          {
+            "id": 14,
+            "field": "description",
+            "start": 422,
+            "end": 450,
+            "text": "Free Download / Stream: NCS\n"
+          }
+        ],
+        "decisions": {
+          "block_0": "primary_topic",
+          "block_1": "promotion_contact_link",
+          "block_2": "promotion_contact_link",
+          "block_3": "primary_topic",
+          "block_4": "background_music_credit",
+          "block_5": "background_music_credit",
+          "block_6": "background_music_credit",
+          "block_7": "background_music_credit",
+          "block_8": "background_music_credit",
+          "block_9": "background_music_credit",
+          "block_10": "background_music_credit",
+          "block_11": "background_music_credit",
+          "block_12": "background_music_credit",
+          "block_13": "background_music_credit",
+          "block_14": "background_music_credit"
+        },
+        "meta": {
+          "model": "kanana-1.5-2.1b-instruct-q4km@5baf76ee0939~bbdbf37b",
+          "prompt_version": "youtube_salience_v1",
+          "attempts": 1,
+          "input_tokens": 1160,
+          "output_tokens": 148,
+          "cost_usd": 0.0,
+          "latency_ms": 4433.655,
+          "first_pass_ok": true,
+          "partial": false,
+          "repairs": []
+        }
+      },
+      "after": {
+        "summary": "발로란트는 결국 저를 통합니다. 설명에 발로란트와 김된모가 언급됩니다.",
+        "representative_tags": [
+          "발로란트",
+          "김된모",
+          "레디언트"
+        ],
+        "detail_tags": {
+          "schema_version": 1,
+          "category": "culture_media",
+          "topics": [
+            "게임"
+          ],
+          "keywords": [
+            "발로란트"
+          ],
+          "locations": [],
+          "entities": [
+            {
+              "type": "person",
+              "name": "김된모"
+            }
+          ]
+        },
+        "save_intent": {
+          "labels": [
+            "공부자료"
+          ],
+          "confidence": 0.8,
+          "rationale": "게임과 관련 인물에 대한 설명으로, 게임 문화 매체의 특성을 잘 보여줍니다."
+        },
+        "title_suggestion": "발로란트와 김된모",
+        "language": "ko",
+        "evidence": [
+          {
+            "claim": "발로란트가 결국 저를 통합니다",
+            "source_span": "제목: 모든 레디언트는 결국 저를 통합니다"
+          }
+        ]
+      },
+      "after_meta": {
+        "model": "kanana-1.5-2.1b-instruct-q4km@5baf76ee0939~bbdbf37b",
+        "prompt_version": "analyze_local_v2+youtube_metadata_scope_v1",
+        "attempts": 1,
+        "input_tokens": 1519,
+        "output_tokens": 219,
+        "cost_usd": 0.0,
+        "latency_ms": 7660.727,
+        "first_pass_ok": true,
+        "partial": false,
+        "repairs": []
+      }
+    },
+    "music": {
+      "salience": {
+        "version": "youtube_salience_v1",
+        "source_scope": "youtube_metadata",
+        "basis": "title_description",
+        "primary": [
+          {
+            "id": 0,
+            "field": "title",
+            "start": 0,
+            "end": 38,
+            "text": "Lost Sky - Dreams pt. II [NCS Release]"
+          }
+        ],
+        "auxiliary": [
+          {
+            "id": 1,
+            "field": "description",
+            "start": 0,
+            "end": 39,
+            "text": "Lost Sky - Dreams pt. II [NCS Release]\n"
+          },
+          {
+            "id": 2,
+            "field": "description",
+            "start": 39,
+            "end": 76,
+            "text": "Music provided by NoCopyrightSounds.\n"
+          }
+        ],
+        "decisions": {
+          "block_0": "primary_topic",
+          "block_1": "background_music_credit",
+          "block_2": "license_boilerplate"
+        },
+        "meta": {
+          "model": "kanana-1.5-2.1b-instruct-q4km@5baf76ee0939~bbdbf37b",
+          "prompt_version": "youtube_salience_v1",
+          "attempts": 1,
+          "input_tokens": 705,
+          "output_tokens": 30,
+          "cost_usd": 0.0,
+          "latency_ms": 1096.367,
+          "first_pass_ok": true,
+          "partial": false,
+          "repairs": []
+        }
+      },
+      "after": {
+        "summary": "이 영상은 NCS가 제작한 음악 작품이다. (NCS 제작, pt. II, 음악)",
+        "representative_tags": [
+          "lostsky",
+          "dreams",
+          "ncs"
+        ],
+        "detail_tags": {
+          "schema_version": 1,
+          "category": "culture_media",
+          "topics": [
+            "음악"
+          ],
+          "keywords": [
+            "pt. II",
+            "NCS Release"
+          ],
+          "locations": [],
+          "entities": []
+        },
+        "save_intent": {
+          "labels": [
+            "정보보관"
+          ],
+          "confidence": 0.9,
+          "rationale": "음악 영상의 제작 정보를 기록할 목적"
+        },
+        "title_suggestion": "Lost Sky - Dreams pt. II [NCS Release] 요약",
+        "language": "ko",
+        "evidence": []
+      },
+      "after_meta": {
+        "model": "kanana-1.5-2.1b-instruct-q4km@5baf76ee0939~bbdbf37b",
+        "prompt_version": "analyze_local_v2+youtube_metadata_scope_v1+repair_local_v2",
+        "attempts": 3,
+        "input_tokens": 4302,
+        "output_tokens": 576,
+        "cost_usd": 0.0,
+        "latency_ms": 17812.841,
+        "first_pass_ok": false,
+        "partial": true,
+        "repairs": [
+          "$.representative_tags[0]: 재요청 소진 후 안전한 빈 값으로 대체",
+          "$.representative_tags[1]: 재요청 소진 후 안전한 빈 값으로 대체",
+          "$.representative_tags[2]: 재요청 소진 후 안전한 빈 값으로 대체",
+          "$.evidence[0].source_span: 재요청 소진 후 안전한 빈 값으로 대체"
+        ]
+      }
+    }
+  },
+  "final_source_state": "사용자 중단 직전 추가된 summary 지침을 포함한 현재 코드의 최종 live 결과는 확인하지 않았다. 추가 측정 중단."
+}

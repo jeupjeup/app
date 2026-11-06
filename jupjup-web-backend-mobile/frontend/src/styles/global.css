@@ -1,0 +1,58 @@
+:root {
+  font-family:
+    Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+    "Noto Sans KR", "Segoe UI", sans-serif;
+  color: #211b17;
+  background: #faf9f6;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
+  background: #faf9f6;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  word-break: keep-all;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+::selection {
+  color: #291b11;
+  background: #ffe1bd;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid rgb(255 159 67 / 55%);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+button:disabled { cursor: not-allowed; opacity: .55; }
+.detail-section { overflow-wrap: anywhere; }
+.detail-section details { margin-top: 16px; font-size: 13px; }
+@media (max-width: 640px) { .detail-primary-actions { flex-wrap: wrap; } }

@@ -1,0 +1,833 @@
+{
+ "generated_for": "phase-10-mobile-contract-audit",
+ "contract": {
+  "file": "specs/app_api_openapi.json",
+  "source": "/Users/minjun/Downloads/message (5).txt",
+  "sha256": "cd18e859669a75280dd8d130150a96a2a0966855911d3b175fbaabaea651194d",
+  "byte_identical": true,
+  "openapi": "3.1.0",
+  "operations": 24,
+  "schemas": 17
+ },
+ "classifications": [
+  "exact",
+  "adapter",
+  "richer",
+  "missing",
+  "dangerous"
+ ],
+ "counts": {
+  "operations": {
+   "exact": 24
+  },
+  "schemas": {
+   "exact": 17
+  },
+  "cross_cutting": {
+   "exact": 7,
+   "adapter": 4,
+   "richer": 4,
+   "dangerous": 3,
+   "missing": 4
+  }
+ },
+ "operations": [
+  {
+   "method": "GET",
+   "path": "/api/health",
+   "spec_path": "/health",
+   "operationId": "health",
+   "auth": "none",
+   "spec_success": 200,
+   "impl_success": 200,
+   "spec_statuses": [
+    200,
+    403,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": "GET /healthz (adds index_ready, embedder, mode, analyzer; 503 while starting)",
+   "notes": ""
+  },
+  {
+   "method": "POST",
+   "path": "/api/auth/register",
+   "spec_path": "/auth/register",
+   "operationId": "register",
+   "auth": "none",
+   "spec_success": 201,
+   "impl_success": 201,
+   "spec_statuses": [
+    201,
+    400,
+    403,
+    409,
+    413,
+    415,
+    429,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": null,
+   "notes": "Email lowercased; whitespace-only nickname accepted (spec minLength 1 permits it). 409 EMAIL_EXISTS."
+  },
+  {
+   "method": "POST",
+   "path": "/api/auth/login",
+   "spec_path": "/auth/login",
+   "operationId": "login",
+   "auth": "none",
+   "spec_success": 200,
+   "impl_success": 200,
+   "spec_statuses": [
+    200,
+    400,
+    401,
+    403,
+    413,
+    415,
+    429,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": null,
+   "notes": "Unknown email and wrong password both 401 INVALID_CREDENTIALS with equal scrypt cost. OAuth-created accounts have a random password and cannot email-login."
+  },
+  {
+   "method": "POST",
+   "path": "/api/auth/logout",
+   "spec_path": "/auth/logout",
+   "operationId": "logout",
+   "auth": "bearer",
+   "spec_success": 204,
+   "impl_success": 204,
+   "spec_statuses": [
+    204,
+    400,
+    401,
+    403,
+    413,
+    415,
+    429,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": null,
+   "notes": "Requires Content-Type: application/json and body {} (415/400 otherwise). Rate-limited (path under /auth/)."
+  },
+  {
+   "method": "GET",
+   "path": "/api/state",
+   "spec_path": "/state",
+   "operationId": "getState",
+   "auth": "bearer",
+   "spec_success": 200,
+   "impl_success": 200,
+   "spec_statuses": [
+    200,
+    401,
+    403,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": "GET /v1/contents (cursor-paginated ContentPage) + GET /v1/collections",
+   "notes": "No pagination; includes trash; savedCount excludes trash. Call on launch/foreground."
+  },
+  {
+   "method": "GET",
+   "path": "/api/me",
+   "spec_path": "/me",
+   "operationId": "getMe",
+   "auth": "bearer",
+   "spec_success": 200,
+   "impl_success": 200,
+   "spec_statuses": [
+    200,
+    401,
+    403,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": null,
+   "notes": ""
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/me",
+   "spec_path": "/me",
+   "operationId": "updateMe",
+   "auth": "bearer",
+   "spec_success": 200,
+   "impl_success": 200,
+   "spec_statuses": [
+    200,
+    400,
+    401,
+    403,
+    413,
+    415,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": null,
+   "notes": ""
+  },
+  {
+   "method": "DELETE",
+   "path": "/api/me",
+   "spec_path": "/me",
+   "operationId": "deleteMe",
+   "auth": "bearer",
+   "spec_success": 204,
+   "impl_success": 204,
+   "spec_statuses": [
+    204,
+    401,
+    403,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": null,
+   "notes": "Cascades api_* rows and, via account_scopes trigger, the account's core /v1 contents/collections."
+  },
+  {
+   "method": "POST",
+   "path": "/api/me/password/verify",
+   "spec_path": "/me/password/verify",
+   "operationId": "verifyPassword",
+   "auth": "bearer",
+   "spec_success": 204,
+   "impl_success": 204,
+   "spec_statuses": [
+    204,
+    400,
+    401,
+    403,
+    413,
+    415,
+    429,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": null,
+   "notes": "5 failures -> 24h 429 PASSWORD_LOCKED. OAuth-only accounts will always fail (random password)."
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/me/password",
+   "spec_path": "/me/password",
+   "operationId": "changePassword",
+   "auth": "bearer",
+   "spec_success": 204,
+   "impl_success": 204,
+   "spec_statuses": [
+    204,
+    400,
+    401,
+    403,
+    413,
+    415,
+    429,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": null,
+   "notes": "Revokes all other sessions; current token stays valid."
+  },
+  {
+   "method": "POST",
+   "path": "/api/contents",
+   "spec_path": "/contents",
+   "operationId": "createContent",
+   "auth": "bearer",
+   "spec_success": 201,
+   "impl_success": 201,
+   "spec_statuses": [
+    201,
+    400,
+    401,
+    403,
+    409,
+    413,
+    415,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": "POST /v1/contents (202 + ingest job; url/text/image(OCR) sources; Idempotency-Key)",
+   "notes": "Writes api_contents only. NOT analyzed, NOT indexed for /v1/search, NOT visible in /v1/contents or the web dashboard (see X12)."
+  },
+  {
+   "method": "GET",
+   "path": "/api/contents",
+   "spec_path": "/contents",
+   "operationId": "listContent",
+   "auth": "bearer",
+   "spec_success": 200,
+   "impl_success": 200,
+   "spec_statuses": [
+    200,
+    400,
+    401,
+    403,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": "POST /v1/search (hybrid lexical+embedding+rerank, query understanding) / GET /v1/contents",
+   "notes": "Case-insensitive substring over title/memo/description/tags; description/tags are always empty so q only matches title(host)+memo."
+  },
+  {
+   "method": "GET",
+   "path": "/api/contents/{id}",
+   "spec_path": "/contents/{id}",
+   "operationId": "getContent",
+   "auth": "bearer",
+   "spec_success": 200,
+   "impl_success": 200,
+   "spec_statuses": [
+    200,
+    401,
+    403,
+    404,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": "GET /v1/contents/{c_id} (analysis, summary, tags, ETag)",
+   "notes": "Malformed id and other user's id -> identical 404."
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/contents/{id}",
+   "spec_path": "/contents/{id}",
+   "operationId": "updateContent",
+   "auth": "bearer",
+   "spec_success": 200,
+   "impl_success": 200,
+   "spec_statuses": [
+    200,
+    400,
+    401,
+    403,
+    404,
+    409,
+    413,
+    415,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": "PATCH /v1/contents/{c_id} (summary/tags/hidden, If-Match)",
+   "notes": ""
+  },
+  {
+   "method": "DELETE",
+   "path": "/api/contents/{id}",
+   "spec_path": "/contents/{id}",
+   "operationId": "deleteContent",
+   "auth": "bearer",
+   "spec_success": 204,
+   "impl_success": 204,
+   "spec_statuses": [
+    204,
+    401,
+    403,
+    404,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": "DELETE /v1/contents/{c_id} (hard delete, no trash)",
+   "notes": "Soft delete into api trash; first deletedAt kept; purged 30 days later on next /api request."
+  },
+  {
+   "method": "POST",
+   "path": "/api/contents/{id}/restore",
+   "spec_path": "/contents/{id}/restore",
+   "operationId": "restoreContent",
+   "auth": "bearer",
+   "spec_success": 200,
+   "impl_success": 200,
+   "spec_statuses": [
+    200,
+    400,
+    401,
+    403,
+    404,
+    409,
+    413,
+    415,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": null,
+   "notes": ""
+  },
+  {
+   "method": "POST",
+   "path": "/api/contents/{id}/view",
+   "spec_path": "/contents/{id}/view",
+   "operationId": "viewContent",
+   "auth": "bearer",
+   "spec_success": 204,
+   "impl_success": 204,
+   "spec_statuses": [
+    204,
+    400,
+    401,
+    403,
+    404,
+    409,
+    413,
+    415,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": null,
+   "notes": ""
+  },
+  {
+   "method": "DELETE",
+   "path": "/api/trash",
+   "spec_path": "/trash",
+   "operationId": "emptyTrash",
+   "auth": "bearer",
+   "spec_success": 204,
+   "impl_success": 204,
+   "spec_statuses": [
+    204,
+    401,
+    403,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": null,
+   "notes": ""
+  },
+  {
+   "method": "GET",
+   "path": "/api/notices",
+   "spec_path": "/notices",
+   "operationId": "listNotices",
+   "auth": "bearer",
+   "spec_success": 200,
+   "impl_success": 200,
+   "spec_statuses": [
+    200,
+    401,
+    403,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": null,
+   "notes": ""
+  },
+  {
+   "method": "POST",
+   "path": "/api/notices/read",
+   "spec_path": "/notices/read",
+   "operationId": "readAllNotices",
+   "auth": "bearer",
+   "spec_success": 204,
+   "impl_success": 204,
+   "spec_statuses": [
+    204,
+    400,
+    401,
+    403,
+    413,
+    415,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": null,
+   "notes": ""
+  },
+  {
+   "method": "POST",
+   "path": "/api/notices/{id}/read",
+   "spec_path": "/notices/{id}/read",
+   "operationId": "readNotice",
+   "auth": "bearer",
+   "spec_success": 204,
+   "impl_success": 204,
+   "spec_statuses": [
+    204,
+    400,
+    401,
+    403,
+    404,
+    413,
+    415,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": null,
+   "notes": ""
+  },
+  {
+   "method": "GET",
+   "path": "/api/search-history",
+   "spec_path": "/search-history",
+   "operationId": "getSearchHistory",
+   "auth": "bearer",
+   "spec_success": 200,
+   "impl_success": 200,
+   "spec_statuses": [
+    200,
+    401,
+    403,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": null,
+   "notes": ""
+  },
+  {
+   "method": "POST",
+   "path": "/api/search-history",
+   "spec_path": "/search-history",
+   "operationId": "addSearchHistory",
+   "auth": "bearer",
+   "spec_success": 200,
+   "impl_success": 200,
+   "spec_statuses": [
+    200,
+    400,
+    401,
+    403,
+    413,
+    415,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": null,
+   "notes": ""
+  },
+  {
+   "method": "DELETE",
+   "path": "/api/search-history",
+   "spec_path": "/search-history",
+   "operationId": "clearSearchHistory",
+   "auth": "bearer",
+   "spec_success": 204,
+   "impl_success": 204,
+   "spec_statuses": [
+    204,
+    401,
+    403,
+    500
+   ],
+   "classification": "exact",
+   "covered_by_test": "tests/integration/test_app_api.py::test_all_contract_operations_status_and_response_schema",
+   "v1_richer_equivalent": null,
+   "notes": ""
+  }
+ ],
+ "schemas": [
+  {
+   "name": "User",
+   "classification": "exact",
+   "notes": "No field tells the app whether the account is OAuth-only (see X17)."
+  },
+  {
+   "name": "Content",
+   "classification": "exact",
+   "notes": "Implemented exactly (status always 'ready', description '' and tags []). Optional keys omitted when null. Enum type/collection identical."
+  },
+  {
+   "name": "Notice",
+   "classification": "exact",
+   "notes": "Validated against responses by jsonschema Draft 2020-12 in existing tests"
+  },
+  {
+   "name": "Session",
+   "classification": "exact",
+   "notes": "token = 64 lowercase hex, SHA-256 at rest, expiresAt = +30d, ISO-8601 ms Z."
+  },
+  {
+   "name": "State",
+   "classification": "exact",
+   "notes": "Validated against responses by jsonschema Draft 2020-12 in existing tests"
+  },
+  {
+   "name": "Error",
+   "classification": "exact",
+   "notes": "{error:{code,message}}; message is always the generic Korean string; codes: VALIDATION_ERROR, INVALID_JSON, INVALID_PASSWORD, UNSUPPORTED_MEDIA_TYPE, PAYLOAD_TOO_LARGE, UNAUTHORIZED, INVALID_CREDENTIALS, PASSWORD_LOCKED, RATE_LIMITED, ORIGIN_FORBIDDEN, NOT_FOUND, EMAIL_EXISTS, DUPLICATE_CONTENT, CONTENT_DELETED, INTERNAL_ERROR."
+  },
+  {
+   "name": "Register",
+   "classification": "exact",
+   "notes": "Request validation implemented in app_api/validation.py with matching bounds/patterns"
+  },
+  {
+   "name": "Login",
+   "classification": "exact",
+   "notes": "Request validation implemented in app_api/validation.py with matching bounds/patterns"
+  },
+  {
+   "name": "CreateContent",
+   "classification": "exact",
+   "notes": "Request validation implemented in app_api/validation.py with matching bounds/patterns"
+  },
+  {
+   "name": "UpdateContent",
+   "classification": "exact",
+   "notes": "Request validation implemented in app_api/validation.py with matching bounds/patterns"
+  },
+  {
+   "name": "VerifyPassword",
+   "classification": "exact",
+   "notes": "Request validation implemented in app_api/validation.py with matching bounds/patterns"
+  },
+  {
+   "name": "ChangePassword",
+   "classification": "exact",
+   "notes": "Request validation implemented in app_api/validation.py with matching bounds/patterns"
+  },
+  {
+   "name": "Nickname",
+   "classification": "exact",
+   "notes": "Request validation implemented in app_api/validation.py with matching bounds/patterns"
+  },
+  {
+   "name": "SearchQuery",
+   "classification": "exact",
+   "notes": "Request validation implemented in app_api/validation.py with matching bounds/patterns"
+  },
+  {
+   "name": "History",
+   "classification": "exact",
+   "notes": "Validated against responses by jsonschema Draft 2020-12 in existing tests"
+  },
+  {
+   "name": "Notices",
+   "classification": "exact",
+   "notes": "Validated against responses by jsonschema Draft 2020-12 in existing tests"
+  },
+  {
+   "name": "ContentList",
+   "classification": "exact",
+   "notes": "Validated against responses by jsonschema Draft 2020-12 in existing tests"
+  }
+ ],
+ "cross_cutting": [
+  {
+   "id": "X01",
+   "area": "Spec identity",
+   "classification": "exact",
+   "severity": "info",
+   "evidence": "message (5).txt is byte-identical to specs/app_api_openapi.json (sha256 prefix cd18e859669a7528), the contract the backend was built and tested against.",
+   "recommendation": "Freeze it; pin its hash in a test.",
+   "phase": "11"
+  },
+  {
+   "id": "X02",
+   "area": "Base URL / path prefix",
+   "classification": "adapter",
+   "severity": "low",
+   "evidence": "Spec servers: http://localhost:3001/api. Backend mounts the contract at /api on the API process (default port 8000 for `jupjup api serve`, 8791 in frontend/README). Paths under /api match exactly.",
+   "recommendation": "App config: API_BASE_URL=http(s)://<host>:<port>/api. Optionally serve on 3001 to match the spec default.",
+   "phase": "11"
+  },
+  {
+   "id": "X03",
+   "area": "Web dev proxy double prefix",
+   "classification": "adapter",
+   "severity": "low",
+   "evidence": "Vite (5177) strips one /api, so the web app calls /api/api/... Mobile apps must call the backend directly, never through the Vite proxy.",
+   "recommendation": "Document only.",
+   "phase": "11"
+  },
+  {
+   "id": "X04",
+   "area": "bearerAuth",
+   "classification": "exact",
+   "severity": "info",
+   "evidence": "Authorization: Bearer <64-hex>; scheme case-insensitive; 30-day expiry; logout/password change/deleteMe revoke.",
+   "recommendation": "Store the token in Keychain/Keystore; on 401 clear it and go to login.",
+   "phase": "-"
+  },
+  {
+   "id": "X05",
+   "area": "Same token on /v1",
+   "classification": "richer",
+   "severity": "info",
+   "evidence": "CompositeAuthenticator maps an /api session to the account scope u_account_<hex>, so the same bearer token authorizes /v1 (verified live). /v1 uses a different error envelope (adds details) and snake_case DTOs.",
+   "recommendation": "Lets the app adopt AI/search features later without a second login.",
+   "phase": "12"
+  },
+  {
+   "id": "X06",
+   "area": "Request body rules",
+   "classification": "exact",
+   "severity": "medium",
+   "evidence": "POST/PATCH need Content-Type application/json and a JSON object body (<=16 KB). Bodyless POSTs (logout, restore, view, notices read) must send {}; empty body returns 400 INVALID_JSON and a missing content type returns 415.",
+   "recommendation": "Mobile HTTP wrapper must always send '{}' for these POSTs.",
+   "phase": "11"
+  },
+  {
+   "id": "X07",
+   "area": "Rate limiting",
+   "classification": "exact",
+   "severity": "medium",
+   "evidence": "30 req/min per socket peer IP on /auth/* and /me/password*. Behind a reverse proxy, uvicorn only trusts X-Forwarded-For from 127.0.0.1. Carrier-grade NAT shares one bucket.",
+   "recommendation": "Production: proxy on the same host or set --forwarded-allow-ips; monitor 429s.",
+   "phase": "13"
+  },
+  {
+   "id": "X08",
+   "area": "CORS / Origin",
+   "classification": "exact",
+   "severity": "medium",
+   "evidence": "Requests without Origin (native RN/Flutter/Swift/Kotlin) pass. Any Origin not in CORS_ORIGINS (+OAUTH_PUBLIC_ORIGIN) returns 403 ORIGIN_FORBIDDEN, including 'Origin: null' and WebView origins such as capacitor://localhost. Preflight allows only the Authorization and Content-Type headers. /v1 has no CORS middleware at all.",
+   "recommendation": "WebView/Expo-web apps: add their exact origin to CORS_ORIGINS. Native apps: nothing to do.",
+   "phase": "11"
+  },
+  {
+   "id": "X09",
+   "area": "LAN / real-device binding",
+   "classification": "dangerous",
+   "severity": "high",
+   "evidence": "`jupjup api serve` refuses any non-loopback --host (exit 2) and its --allow-external-bind flag is declared but ignored. Bypassing via raw uvicorn with the default auth_backend=dev_header would expose /v1 GETs to anyone on the LAN via X-User-Id.",
+   "recommendation": "Phase 11: allow external bind only when auth_backend=app_session and --allow-external-bind is given. Interim workaround verified: uvicorn factory with JUPJUP_AUTH_BACKEND=app_session.",
+   "phase": "11"
+  },
+  {
+   "id": "X10",
+   "area": "HTTPS production",
+   "classification": "missing",
+   "severity": "high",
+   "evidence": "No deploy profile: TLS termination, HSTS, env=prod checks (cursor_secret default 'dev-only-change-me' is not rejected), forwarded-IP trust and backups are all undefined. iOS ATS needs HTTPS in release builds.",
+   "recommendation": "Phase 13: reverse proxy (Caddy or nginx) with TLS -> uvicorn on 127.0.0.1, prod settings validation, smoke over HTTPS.",
+   "phase": "13"
+  },
+  {
+   "id": "X11",
+   "area": "Trailing slash / HEAD",
+   "classification": "dangerous",
+   "severity": "low",
+   "evidence": "GET /api/health/ returns a 307 redirect (Starlette redirect_slashes); behind TLS termination the Location can downgrade to http:// and clients may drop Authorization. HEAD returns 404.",
+   "recommendation": "Set redirect_slashes=False on the /api sub-app (404 instead of redirect).",
+   "phase": "11"
+  },
+  {
+   "id": "X12",
+   "area": "Dual content store",
+   "classification": "dangerous",
+   "severity": "high",
+   "evidence": "/api/contents writes api_contents; /v1/contents writes core contents. Verified live: a URL saved via /api is invisible to /v1/contents and /v1/search, and a /v1 save is invisible to /api/state. Same account, same token, two disjoint libraries.",
+   "recommendation": "Phase 12 (needs product decision): link api_contents to core contents and surface analysis status/summary/tags through the unchanged /api DTO.",
+   "phase": "12"
+  },
+  {
+   "id": "X13",
+   "area": "AI analysis lifecycle",
+   "classification": "richer",
+   "severity": "medium",
+   "evidence": "Spec Content.status enum already includes analyzing/failed/unavailable, but the server always returns ready with empty description/tags. /v1 has the real pipeline (pending, awaiting_confirmation, ready, analysis_failed...).",
+   "recommendation": "Bridge maps core status into the existing enum, so it stays backward-compatible.",
+   "phase": "12"
+  },
+  {
+   "id": "X14",
+   "area": "Search",
+   "classification": "richer",
+   "severity": "low",
+   "evidence": "listContent q is a substring filter. /v1/search is hybrid semantic search over core contents only.",
+   "recommendation": "Keep q as is. The app can call /v1/search with the same token once the bridge lands.",
+   "phase": "12"
+  },
+  {
+   "id": "X15",
+   "area": "Collections",
+   "classification": "adapter",
+   "severity": "medium",
+   "evidence": "Spec collection is a fixed six-value Korean enum set by the user. /v1/collections are user-defined (name+color). No mapping exists.",
+   "recommendation": "Bridge keeps the enum value in api_contents (app-owned field) and does not mirror it into /v1 collections.",
+   "phase": "12"
+  },
+  {
+   "id": "X16",
+   "area": "Social OAuth",
+   "classification": "richer",
+   "severity": "low",
+   "evidence": "Spec says OAuth is unsupported. The backend has Google/Naver OAuth, but the flow is browser-cookie-bound and redirects to the web origin /auth/callback, so it is unusable from a native app.",
+   "recommendation": "Out of contract. Future: native OAuth with PKCE + app links (separate phase).",
+   "phase": "later"
+  },
+  {
+   "id": "X17",
+   "area": "OAuth-only accounts and password endpoints",
+   "classification": "missing",
+   "severity": "low",
+   "evidence": "OAuth users get a random password: verify/change always fail and lock after 5 tries. User has no field telling the app this.",
+   "recommendation": "Do NOT add fields to /api User (strict Kotlin decoders reject unknown keys). Hide the password UI for OAuth users via a /v1 endpoint later, or accept the limitation.",
+   "phase": "later"
+  },
+  {
+   "id": "X18",
+   "area": "Unsupported features (push, offline sync, upload)",
+   "classification": "exact",
+   "severity": "info",
+   "evidence": "Absent in both spec and backend; the spec forbids fake success.",
+   "recommendation": "None.",
+   "phase": "-"
+  },
+  {
+   "id": "X19",
+   "area": "Spec prose drift",
+   "classification": "adapter",
+   "severity": "low",
+   "evidence": "info.description says Node 26+/SQLite server, OAuth and AI unsupported; reality is Python/FastAPI with OAuth/AI on /v1. Behaviour is unaffected.",
+   "recommendation": "Keep the frozen file; this audit is the errata.",
+   "phase": "-"
+  },
+  {
+   "id": "X20",
+   "area": "Account deletion cascade",
+   "classification": "exact",
+   "severity": "info",
+   "evidence": "DELETE /api/me cascades api_* and, through the account_scopes trigger, core contents/collections/idempotency/index revisions.",
+   "recommendation": "Covered by tests/integration/test_account_scoping.py.",
+   "phase": "-"
+  },
+  {
+   "id": "X21",
+   "area": "Contract test coverage",
+   "classification": "missing",
+   "severity": "medium",
+   "evidence": "Existing: 24 success paths validated against the spec plus many negative tests (100 tests pass). Missing: error-status ⊆ spec conformance per operation, full create_app mount with env settings, CLI bind policy, spec hash pin, black-box LAN smoke script.",
+   "recommendation": "Phase 11 test plan (section 7).",
+   "phase": "11"
+  },
+  {
+   "id": "X22",
+   "area": "Native client network policy",
+   "classification": "missing",
+   "severity": "medium",
+   "evidence": "Not a backend gap, but required for devices: iOS ATS + local-network permission, Android cleartext policy for dev HTTP.",
+   "recommendation": "Integration guide (section 8).",
+   "phase": "11"
+  }
+ ]
+}

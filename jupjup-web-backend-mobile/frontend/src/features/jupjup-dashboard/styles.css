@@ -1,0 +1,1006 @@
+
+:root{--paper:#FAF9F6;--white:#fff;--ink:#1F1916;--brown:#8B5A2B;--orange:#FF9F43;--orange-d:#E58B30;--muted:#858078;--line:#EEEAE4;--line-2:#E6E0D8;--peach:#FFF3E6;--cream:#FFFAF4;--shadow:0 14px 40px rgba(67,47,27,.065);--radius:16px}
+[hidden]{display:none!important}*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;-webkit-font-smoothing:antialiased;word-break:keep-all;font-weight:400}button,input,select,textarea{font:inherit}button{cursor:pointer}button,input,select,textarea{outline-offset:3px}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #FFC480}a{color:inherit;text-decoration:none}svg{display:block}::selection{background:#FFE4C1;color:var(--ink)}
+.icon{width:19px;height:19px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.icon.small{width:16px;height:16px}.icon.large{width:23px;height:23px}.muted{color:var(--muted)}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.button{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:43px;padding:0 17px;border:1px solid var(--line-2);border-radius:11px;background:#fff;color:var(--ink);font-size:13px;font-weight:530;white-space:nowrap;transition:background .18s,transform .18s,border .18s}.button:hover{background:#faf6f0;transform:translateY(-1px)}.button.primary{background:var(--orange);border-color:var(--orange);color:#332014;font-weight:590}.button.primary:hover{background:#F6A654}.button.ghost{background:transparent;border-color:transparent}.button.ghost:hover{background:#F6F3EF}.button.icon-button{width:40px;min-height:40px;padding:0}.icon-button.plain{width:34px;min-height:34px;border-color:transparent;background:transparent;color:#6F6860}.icon-button.plain:hover{background:#F6F3EE}.nav-text{font-size:13.5px}.app-shell{display:flex;min-height:100vh}
+.sidebar{width:252px;flex:0 0 252px;position:sticky;top:0;height:100vh;background:#fff;border-right:1px solid var(--line);padding:28px 17px 22px;display:flex;flex-direction:column;z-index:35;transition:transform .25s}
+.logo{display:flex;gap:9px;align-items:center;padding-left:14px;margin-bottom:38px;font-size:21px;font-weight:650;letter-spacing:-.065em}.brand-icon{width:33px;height:33px}.logo .brand-dot{color:#DE8A38}.workspace{margin:0 7px 33px;padding:11px 12px;display:flex;align-items:center;gap:10px;background:#FBFAF8;border:1px solid #F0ECE7;border-radius:12px}.avatar{display:grid;place-items:center;flex:none;width:33px;height:33px;border-radius:10px;background:#FBE8D6;color:#96643C;font-size:15px;font-weight:620}.workspace .name{font-size:12.5px;font-weight:580}.workspace .sub{font-size:11.5px;color:#9F958B;margin-top:3px}.workspace .chevron{margin-left:auto;color:#A8A19A}.nav-caption{font-size:11px;color:#ABA49B;font-weight:500;letter-spacing:.015em;padding:0 16px;margin:0 0 12px}.nav-items{display:flex;flex-direction:column;gap:3px}.nav-item{display:flex;align-items:center;width:100%;min-height:42px;gap:12px;padding:0 14px;border:0;border-radius:10px;color:#6F675F;background:transparent;text-align:left;font-size:13.5px;font-weight:460;transition:background .16s,color .16s}.nav-item:hover{background:#FAF7F2;color:var(--ink)}.nav-item.active{color:#704925;background:#FFF0DE;font-weight:600}.nav-item .count{font-size:11px;color:#A29B91;margin-left:auto;font-weight:470}.nav-item.active .count{color:#A47B4F}.nav-item .icon{width:18px;height:18px;stroke-width:1.8}.nav-divider{height:1px;background:var(--line);margin:23px 15px 23px}.nav-section-top{display:flex;align-items:center;justify-content:space-between;padding-right:8px}.plus-collection{background:transparent;border:0;border-radius:7px;color:#9E978F;width:28px;height:28px;display:grid;place-items:center}.plus-collection:hover{background:#F7F2EB;color:var(--ink)}.collection-nav{max-height:240px;overflow-y:auto}.collection-nav::-webkit-scrollbar{width:3px}.collection-nav::-webkit-scrollbar-thumb{background:#E4DFD7}.color-dot{width:8px;height:8px;border-radius:3px;flex:none}.sidebar-bottom{margin-top:auto;padding:13px 11px 0;border-top:1px solid var(--line)}.sidebar-bottom .nav-item{margin-top:3px}.sidebar-note{font-size:11px;line-height:1.6;color:#A8A198;padding:15px 12px 0}
+.main-shell{flex:1;min-width:0}.topbar{height:76px;padding:0 clamp(24px,3vw,54px);display:flex;align-items:center;justify-content:space-between;background:rgba(250,249,246,.92);border-bottom:1px solid var(--line);backdrop-filter:blur(12px);position:sticky;top:0;z-index:20}.breadcrumbs{display:flex;gap:10px;align-items:center;color:#9D958A;font-size:12.5px}.breadcrumbs b{color:var(--ink);font-weight:520}.top-actions{display:flex;gap:14px;align-items:center}.top-search{display:flex;align-items:center;gap:9px;padding:0 12px;color:#948B82;border:1px solid var(--line-2);border-radius:10px;background:#fff;height:38px;min-width:218px;cursor:pointer;font-size:12.5px}.top-search kbd{margin-left:auto;background:#F7F5F2;border:1px solid #ECE6E0;border-radius:5px;padding:2px 5px;font-size:10px;color:#928A82;font-family:inherit}.top-profile{width:34px;height:34px;display:grid;place-items:center;border:0;border-radius:50%;background:#F9D8B7;color:#8E5F3C;font-size:13px;font-weight:570}.mobile-menu{display:none}
+.content{width:min(1410px,100%);padding:46px clamp(24px,3vw,54px) 80px;margin:0 auto}.intro{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:29px}.intro h1{font-size:clamp(29px,3vw,39px);font-weight:580;letter-spacing:-.06em;line-height:1.28;margin:0 0 9px}.intro p{font-size:14px;color:#8E867C;margin:0;line-height:1.6}.intro-actions{display:flex;gap:9px}.intro-actions .button .icon{width:17px;height:17px}
+.search-feature{position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;min-height:234px;margin-bottom:42px;background:#FFF2E3;border:1px solid #F8EADA;border-radius:19px;padding:35px 44px}.search-feature::before{content:"";position:absolute;right:0;top:0;width:42%;height:100%;background:radial-gradient(circle at 70% 55%,rgba(255,255,255,.72),transparent 63%);z-index:-1}.search-copy{position:relative;z-index:2;max-width:560px;width:63%}.search-copy h2{margin:0 0 8px;font-size:25px;letter-spacing:-.05em;font-weight:570;line-height:1.4}.search-copy p{font-size:13px;line-height:1.7;color:#907562;margin:0 0 23px}.big-search{height:51px;border:1px solid #EEDCCA;border-radius:11px;background:#fff;display:flex;align-items:center;gap:11px;padding:0 14px;box-shadow:0 8px 25px rgba(136,84,36,.045)}.big-search>.icon{color:#9B8170}.big-search input{min-width:0;flex:1;border:0;background:transparent;outline:none;font-size:13.5px;color:var(--ink)}.big-search input::placeholder{color:#A89D92}.big-search .search-key{border:1px solid #F1E9E1;background:#FBFAF8;border-radius:5px;padding:4px 6px;font-size:11px;color:#9E958D}.search-visual{position:absolute;right:33px;top:8px;height:235px;width:340px;pointer-events:none}.search-visual .paper-a,.search-visual .paper-b,.search-visual .paper-c{position:absolute;border-radius:13px;background:#fff;border:1px solid rgba(136,93,58,.1);box-shadow:0 13px 30px rgba(93,60,30,.13);overflow:hidden;transform-origin:center}.paper-a{width:143px;height:156px;right:155px;top:34px;transform:rotate(-13deg)}.paper-b{width:153px;height:164px;right:71px;top:10px;transform:rotate(11deg)}.paper-c{width:152px;height:143px;right:0;top:70px;transform:rotate(-6deg)}.paper-photo{height:106px;display:flex;justify-content:center;align-items:center}.paper-a .paper-photo{background:#E6D6F9}.paper-b .paper-photo{background:#F8CFAF}.paper-c .paper-photo{background:#C7DBCC}.paper-txt{height:6px;width:62%;border-radius:6px;background:#E8E4DF;margin:12px 12px}.paper-txt.short{width:43%;margin-top:-5px}.visual-loop{position:absolute;right:58px;bottom:0;width:47px;height:47px;border-radius:15px;display:grid;place-items:center;background:#FF9F43;color:#563113;box-shadow:0 11px 24px rgba(137,84,31,.19);transform:rotate(9deg)}
+.dashboard-layout{display:grid;grid-template-columns:minmax(0,1fr) 274px;gap:32px;align-items:start}.section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:21px}.section-heading h2{margin:0;font-size:20px;letter-spacing:-.045em;font-weight:575}.section-heading p{margin:5px 0 0;color:#999087;font-size:12px}.inline-link{display:inline-flex;align-items:center;gap:4px;color:#9A704A;background:transparent;border:0;padding:5px;font-size:12px;font-weight:520}.inline-link:hover{color:#6B4328}.content-toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:11px;margin-bottom:22px}.filters{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.filter-button{min-height:34px;padding:0 14px;border:1px solid transparent;border-radius:9px;background:transparent;font-size:12px;color:#877F76;transition:.18s}.filter-button:hover{background:#F4EEE7}.filter-button.selected{border-color:#EAE4DC;background:#fff;color:#3B2E24;font-weight:560;box-shadow:0 2px 6px rgba(70,47,32,.03)}.content-tools{display:flex;align-items:center;gap:7px}.sort-select{height:33px;min-width:105px;padding:0 22px 0 9px;border:0;background:transparent;color:#7D756D;font-size:12px;cursor:pointer}.view-toggle{display:flex;background:#F2EEE8;padding:3px;border-radius:8px}.view-toggle button{width:29px;height:28px;border:0;border-radius:6px;background:transparent;display:grid;place-items:center;color:#9C958C}.view-toggle button.active{background:#fff;color:#504030;box-shadow:0 1px 5px rgba(65,47,29,.05)}.view-toggle .icon{width:15px;height:15px}.result-note{font-size:12px;color:#928A82;margin:-7px 0 15px}.result-note strong{color:#7D5130;font-weight:600}
+.content-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}.content-card{position:relative;min-width:0;background:#fff;border:1px solid #ECE7E0;border-radius:15px;overflow:hidden;transition:transform .2s,border-color .2s,box-shadow .2s;animation:enter .3s both}.content-card:hover{transform:translateY(-3px);border-color:#E9D5BB;box-shadow:var(--shadow)}.card-art{position:relative;height:152px;overflow:hidden;background:#F3EEE7;cursor:pointer}.card-art svg{width:100%;height:100%;display:block;transition:transform .45s}.content-card:hover .card-art svg{transform:scale(1.04)}.card-art .type-pill{position:absolute;left:12px;top:12px;background:rgba(255,255,255,.91);color:#5B5048;border:1px solid rgba(255,255,255,.7);backdrop-filter:blur(8px);border-radius:6px;padding:5px 7px;font-size:10px;font-weight:560;display:flex;align-items:center;gap:5px}.type-pill .icon{width:12px;height:12px}.favorite{position:absolute;right:10px;top:10px;width:27px;height:27px;display:grid;place-items:center;border:0;border-radius:8px;background:rgba(255,255,255,.92);color:#8E8076;transition:.18s}.favorite:hover{background:#fff;color:#E49A54}.favorite.active{color:#E58C38}.favorite.active svg{fill:#FCE1BE}.favorite .icon{width:15px;height:15px}.card-body{padding:14px 14px 13px}.card-source{display:flex;align-items:center;gap:7px;color:#999087;font-size:10.5px;margin-bottom:9px}.platform-mark{width:6px;height:6px;border-radius:50%;background:#EFA05B}.platform-mark.youtube{background:#F16F6D}.platform-mark.instagram{background:#C789CE}.platform-mark.web{background:#A9B8A3}.platform-mark.note{background:#E5B868}.card-title{display:-webkit-box;line-clamp:2;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;height:39px;margin:0 0 13px;color:#382E27;font-size:13px;line-height:1.52;letter-spacing:-.02em;font-weight:555;cursor:pointer}.card-title:hover{color:#AD6C33}.card-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px}.tags{display:flex;gap:5px;flex-wrap:nowrap;min-width:0;overflow:hidden}.tag{white-space:nowrap;padding:4px 6px;border-radius:5px;background:#F7F4F0;color:#83776D;font-size:10px}.card-more{border:0;background:transparent;display:grid;place-items:center;width:25px;height:25px;flex:none;color:#92877D;border-radius:6px}.card-more:hover{background:#F5F0EB;color:#44342A}.card-more .icon{width:17px;height:17px}
+.content-grid.is-list{grid-template-columns:1fr;gap:10px}.is-list .content-card{display:flex;align-items:stretch;min-height:125px}.is-list .card-art{width:195px;min-width:195px;height:auto}.is-list .card-body{flex:1;display:flex;flex-direction:column;justify-content:center;padding:15px 19px}.is-list .card-title{height:auto;min-height:0;margin-bottom:8px;font-size:14px}.is-list .card-source{margin-bottom:8px}.is-list .card-bottom{margin-top:auto}.is-list .favorite{left:156px;right:auto}
+.right-rail{padding-top:0}.rail-block{margin-bottom:29px}.rail-title{display:flex;align-items:center;justify-content:space-between;margin:3px 0 17px}.rail-title h3{font-size:17px;font-weight:565;letter-spacing:-.035em;margin:0}.rail-title .rail-add{width:28px;height:28px;border:1px solid #EEE7E0;background:#fff;border-radius:8px;color:#9D8271;display:grid;place-items:center}.rail-add:hover{color:#7E532F;background:#FFF5E8}.collection-list{display:flex;flex-direction:column;gap:9px}.collection-tile{display:flex;width:100%;align-items:center;gap:13px;text-align:left;padding:11px 13px;border:1px solid #ECE7E0;border-radius:11px;background:#fff;transition:background .18s,transform .18s,border .18s}.collection-tile:hover{border-color:#E7D5BD;transform:translateX(2px)}.folder-icon{width:36px;height:36px;flex:none;display:grid;place-items:center;border-radius:9px}.folder-icon .icon{width:17px;height:17px;stroke-width:1.7}.col-info{min-width:0;flex:1}.col-info .col-title{display:block;color:#4B3B30;font-size:12.3px;font-weight:535;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.col-info .col-count{display:block;color:#A59C91;font-size:10.5px;margin-top:5px}.collection-tile>.icon{width:14px;height:14px;color:#B9AFA4}.rail-helper{border-radius:14px;background:#F7F0E7;border:1px solid #F0E6DA;padding:24px 23px;position:relative;overflow:hidden}.rail-helper .small-icon{width:34px;height:34px;background:#FCE0BD;color:#955E34;border-radius:10px;display:grid;place-items:center;margin-bottom:15px}.rail-helper h3{font-size:17px;line-height:1.45;letter-spacing:-.035em;font-weight:580;margin:0 0 8px}.rail-helper p{font-size:12px;line-height:1.75;color:#8D7867;margin:0 0 17px}.rail-helper button{border:0;background:transparent;padding:0;color:#935E35;font-size:12px;display:flex;align-items:center;gap:5px;font-weight:550}.rail-helper button:hover{color:#C47830}.rail-helper .decoration{position:absolute;right:-22px;bottom:-45px;width:120px;height:120px;border:1px solid rgba(174,127,92,.16);border-radius:50%;pointer-events:none}.rail-helper .decoration::after{content:"";position:absolute;inset:20px;border:1px solid rgba(174,127,92,.16);border-radius:50%}.rail-caption{padding:15px 0 0;text-align:center;color:#B4AAA0;font-size:10.5px}.empty-state{border:1px dashed #E5DAD0;border-radius:16px;background:#fff;min-height:295px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:25px}.empty-symbol{width:57px;height:57px;border-radius:18px;background:#FFF1E0;display:grid;place-items:center;color:#BC8351;margin-bottom:17px}.empty-state h3{font-size:16px;font-weight:560;margin:0 0 9px}.empty-state p{font-size:12.5px;line-height:1.7;color:#998F85;margin:0 0 19px}
+.collections-overview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.overview-card{border:1px solid #ECE7E1;background:#fff;border-radius:15px;text-align:left;padding:23px;min-height:165px;transition:.2s}.overview-card:hover{border-color:#E7D3B9;box-shadow:var(--shadow);transform:translateY(-2px)}.overview-card .folder-icon{margin-bottom:17px;width:43px;height:43px}.overview-card h3{font-size:15px;margin:0 0 8px;font-weight:560}.overview-card p{font-size:12px;color:#958A80;margin:0}
+.dialog-backdrop{position:fixed;inset:0;background:rgba(30,23,19,.36);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:18px;z-index:100}.dialog-backdrop.open{display:flex}.dialog{background:#fff;border:1px solid #EEE7DF;border-radius:19px;width:min(492px,100%);max-height:min(730px,90vh);overflow:auto;box-shadow:0 24px 80px rgba(38,27,19,.19);padding:26px}.dialog.wide{width:min(625px,100%)}.dialog-header{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:24px}.dialog-header h2{font-size:20px;letter-spacing:-.04em;font-weight:590;margin:0}.dialog-close{width:31px;height:31px;border:0;background:#F7F5F2;border-radius:8px;color:#71675F;display:grid;place-items:center}.dialog-close:hover{background:#EEE7E0}.form-fields{display:grid;gap:17px}.form-field label{display:block;color:#594B41;font-size:12px;font-weight:555;margin-bottom:8px}.form-field input,.form-field select,.form-field textarea{width:100%;border:1px solid #E7E1D9;border-radius:9px;background:#fff;padding:12px 13px;font-size:13px;color:#3F332B;outline:none}.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:#E5A465;box-shadow:0 0 0 3px rgba(255,159,67,.13)}.form-field input::placeholder,.form-field textarea::placeholder{color:#ADA39B}.form-field .help{display:block;margin-top:7px;color:#9F958B;font-size:11.5px;line-height:1.6}.form-field textarea{resize:vertical;min-height:90px}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.dialog-footer{display:flex;justify-content:flex-end;gap:9px;margin-top:26px}.notice{background:#FFF4E7;border:1px solid #F9E8D2;border-radius:10px;color:#8F6744;font-size:11.5px;line-height:1.7;padding:11px 13px}.detail-art{height:205px;border-radius:13px;overflow:hidden;background:#F7F1EA;margin-bottom:18px}.detail-art svg{width:100%;height:100%}.detail-category{font-size:11px;color:#A07F61;margin-bottom:8px}.detail-title{font-size:22px;letter-spacing:-.04em;line-height:1.4;font-weight:580;margin:0 0 12px}.detail-desc{font-size:13px;color:#7F7368;line-height:1.75;margin:0 0 15px}.detail-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}.detail-meta span{background:#F7F4F0;border-radius:6px;padding:7px 10px;font-size:11px;color:#897F75}.detail-buttons{display:flex;gap:7px;flex-wrap:wrap}.detail-buttons .button{min-height:38px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,14px);opacity:0;pointer-events:none;z-index:120;background:#2E2925;color:#fff;padding:12px 17px;border-radius:10px;font-size:12.5px;box-shadow:0 13px 32px rgba(25,18,13,.18);transition:opacity .2s,transform .2s}.toast.show{opacity:1;transform:translate(-50%,0)}.sidebar-scrim{display:none}
+@keyframes enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:1340px){.dashboard-layout{grid-template-columns:minmax(0,1fr) 243px;gap:24px}.card-art{height:137px}.content-grid{gap:13px}.search-visual{transform:scale(.85);transform-origin:right center;right:20px}.search-copy{width:65%}}
+@media(max-width:1170px){.sidebar{width:218px;flex-basis:218px}.content{padding-inline:28px}.topbar{padding-inline:28px}.dashboard-layout{grid-template-columns:1fr}.right-rail{display:grid;grid-template-columns:1fr 260px;gap:20px}.collection-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.search-visual{right:25px}}
+@media(max-width:850px){.sidebar{position:fixed;transform:translateX(-100%);width:252px}.sidebar.open{transform:translateX(0)}.sidebar-scrim.open{display:block;position:fixed;inset:0;background:rgba(23,19,15,.25);z-index:30}.mobile-menu{display:grid;place-items:center;width:34px;height:34px;border:0;background:transparent;margin-right:8px}.breadcrumbs{margin-right:auto}.topbar{justify-content:flex-start}.top-actions{margin-left:auto}.top-search{min-width:unset;width:36px;justify-content:center;padding:0}.top-search span,.top-search kbd{display:none}.top-search .icon{width:18px;height:18px}.search-feature{padding:27px 30px}.search-copy{width:70%}.search-visual{right:0;transform:scale(.75)} }
+@media(max-width:620px){.content{padding:28px 17px 55px}.topbar{height:62px;padding-inline:12px}.intro{align-items:flex-start;margin-bottom:22px}.intro h1{font-size:29px}.intro p{max-width:250px;font-size:12.5px}.intro-actions .button{padding:0 12px;min-height:38px;font-size:12px}.intro-actions .button span{display:none}.search-feature{min-height:245px;padding:25px 21px;align-items:flex-start;margin-bottom:33px}.search-copy{width:100%;max-width:none}.search-copy h2{font-size:22px;position:relative;z-index:1}.search-copy p{max-width:260px;position:relative;z-index:1;font-size:11.5px;margin-bottom:17px}.big-search{height:48px}.big-search input{font-size:12px}.big-search .search-key{display:none}.search-visual{transform:scale(.58);transform-origin:right bottom;top:auto;right:-22px;bottom:27px;opacity:.31}.section-heading h2{font-size:19px}.content-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card-art{height:130px}.card-body{padding:12px}.card-title{font-size:12px;min-height:37px}.card-source{font-size:9.5px}.tag{font-size:9px}.right-rail{display:block;margin-top:18px}.collection-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.collection-tile{padding:10px 9px;gap:8px}.folder-icon{width:31px;height:31px}.rail-helper{display:none}.collection-tile>.icon{display:none}.sort-select{min-width:88px}.collections-overview{grid-template-columns:repeat(2,1fr)}.is-list .card-art{width:112px;min-width:112px}.is-list .favorite{left:72px}.is-list .card-body{padding:12px}.is-list .card-title{font-size:12px}.dialog{padding:21px}.form-row{grid-template-columns:1fr}}
+@media(max-width:380px){.content-grid{grid-template-columns:1fr}.card-art{height:173px}.content-toolbar{gap:5px}.filter-button{padding:0 10px}.intro h1{font-size:27px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* React component wrapper around static, original vector thumbnails. */
+.svg-art{width:100%;height:100%}
+.detail-meta span:has(.icon){display:inline-flex;align-items:center;gap:5px}
+
+/* 검색 결과 페이지: 기존 레이아웃을 유지하는 전용 타이포그래피 조정 */
+.search-results-page {
+  --search-font-title: 16px;
+  --search-font-body: 13px;
+  --search-font-caption: 12px;
+}
+
+/* 페이지 헤더 */
+.search-results-page h1 {
+  font-size: clamp(28px, 2.35vw, 32px);
+  line-height: 1.3;
+  font-weight: 580;
+  letter-spacing: -.045em;
+}
+.search-results-page .intro p,
+.search-results-page .archive-page-header p,
+.search-results-page .page-header p {
+  font-size: 14px;
+  line-height: 1.65;
+  font-weight: 400;
+}
+
+/* 검색어와 검색 결과 수 */
+.search-results-page .results-search input {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+.search-results-page .results-search .button {
+  font-size: 13px;
+  font-weight: 520;
+}
+.search-results-page .search-query-summary h2 {
+  margin: 0;
+  font-size: clamp(21px, 2vw, 24px);
+  font-weight: 550;
+  line-height: 1.4;
+  letter-spacing: -.035em;
+}
+.search-results-page .search-query-summary > strong {
+  font-size: 14px;
+  font-weight: 550;
+  line-height: 1.5;
+}
+
+/* 필터: 라벨과 선택값의 크기를 구분 */
+.search-results-page .filter-bar label {
+  font-size: 12px;
+  font-weight: 450;
+  line-height: 1.5;
+}
+.search-results-page .filter-bar select {
+  font-size: 13px;
+  font-weight: 450;
+  line-height: 1.5;
+}
+.search-results-page .filter-reset {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* 검색 결과 카드 */
+.search-results-page .search-result-grid .card-title {
+  height: auto;
+  min-height: 48px;
+  margin-bottom: 13px;
+  font-size: var(--search-font-title);
+  font-weight: 550;
+  line-height: 1.5;
+  letter-spacing: -.025em;
+}
+.search-results-page .search-result-grid .card-source,
+.search-results-page .search-result-grid .card-date,
+.search-results-page .search-result-grid .card-meta {
+  font-size: var(--search-font-caption);
+  font-weight: 400;
+  line-height: 1.5;
+}
+.search-results-page .search-result-grid .card-body > p,
+.search-results-page .search-result-grid :is(.card-description, .card-desc, .card-summary, .card-excerpt, .archive-card-description) {
+  font-size: var(--search-font-body);
+  font-weight: 400;
+  line-height: 1.65;
+}
+.search-results-page .search-result-grid :is(.tag, .primary-tag, .detail-tag),
+.search-results-page .search-result-grid .tags span {
+  font-size: 11.5px;
+  font-weight: 450;
+  line-height: 1.45;
+}
+.search-results-page .search-result-grid :is(.match-reason, .search-match-reason, .card-reason, .search-reason),
+.search-results-page .search-result-grid [class*="match-reason"] {
+  font-size: 12px;
+  font-weight: 450;
+  line-height: 1.55;
+}
+.search-results-page .search-result-grid .card-art .type-pill {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* 관련 컬렉션 / 과거 콘텐츠 */
+.search-results-page .search-side h3 {
+  font-size: 15px;
+  font-weight: 550;
+  line-height: 1.45;
+  letter-spacing: -.02em;
+}
+.search-results-page .search-side button,
+.search-results-page .search-side button > span {
+  font-size: 13px;
+  font-weight: 450;
+  line-height: 1.55;
+}
+.search-results-page .search-side button small {
+  display: block;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.55;
+}
+.search-results-page .search-empty h2 {
+  font-size: 19px;
+  font-weight: 550;
+}
+.search-results-page .search-empty p {
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+/* 작은 화면에서는 카드 가독성을 유지하며 줄바꿈을 허용 */
+@media (max-width: 620px) {
+  .search-results-page h1 { font-size: 28px; }
+  .search-results-page .results-search input { font-size: 14px; }
+  .search-results-page .search-query-summary h2 { font-size: 22px; }
+  .search-results-page .search-result-grid .card-title {
+    font-size: 14px;
+    min-height: 42px;
+    line-height: 1.5;
+  }
+  .search-results-page .search-result-grid .card-body > p,
+  .search-results-page .search-result-grid :is(.card-description, .card-desc, .card-summary, .card-excerpt, .archive-card-description) {
+    font-size: 12px;
+  }
+  .search-results-page .search-result-grid .card-source,
+  .search-results-page .search-result-grid .card-date,
+  .search-results-page .search-result-grid .card-meta {
+    font-size: 11px;
+  }
+  .search-results-page .search-side button,
+  .search-results-page .search-side button > span {
+    font-size: 13px;
+  }
+}
+
+/* 콘텐츠 상세 페이지: 기존 구조·색상 유지, 신규 UX 요소만 스타일 확장 */
+.detail-page .detail-analysis-feedback {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  border: 1px solid #f0e5d6;
+  border-radius: 10px;
+  background: #fff8ee;
+  color: #86684d;
+  font-size: 12.5px;
+  line-height: 1.65;
+}
+.detail-page .detail-analysis-feedback.is-error {
+  border-color: #f2ddd6;
+  background: #fff6f2;
+  color: #946455;
+}
+.detail-page .detail-analysis-feedback button {
+  margin-left: auto;
+  padding: 2px 0;
+  background: transparent;
+  border: 0;
+  color: #895c3b;
+  font-weight: 550;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.detail-page .detail-analysis-spinner {
+  width: 15px;
+  height: 15px;
+  flex: none;
+  border: 2px solid #efd9c1;
+  border-top-color: var(--orange);
+  border-radius: 50%;
+  animation: detail-analysis-spin .9s linear infinite;
+}
+@keyframes detail-analysis-spin { to { transform: rotate(360deg); } }
+.detail-page .ai-summary { white-space: pre-line; }
+.detail-page .detail-summary-points {
+  display: grid;
+  gap: 10px;
+  padding-left: 18px;
+  margin: 16px 0 0;
+  color: #6e6359;
+  font-size: 13px;
+  line-height: 1.8;
+}
+.detail-page .detail-summary-points li::marker { color: #e1a15f; }
+.detail-page .detail-summary-empty {
+  margin: 0;
+  color: #988e84;
+  font-size: 13px;
+  line-height: 1.7;
+}
+.detail-page .detail-memo-editor { display: grid; gap: 13px; }
+.detail-page .detail-memo-editor textarea {
+  width: 100%;
+  min-height: 112px;
+  resize: vertical;
+  padding: 14px 15px;
+  border: 1px solid var(--line-2);
+  border-radius: 11px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 13.5px;
+  line-height: 1.7;
+  font-weight: 400;
+}
+.detail-page .detail-memo-editor textarea::placeholder { color: #aaa096; }
+.detail-page .detail-memo-editor textarea:focus {
+  border-color: #e5a465;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255,159,67,.12);
+}
+.detail-page .detail-memo-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 9px;
+}
+.detail-page .user-memo { white-space: pre-wrap; overflow-wrap: anywhere; }
+.detail-page .detail-side button:disabled { cursor: default; opacity: .55; }
+@media (max-width: 620px) {
+  .detail-page .detail-analysis-feedback { padding: 11px 12px; }
+  .detail-page .detail-memo-actions .button { min-height: 38px; }
+  .detail-page .detail-summary-points { font-size: 12.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .detail-page .detail-analysis-spinner { animation: none; }
+}
+
+/* =====================================================================
+   JupJup | Unified typography scale — 2026-11
+   Preserve the existing palette/layout and make reading sizes consistent.
+   Scope layout-specific adjustments to the dashboard and archive pages.
+   ===================================================================== */
+:root {
+  --jp-text-page: 36px;
+  --jp-text-feature: 24px;
+  --jp-text-section: 22px;
+  --jp-text-subsection: 16px;
+  --jp-text-card: 16px;
+  --jp-text-body: 14px;
+  --jp-text-control: 14px;
+  --jp-text-rail: 13px;
+  --jp-text-caption: 12px;
+  --jp-text-stat: 30px;
+}
+
+/* Page titles / supporting text */
+.main-shell .content .intro h1,
+.main-shell .content .archive-page-header h1,
+.main-shell .content .page-header h1,
+.main-shell .archive-content .intro h1 {
+  font-size: clamp(30px, 2.35vw, var(--jp-text-page));
+  line-height: 1.27;
+  font-weight: 580;
+  letter-spacing: -.052em;
+}
+.main-shell .content .intro p,
+.main-shell .content .archive-page-header p,
+.main-shell .content .page-header p {
+  font-size: var(--jp-text-body);
+  line-height: 1.65;
+  font-weight: 400;
+}
+
+/* Sections and the main search panel */
+.main-shell .content .section-heading h2,
+.main-shell .content .rail-block .section-heading h2 {
+  font-size: var(--jp-text-section);
+  line-height: 1.38;
+  font-weight: 550;
+  letter-spacing: -.036em;
+}
+.main-shell .content .section-heading p,
+.main-shell .content .result-note {
+  font-size: var(--jp-text-caption);
+  line-height: 1.6;
+}
+.main-shell .content .search-feature .search-copy h2 {
+  font-size: var(--jp-text-feature);
+  line-height: 1.4;
+  font-weight: 550;
+  letter-spacing: -.04em;
+}
+.main-shell .content .search-feature .search-copy p {
+  font-size: var(--jp-text-body);
+  line-height: 1.65;
+  font-weight: 400;
+}
+.main-shell .content .big-search input,
+.main-shell .content .results-search input {
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+/* Reusable content cards: heading, summary, source and tags */
+.main-shell .content .content-card .card-title {
+  height: auto;
+  min-height: 48px;
+  margin-bottom: 12px;
+  font-size: var(--jp-text-card);
+  line-height: 1.5;
+  font-weight: 550;
+  letter-spacing: -.022em;
+}
+.main-shell .content .content-card :is(
+  .card-description, .card-desc, .card-summary, .card-excerpt,
+  .archive-card-description, .card-description-text
+),
+.main-shell .content .content-card .card-body > p {
+  font-size: var(--jp-text-body);
+  line-height: 1.65;
+  font-weight: 400;
+}
+.main-shell .content .content-card :is(.card-source, .card-meta, .card-date),
+.main-shell .content .content-card .card-source :is(span, time) {
+  font-size: var(--jp-text-caption);
+  line-height: 1.5;
+  font-weight: 400;
+}
+.main-shell .content .content-card .card-art .type-pill,
+.main-shell .content .content-card .card-art .detail-status {
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.main-shell .content .content-card :is(.tags .tag, .card-tags .tag, .tag, .primary-tag, .detail-tag) {
+  font-size: var(--jp-text-caption);
+  font-weight: 450;
+  line-height: 1.4;
+}
+.main-shell .content .content-card :is(.match-reason, .search-match-reason, .card-reason, .search-reason),
+.main-shell .content .content-card [class*="match-reason"] {
+  font-size: var(--jp-text-caption);
+  font-weight: 450;
+  line-height: 1.55;
+}
+/* List mode uses a single-line heading instead of a reserved two-line area. */
+.main-shell .content .content-grid.is-list .content-card .card-title {
+  min-height: 0;
+  font-size: 16px;
+}
+
+/* Controls, navigation and filters */
+.main-shell .content .button,
+.main-shell .content .filter-button,
+.main-shell .content .sort-select,
+.main-shell .content .filter-bar select,
+.main-shell .content .filter-bar .filter-reset {
+  font-size: var(--jp-text-control);
+  font-weight: 500;
+  line-height: 1.4;
+}
+.main-shell .content .filter-bar label {
+  font-size: var(--jp-text-caption);
+  font-weight: 450;
+  line-height: 1.5;
+}
+.main-shell .content .tag,
+.main-shell .content .suggested-tags button {
+  font-size: var(--jp-text-caption);
+}
+.sidebar .nav-item { font-size: 14px; font-weight: 460; }
+.sidebar .nav-caption { font-size: 12px; }
+.main-shell .topbar .breadcrumbs { font-size: 13px; }
+.main-shell .topbar .top-search { font-size: 13px; }
+
+/* Right rails and collection lists */
+.main-shell .content :is(.rail-title h3, .search-side h3, .detail-side h3) {
+  font-size: var(--jp-text-subsection);
+  font-weight: 550;
+  line-height: 1.45;
+  letter-spacing: -.022em;
+}
+.main-shell .content :is(.collection-tile .col-title, .collection-nav .nav-text),
+.main-shell .content .search-side button,
+.main-shell .content .search-side button > span,
+.main-shell .content .detail-side label {
+  font-size: var(--jp-text-rail);
+  font-weight: 450;
+  line-height: 1.55;
+}
+.main-shell .content :is(.collection-tile .col-count, .search-side small) {
+  font-size: var(--jp-text-caption);
+  font-weight: 400;
+  line-height: 1.5;
+}
+.main-shell .content .rail-helper h3 {
+  font-size: var(--jp-text-subsection);
+  font-weight: 550;
+  line-height: 1.45;
+}
+.main-shell .content .rail-helper p { font-size: 13px; line-height: 1.7; }
+
+/* Rediscovery / statistics cards (if the page includes these components) */
+.main-shell .content :is(.revisit-card, .rediscovery-card, .stat-card, .insight-card)
+:is(.number, .value, .stat-number, .stat-value) {
+  font-size: var(--jp-text-stat);
+  line-height: 1.1;
+  font-weight: 550;
+}
+.main-shell .content :is(.revisit-card, .rediscovery-card, .stat-card, .insight-card)
+:is(.label, .title, .stat-label) {
+  font-size: var(--jp-text-body);
+  line-height: 1.55;
+  font-weight: 500;
+}
+
+/* Search results: preserve existing card layout while harmonizing text. */
+.main-shell .search-results-page .search-query-summary h2 {
+  font-size: var(--jp-text-feature);
+  font-weight: 550;
+}
+.main-shell .search-results-page .search-result-grid .card-title {
+  font-size: var(--jp-text-card);
+  min-height: 48px;
+}
+.main-shell .search-results-page .search-result-grid :is(
+  .card-description, .card-desc, .card-summary,
+  .card-excerpt, .archive-card-description
+) {
+  font-size: var(--jp-text-body);
+}
+.main-shell .search-results-page .search-side h3 {
+  font-size: var(--jp-text-subsection);
+}
+
+/* Content details: keep existing card sizes and hierarchy. */
+.main-shell .detail-page .detail-overview h1 {
+  font-size: clamp(26px, 2.2vw, 32px);
+  line-height: 1.35;
+  font-weight: 570;
+  letter-spacing: -.045em;
+}
+.main-shell .detail-page .detail-section-heading h2 {
+  font-size: 20px;
+  line-height: 1.4;
+  font-weight: 550;
+}
+.main-shell .detail-page :is(.ai-summary, .user-memo, .detail-summary-points) {
+  font-size: var(--jp-text-body);
+  line-height: 1.75;
+  font-weight: 400;
+}
+.main-shell .detail-page .detail-meta-line { font-size: var(--jp-text-caption); }
+.main-shell .detail-page .detail-section-heading button,
+.main-shell .detail-page .detail-side button { font-size: var(--jp-text-control); }
+.main-shell .detail-page .tag-groups h3 { font-size: 13px; font-weight: 550; }
+.main-shell .detail-page .tag-groups span { font-size: var(--jp-text-caption); }
+.main-shell .detail-page .detail-memo-editor textarea { font-size: var(--jp-text-body); }
+
+/* Upload page: only selectors already used by the upload feature take effect. */
+.main-shell .content:is(.upload-page, .new-content-page) h1,
+.main-shell .content :is(.upload-page, .new-content-page) h1 {
+  font-size: clamp(30px, 2.35vw, var(--jp-text-page));
+  font-weight: 580;
+}
+.main-shell .content:is(.upload-page, .new-content-page) textarea,
+.main-shell .content :is(.upload-page, .new-content-page) textarea,
+.main-shell .content:is(.upload-page, .new-content-page) input,
+.main-shell .content :is(.upload-page, .new-content-page) input {
+  font-size: var(--jp-text-body);
+  line-height: 1.6;
+}
+
+@media (max-width: 850px) {
+  :root { --jp-text-page: 32px; --jp-text-section: 21px; }
+}
+@media (max-width: 620px) {
+  :root {
+    --jp-text-page: 29px;
+    --jp-text-feature: 22px;
+    --jp-text-section: 20px;
+    --jp-text-card: 14px;
+    --jp-text-body: 13px;
+    --jp-text-control: 13px;
+    --jp-text-caption: 11.5px;
+    --jp-text-stat: 28px;
+  }
+  .main-shell .content .intro h1,
+  .main-shell .content .archive-page-header h1,
+  .main-shell .content .page-header h1 { font-size: var(--jp-text-page); }
+  .main-shell .content .content-card .card-title {
+    font-size: var(--jp-text-card);
+    min-height: 42px;
+    line-height: 1.5;
+  }
+  .main-shell .content .content-card :is(
+    .card-description, .card-desc, .card-summary,
+    .card-excerpt, .archive-card-description
+  ) { font-size: 12.5px; }
+  .main-shell .content .content-card .card-source,
+  .main-shell .content .content-card .card-date,
+  .main-shell .content .content-card .card-meta { font-size: 11px; }
+  .main-shell .content .content-card :is(.tag, .primary-tag, .detail-tag) { font-size: 11px; }
+  .main-shell .content .search-feature .search-copy p { font-size: 12.5px; }
+  .main-shell .content :is(.rail-title h3, .search-side h3, .detail-side h3) { font-size: 15px; }
+  .main-shell .search-results-page .search-result-grid .card-title { font-size: 14px; }
+  .main-shell .detail-page .detail-overview h1 { font-size: 26px; }
+}
+
+/* =====================================================================
+   줍줍저장소 · 콘텐츠 카드 가독성 개선 (2026-11-05)
+   썸네일과 제목을 우선하고, 요약·태그·출처는 보조 정보로 정리.
+   카드의 HTML 구조나 클릭 동작은 변경하지 않습니다.
+   ===================================================================== */
+
+/* Grid cards: more breathing room, without increasing decorative weight. */
+.main-shell .content .content-grid .content-card {
+  border-color: #EAE5DE;
+  border-radius: 17px;
+  box-shadow: none;
+}
+.main-shell .content .content-grid .content-card:hover {
+  border-color: #E6D0B6;
+  box-shadow: 0 9px 26px rgba(67, 47, 27, .055);
+}
+.main-shell .content .content-grid .content-card .card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  padding: 20px 20px 19px;
+}
+
+/* Eyebrow: platform and date should not compete with the title. */
+.main-shell .content .content-grid .content-card .card-source,
+.main-shell .content .content-grid .content-card :is(.card-date, .card-meta) {
+  margin-bottom: 12px;
+  color: #8A837B;
+  font-size: 11.5px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+.main-shell .content .content-grid .content-card .platform-mark {
+  width: 6px;
+  height: 6px;
+}
+
+/* Primary content: clear two-line title, restrained weight. */
+.main-shell .content .content-grid .content-card .card-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  height: auto;
+  min-height: 46px;
+  max-height: 46.4px;
+  margin: 0 0 13px;
+  color: #302923;
+  font-size: 16px;
+  font-weight: 540;
+  line-height: 1.45;
+  letter-spacing: -.025em;
+}
+
+/* Secondary content: smaller and at most two lines. */
+.main-shell .content .content-grid .content-card :is(
+  .card-description, .card-desc, .card-summary, .card-excerpt,
+  .archive-card-description, .card-description-text
+),
+.main-shell .content .content-grid .content-card .card-body > p:not(.card-title):not(.card-source):not(.card-date):not(.card-meta):not([class*="reason"]) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  max-height: 43px;
+  margin: 0 0 16px;
+  color: #77716B;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: -.01em;
+}
+
+/* Tags are metadata, not another headline. Show at most two on a card. */
+.main-shell .content .content-grid .content-card :is(.tags, .card-tags) {
+  gap: 7px;
+  min-width: 0;
+}
+.main-shell .content .content-grid .content-card :is(.tags, .card-tags) > :nth-child(n+3) {
+  display: none;
+}
+.main-shell .content .content-grid .content-card :is(.tag, .primary-tag, .detail-tag) {
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: #F6F3EF;
+  color: #867C72;
+  font-size: 11.5px;
+  font-weight: 430;
+  line-height: 1.35;
+}
+.main-shell .content .content-grid .content-card .card-bottom {
+  gap: 9px;
+  margin-top: 3px;
+}
+.main-shell .content .content-grid .content-card .card-more {
+  color: #998F85;
+}
+
+/* Collections and ancillary labels retain a quiet, one-line treatment. */
+.main-shell .content .content-grid .content-card :is(
+  .card-collection, .card-collections, .collection-name, .collection-names,
+  .card-footer, .card-footer-label
+) {
+  min-width: 0;
+  color: #8E857C;
+  font-size: 11.5px;
+  font-weight: 400;
+  line-height: 1.45;
+}
+.main-shell .content .content-grid .content-card :is(
+  .card-collection, .collection-name, .card-footer-label
+) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Keep useful match reasons, but visually separate them from primary content. */
+.main-shell .search-results-page .search-result-grid .content-card :is(
+  .match-reason, .search-match-reason, .card-reason, .search-reason
+) {
+  color: #866A52;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* List mode preserves its horizontal layout. */
+.main-shell .content .content-grid.is-list .content-card .card-body {
+  padding: 17px 20px;
+}
+.main-shell .content .content-grid.is-list .content-card .card-title {
+  min-height: 0;
+  max-height: 46.4px;
+  margin-bottom: 8px;
+}
+.main-shell .content .content-grid.is-list .content-card :is(
+  .card-description, .card-desc, .card-summary, .card-excerpt, .archive-card-description
+) {
+  margin-bottom: 9px;
+}
+
+/* On narrower grids, trade padding down slightly before shrinking content. */
+@media (max-width: 1170px) {
+  .main-shell .content .content-grid:not(.is-list) .content-card .card-body {
+    padding: 18px 17px 17px;
+  }
+}
+@media (max-width: 620px) {
+  .main-shell .content .content-grid:not(.is-list) .content-card .card-body {
+    padding: 15px 14px 16px;
+  }
+  .main-shell .content .content-grid .content-card .card-title {
+    min-height: 41px;
+    max-height: 41px;
+    font-size: 14px;
+    line-height: 1.46;
+    margin-bottom: 11px;
+  }
+  .main-shell .content .content-grid .content-card :is(
+    .card-description, .card-desc, .card-summary, .card-excerpt,
+    .archive-card-description, .card-description-text
+  ),
+  .main-shell .content .content-grid .content-card .card-body > p:not(.card-title):not(.card-source):not(.card-date):not(.card-meta):not([class*="reason"]) {
+    max-height: 40px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    line-height: 1.65;
+  }
+  .main-shell .content .content-grid .content-card :is(.tag, .primary-tag, .detail-tag) {
+    font-size: 10.5px;
+    padding: 4px 6px;
+  }
+  .main-shell .content .content-grid .content-card .card-source {
+    margin-bottom: 9px;
+    font-size: 11px;
+  }
+}
+
+/* ======================================================================
+   줍줍저장소 · 홈 화면 타이포그래피 및 정렬 개선
+   기존 카드/검색/내비게이션 동작과 색상은 유지합니다.
+   시선 위계: 페이지 제목 > 섹션 제목 > 카드 제목 > 요약 > 메타 정보
+   ====================================================================== */
+
+/* 제목 크기의 대비를 다시 잡고, 부제는 시각적으로 한 단계 물립니다. */
+:root {
+  --jp-text-page: 32px;
+  --jp-text-section: 21px;
+  --jp-text-feature: 23px;
+  --jp-text-card: 16px;
+  --jp-text-body: 14px;
+  --jp-text-caption: 12px;
+}
+
+.main-shell .content .intro {
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 34px;
+  text-align: left;
+}
+.main-shell .content .intro h1,
+.main-shell .content .archive-page-header h1 {
+  margin-bottom: 10px;
+  font-size: clamp(28px, 2.2vw, 32px);
+  line-height: 1.28;
+  letter-spacing: -.045em;
+  font-weight: 600;
+}
+.main-shell .content .intro p,
+.main-shell .content .archive-page-header p {
+  color: #817A72;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+/* 모든 주요 섹션 제목은 공통 왼쪽 축에서 시작합니다. */
+.main-shell .content .section-heading {
+  align-items: flex-end;
+  text-align: left;
+  gap: 16px;
+  margin-bottom: 23px;
+}
+.main-shell .content .section-heading > :first-child { min-width: 0; }
+.main-shell .content .section-heading h2 {
+  margin: 0;
+  color: #26211D;
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.38;
+  letter-spacing: -.035em;
+  text-align: left;
+}
+.main-shell .content .section-heading p {
+  margin: 7px 0 0;
+  color: #8D857C;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.55;
+  text-align: left;
+}
+.main-shell .content .section-heading :is(.inline-link, a, button) {
+  flex-shrink: 0;
+  align-self: flex-end;
+}
+
+/* 검색 영역: 중앙 정렬 예외를 없애 F형 시선 흐름을 유지합니다. */
+.main-shell .content .search-feature {
+  justify-content: flex-start;
+  text-align: left;
+}
+.main-shell .content .search-feature :is(.search-copy, .search-header, .search-content) {
+  text-align: left;
+  margin-left: 0;
+  margin-right: 0;
+}
+.main-shell .content .search-feature .search-copy h2 {
+  margin: 0 0 10px;
+  color: #2D251F;
+  font-size: 23px;
+  font-weight: 580;
+  line-height: 1.4;
+  letter-spacing: -.037em;
+  text-align: left;
+}
+.main-shell .content .search-feature .search-copy p {
+  margin: 0 0 23px;
+  color: #8E7765;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.68;
+  text-align: left;
+}
+.main-shell .content .search-feature :is(.big-search, .search-input-wrap, .search-form) {
+  margin-left: 0;
+  margin-right: 0;
+  text-align: left;
+}
+.main-shell .content .search-feature :is(.suggested-tags, .search-suggestions, .search-examples) {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+/* 다시 주워볼까요? / 빠른 요약 카드: 숫자, 라벨, 행동을 명확히 분리. */
+.main-shell .content :is(
+  .revisit-card, .rediscovery-card, .stat-card, .insight-card,
+  .revisit-tile, .rediscovery-tile, .quick-stat-card
+) {
+  padding: 23px 23px 22px;
+  text-align: left;
+}
+.main-shell .content :is(
+  .revisit-card, .rediscovery-card, .stat-card, .insight-card,
+  .revisit-tile, .rediscovery-tile, .quick-stat-card
+) :is(.number, .value, .stat-number, .stat-value) {
+  font-size: 30px;
+  line-height: 1.15;
+  font-weight: 580;
+  letter-spacing: -.035em;
+}
+.main-shell .content :is(
+  .revisit-card, .rediscovery-card, .stat-card, .insight-card,
+  .revisit-tile, .rediscovery-tile, .quick-stat-card
+) :is(.label, .title, .stat-label, .description) {
+  color: inherit;
+  font-size: 14px;
+  font-weight: 550;
+  line-height: 1.5;
+  text-align: left;
+}
+.main-shell .content :is(
+  .revisit-card, .rediscovery-card, .stat-card, .insight-card,
+  .revisit-tile, .rediscovery-tile, .quick-stat-card
+) :is(.card-link, .more-link, .view-link, .stat-link) {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 21px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: left;
+}
+
+/* 최근 저장 콘텐츠 카드: 정보 간 경쟁을 줄이고 수직 기준선을 통일. */
+.main-shell .content .content-grid .content-card .card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 0;
+  padding: 22px 21px 20px;
+  text-align: left;
+}
+.main-shell .content .content-grid .content-card .card-source,
+.main-shell .content .content-grid .content-card :is(.card-date, .card-meta) {
+  margin: 0 0 12px;
+  color: #8D847B;
+  font-size: 11.5px;
+  font-weight: 400;
+  line-height: 1.55;
+}
+.main-shell .content .content-grid .content-card .card-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  min-height: 46px;
+  max-height: 46.4px;
+  margin: 0 0 15px;
+  color: #2F2924;
+  font-size: 16px;
+  font-weight: 590;
+  line-height: 1.45;
+  letter-spacing: -.022em;
+  text-align: left;
+}
+.main-shell .content .content-grid .content-card :is(
+  .card-description, .card-desc, .card-summary, .card-excerpt,
+  .archive-card-description, .card-description-text
+),
+.main-shell .content .content-grid .content-card .card-body > p:not(.card-title):not(.card-source):not(.card-date):not(.card-meta):not([class*="reason"]) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  max-height: 43px;
+  margin: 0 0 18px;
+  color: #807870;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: -.005em;
+  text-align: left;
+}
+.main-shell .content .content-grid .content-card :is(.tags, .card-tags) {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 7px;
+}
+.main-shell .content .content-grid .content-card :is(.tag, .primary-tag, .detail-tag) {
+  color: #80766C;
+  font-size: 11.5px;
+  font-weight: 450;
+  line-height: 1.4;
+}
+.main-shell .content .content-grid .content-card .card-bottom {
+  margin-top: auto;
+  padding-top: 5px;
+}
+.main-shell .content .content-grid .content-card :is(
+  .card-collections, .card-collection, .card-footer, .collection-names
+) {
+  margin-top: 15px;
+  padding-top: 13px;
+  border-top: 1px solid #F0EBE5;
+  font-size: 11.5px;
+  line-height: 1.55;
+}
+
+/* 기존 카드 목록 보기와 좁은 화면을 보호합니다. */
+.main-shell .content .content-grid.is-list .content-card .card-body {
+  padding: 18px 20px;
+}
+.main-shell .content .content-grid.is-list .content-card .card-title {
+  min-height: 0;
+  margin-bottom: 9px;
+}
+@media (max-width: 850px) {
+  .main-shell .content .intro h1,
+  .main-shell .content .archive-page-header h1 { font-size: 30px; }
+  .main-shell .content .section-heading h2 { font-size: 20px; }
+}
+@media (max-width: 620px) {
+  .main-shell .content .intro { align-items: flex-start; gap: 12px; margin-bottom: 26px; }
+  .main-shell .content .intro h1,
+  .main-shell .content .archive-page-header h1 { font-size: 28px; }
+  .main-shell .content .intro p { font-size: 13px; }
+  .main-shell .content .section-heading { align-items: flex-end; margin-bottom: 18px; }
+  .main-shell .content .section-heading h2 { font-size: 19px; }
+  .main-shell .content .section-heading p { font-size: 12px; }
+  .main-shell .content .search-feature .search-copy h2 { font-size: 21px; }
+  .main-shell .content .search-feature .search-copy p { font-size: 12.5px; }
+  .main-shell .content :is(
+    .revisit-card, .rediscovery-card, .stat-card, .insight-card,
+    .revisit-tile, .rediscovery-tile, .quick-stat-card
+  ) { padding: 18px; }
+  .main-shell .content .content-grid:not(.is-list) .content-card .card-body { padding: 16px 14px 17px; }
+  .main-shell .content .content-grid .content-card .card-title {
+    min-height: 41px;
+    max-height: 41px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    line-height: 1.46;
+  }
+  .main-shell .content .content-grid .content-card :is(
+    .card-description, .card-desc, .card-summary, .card-excerpt,
+    .archive-card-description, .card-description-text
+  ),
+  .main-shell .content .content-grid .content-card .card-body > p:not(.card-title):not(.card-source):not(.card-date):not(.card-meta):not([class*="reason"]) {
+    margin-bottom: 14px;
+    font-size: 12px;
+    max-height: 40px;
+  }
+}
+
+.card-art {
+  height: auto;
+  aspect-ratio: 16 / 9;
+}

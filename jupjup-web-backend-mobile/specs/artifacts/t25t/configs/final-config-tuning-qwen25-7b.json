@@ -1,0 +1,95 @@
+{
+  "frozen_config_sha256": "8d899e6a516997ce23ae5268ee186580228b5828131df3215eeef8e4b713f04b",
+  "format": 2,
+  "profile": {
+    "name": "tuning-qwen25-7b",
+    "engine": "local",
+    "model": "qwen2.5-7b-instruct-q4km",
+    "chunk_model": null,
+    "prompt_version": "analyze_local_v3c",
+    "chunk_prompt_version": "chunk_notes_local_v3c",
+    "repair_prompt_version": "repair_local_v3c",
+    "reduce_prompt_version": "reduce_local_v3c",
+    "max_output_tokens": 1536,
+    "chunk_max_output_tokens": 768,
+    "max_repairs": 2,
+    "timeouts": {
+      "analyze_s": 55.0,
+      "chunk_s": 45.0,
+      "repair_s": 30.0
+    },
+    "chunk": {
+      "single_max_tokens": 6000,
+      "chunk_target_tokens": 3000,
+      "overlap_tokens": 150,
+      "max_chunks": 8
+    },
+    "decoding": {
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0,
+      "min_p": 0.0,
+      "repeat_penalty": 1.0,
+      "seed": 20261102,
+      "n_batch": 512,
+      "n_ubatch": 512,
+      "n_threads": 4,
+      "constrained": "json_schema",
+      "decoding_schema_version": "ds-3"
+    },
+    "routes": [],
+    "effort": null
+  },
+  "prompts": {
+    "analyze_local_v3c": "dc184ee7b180e7238dc4791f47fa1b6617f219a2926b5a229f40627845f054d9",
+    "chunk_notes_local_v3c": "fd8038ba3ba9503a8ab786d293ebd738901c7bf5c9059b06a3f3b091b8584859",
+    "reduce_local_v3c": "eefa94a92b3302ba532c59d182c82d222263bb636a51b279405e4a8bd4ce8c74",
+    "repair_local_v3c": "184c320be5ad9fba4b4fbe50b94d01afd1615c518ffb8972f1741c1644127f7e"
+  },
+  "decoding_policy": {
+    "ds-3": "e895dd892adc0aed1af7cb4148749ed1e3573edccebfc8d02159d44643c4c2b2"
+  },
+  "models": {
+    "qwen2.5-7b-instruct-q4km": {
+      "model_id": "qwen2.5-7b-instruct-q4km",
+      "repo": "Qwen/Qwen2.5-7B-Instruct-GGUF",
+      "revision": "bb5d59e06d9551d752d08b292a50eb208b07ab1f",
+      "filename": "qwen2.5-7b-instruct-q4_k_m-00001-of-00002.gguf",
+      "sha256": "dfce12e3862a5283ccfb88221b48480e58745165de856439950d0f22590580db",
+      "extra_files": [
+        {
+          "filename": "qwen2.5-7b-instruct-q4_k_m-00002-of-00002.gguf",
+          "sha256": "539cf93f78e887edea1c04e2d7d8cdaca9d01dae9c9025bcb8accbe29df3d72a"
+        }
+      ],
+      "source": "hf_gguf",
+      "n_ctx": 16384,
+      "chat_template": "gguf",
+      "license": "apache-2.0",
+      "license_commercial_ok": true,
+      "file_sha256s": [
+        "dfce12e3862a5283ccfb88221b48480e58745165de856439950d0f22590580db",
+        "539cf93f78e887edea1c04e2d7d8cdaca9d01dae9c9025bcb8accbe29df3d72a"
+      ]
+    }
+  },
+  "grounded_evidence": {
+    "version": "source-enum-1",
+    "max_candidates": 64,
+    "span_chars": 120,
+    "stride_chars": 100,
+    "selection": "source-order-even-sample",
+    "adjacent_sentence_pairs": true,
+    "require_normalized_literal_match": true,
+    "deduplicate_valid_intent_labels": true,
+    "exclude_control_tokens_and_injection_payloads": true,
+    "required_detail_fields": [
+      "schema_version",
+      "category",
+      "topics",
+      "keywords",
+      "locations",
+      "entities"
+    ]
+  }
+}

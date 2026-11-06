@@ -1,0 +1,156 @@
+# T25 로컬 분석기 프로필 (설계: specs/design_local_analyzer.md 6.2절)
+#
+# T25b(런타임·모델 스파이크)가 `models:` 블록을 채웠다. 측정 근거: specs/phase2_t25b_spike_report.md
+# - 확인일: 2026-11-02. revision은 Hugging Face commit hash, sha256은 최종 GGUF 파일의 sha256이다.
+# - 공식 GGUF가 있는 모델(EXAONE 3.5 2.4B, Qwen2.5 3B/7B)은 공식 GGUF 파일 그대로다 (HF LFS oid와 일치 확인).
+# - 공식 GGUF가 없는 모델(Qwen3-4B-Instruct-2507, Kanana-1.5 2.1B/8B)은 공식 safetensors(아래 repo@revision)를
+#   llama-cpp-python 0.3.36 sdist에 들어 있는 llama.cpp의 convert_hf_to_gguf.py → llama_model_quantize(Q4_K_M)로
+#   직접 변환했다 (scripts/spikes/convert_quantize.py). 이 세 모델의 `filename`은 HF 저장소에 없는 **로컬 변환 결과물**
+#   이름이다. 이 세 모델은 `source: local_convert`로 표시하고, `jupjup models pull`은 받지 않고 안내만 한다
+#   (배포 경로는 PM·사용자 결정 사항. specs/phase2_t25d_report.md "남은 문제").
+# - 모델 가중치는 저장소에 커밋하지 않는다. 캐시 경로는 JUPJUP_ANALYZER_CACHE_DIR(설계 3.4절)로 전달한다.
+#   파일 위치: <cache>/gguf/<model_id>/<filename>
+# - measured_p50_s: T25b 실측 건당 p50(초, 문법 제약 single. Qwen3-4B·Kanana-2.1B는 제어 문자 패치 문법 재측정값).
+#   예상 소요 시간 출력(`analyze record`, `eval ingest --mode live`, `bench analyze`)에만 쓴다. 녹화 키와 무관하다.
+# - 로더: jupjup.ingest.profiles.AnalyzerProfiles.load (참조 무결성 검사 포함). 점검: `jupjup models doctor`
+version: 1
+default_profile: mock            # T25h 채택과 사용자 승인 뒤에 local-<선택>으로 바꾼다
+models:
+  qwen3-4b-instruct-2507-q4km:
+    # 기본 후보. 로컬 변환: Qwen/Qwen3-4B-Instruct-2507@cdbee75f (safetensors 3개) → f16 GGUF → Q4_K_M
+    model_id: qwen3-4b-instruct-2507-q4km
+    source: local_convert
+    repo: Qwen/Qwen3-4B-Instruct-2507
+    revision: cdbee75f17c01a7cc42f958dc650907174af0554
+    filename: Qwen3-4B-Instruct-2507-Q4_K_M.gguf
+    sha256: f51854d096312ef2d257a4e042e294b93cac76f790ca1ce06ddd3100930bb63f
+    n_ctx: 16384
+    license: apache-2.0
+    license_commercial_ok: true
+    measured_p50_s: 46.7
+  kanana-1.5-2.1b-instruct-q4km:
+    # 도전 후보. 로컬 변환: kakaocorp/kanana-1.5-2.1b-instruct-2505@7df4bc35 (model.safetensors) → f16 GGUF → Q4_K_M
+    model_id: kanana-1.5-2.1b-instruct-q4km
+    source: local_convert
+    repo: kakaocorp/kanana-1.5-2.1b-instruct-2505
+    revision: 7df4bc35ccd610e451809d7106e1c3cf82bfd44c
+    filename: kanana-1.5-2.1b-instruct-2505-Q4_K_M.gguf
+    sha256: 5baf76ee093908cdb37b20b116c8a74aebcb6e8d2e097fb9c0980d6b7584ea60
+    n_ctx: 16384
+    license: apache-2.0
+    license_commercial_ok: true
+    measured_p50_s: 16.6
+  exaone-3.5-2.4b-instruct-q4km:
+    # 참고 후보. 공식 GGUF. EXAONE AI Model License Agreement 1.1 - NC (3.1절 상업 이용 금지)
+    model_id: exaone-3.5-2.4b-instruct-q4km
+    repo: LGAI-EXAONE/EXAONE-3.5-2.4B-Instruct-GGUF
+    revision: 142acae803a41c206e8d0fa978c6102c748911bb
+    filename: EXAONE-3.5-2.4B-Instruct-Q4_K_M.gguf
+    sha256: 1660a3794acc33437137faab5cb3fb2b2c4191d0a4ec991d4c31a7197cb2cdbf
+    n_ctx: 16384
+    license: exaone-1.1-nc
+    license_commercial_ok: false
+    measured_p50_s: 18.8
+  qwen2.5-3b-instruct-q4km:
+    # 참고 후보. 공식 GGUF. Qwen RESEARCH LICENSE AGREEMENT (2절: 비상업 목적만, 상업 이용은 별도 허가)
+    model_id: qwen2.5-3b-instruct-q4km
+    repo: Qwen/Qwen2.5-3B-Instruct-GGUF
+    revision: 7dabda4d13d513e3e842b20f0d435c732f172cbe
+    filename: qwen2.5-3b-instruct-q4_k_m.gguf
+    sha256: 626b4a6678b86442240e33df819e00132d3ba7dddfe1cdc4fbb18e0a9615c62d
+    n_ctx: 16384
+    license: qwen-research
+    license_commercial_ok: false
+    measured_p50_s: 25.1
+  qwen2.5-7b-instruct-q4km:
+    # 승격 후보. 공식 GGUF가 2개 파일로 나뉘어 있다. llama.cpp는 첫 파일 경로로 열면 둘째 파일을 같은 디렉터리에서 찾는다.
+    # 분할 표현(T25d 결정): 첫 파일은 filename/sha256, 둘째 파일부터 extra_files에 둔다. 모두 sha256을 검증한다.
+    model_id: qwen2.5-7b-instruct-q4km
+    repo: Qwen/Qwen2.5-7B-Instruct-GGUF
+    revision: bb5d59e06d9551d752d08b292a50eb208b07ab1f
+    filename: qwen2.5-7b-instruct-q4_k_m-00001-of-00002.gguf
+    sha256: dfce12e3862a5283ccfb88221b48480e58745165de856439950d0f22590580db
+    extra_files:
+      - filename: qwen2.5-7b-instruct-q4_k_m-00002-of-00002.gguf
+        sha256: 539cf93f78e887edea1c04e2d7d8cdaca9d01dae9c9025bcb8accbe29df3d72a
+    n_ctx: 16384
+    license: apache-2.0
+    license_commercial_ok: true
+    measured_p50_s: 53.5
+  kanana-1.5-8b-instruct-q4km:
+    # 승격·판정기 후보. 로컬 변환: kakaocorp/kanana-1.5-8b-instruct-2505@c963a5f4 → f16 GGUF → Q4_K_M.
+    # convert_hf_to_gguf --remote(HTTP range 읽기, main == 고정 revision 전후 확인)로 f16 중간본을 만들고 직접 양자화했다.
+    model_id: kanana-1.5-8b-instruct-q4km
+    source: local_convert
+    repo: kakaocorp/kanana-1.5-8b-instruct-2505
+    revision: c963a5f4f6496c749f94064a20b33028b0db9f19
+    filename: kanana-1.5-8b-instruct-2505-Q4_K_M.gguf
+    sha256: fbe5103bfe68ec23cb8ea2d3e90ff9f3979b933df4169ba05b348f2b818eed57
+    n_ctx: 16384
+    license: apache-2.0
+    license_commercial_ok: true
+    measured_p50_s: 38.6
+profiles:
+  mock: {name: mock, engine: mock}
+  local-qwen3-4b: {name: local-qwen3-4b, engine: local, model: qwen3-4b-instruct-2507-q4km}
+  local-kanana-2b: {name: local-kanana-2b, engine: local, model: kanana-1.5-2.1b-instruct-q4km}
+  local-exaone-2b: {name: local-exaone-2b, engine: local, model: exaone-3.5-2.4b-instruct-q4km}
+  local-qwen25-3b: {name: local-qwen25-3b, engine: local, model: qwen2.5-3b-instruct-q4km}
+  local-qwen25-7b: {name: local-qwen25-7b, engine: local, model: qwen2.5-7b-instruct-q4km}
+  local-kanana-8b: {name: local-kanana-8b, engine: local, model: kanana-1.5-8b-instruct-q4km}
+  # T25t final: v3c/ds-3; small candidates R4, promotion candidates R3.
+  tuning-qwen3-4b:
+    name: tuning-qwen3-4b
+    engine: local
+    model: qwen3-4b-instruct-2507-q4km
+    prompt_version: analyze_local_v3c
+    repair_prompt_version: repair_local_v3c
+    chunk_prompt_version: chunk_notes_local_v3c
+    reduce_prompt_version: reduce_local_v3c
+    max_output_tokens: 1536
+    chunk_max_output_tokens: 768
+    timeouts: {analyze_s: 55, repair_s: 30, chunk_s: 45}
+    chunk: {single_max_tokens: 6000, chunk_target_tokens: 3000, overlap_tokens: 150, max_chunks: 8}
+    decoding: {decoding_schema_version: ds-3}
+  tuning-kanana-2b:
+    name: tuning-kanana-2b
+    engine: local
+    model: kanana-1.5-2.1b-instruct-q4km
+    prompt_version: analyze_local_v3c
+    repair_prompt_version: repair_local_v3c
+    chunk_prompt_version: chunk_notes_local_v3c
+    reduce_prompt_version: reduce_local_v3c
+    max_output_tokens: 1536
+    chunk_max_output_tokens: 768
+    timeouts: {analyze_s: 55, repair_s: 30, chunk_s: 45}
+    chunk: {single_max_tokens: 6000, chunk_target_tokens: 3000, overlap_tokens: 150, max_chunks: 8}
+    decoding: {decoding_schema_version: ds-3}
+  tuning-qwen25-7b:
+    name: tuning-qwen25-7b
+    engine: local
+    model: qwen2.5-7b-instruct-q4km
+    prompt_version: analyze_local_v3c
+    repair_prompt_version: repair_local_v3c
+    chunk_prompt_version: chunk_notes_local_v3c
+    reduce_prompt_version: reduce_local_v3c
+    max_output_tokens: 1536
+    chunk_max_output_tokens: 768
+    timeouts: {analyze_s: 55, repair_s: 30, chunk_s: 45}
+    chunk: {single_max_tokens: 6000, chunk_target_tokens: 3000, overlap_tokens: 150, max_chunks: 8}
+    decoding: {decoding_schema_version: ds-3}
+  tuning-kanana-8b:
+    name: tuning-kanana-8b
+    engine: local
+    model: kanana-1.5-8b-instruct-q4km
+    prompt_version: analyze_local_v3c
+    repair_prompt_version: repair_local_v3c
+    chunk_prompt_version: chunk_notes_local_v3c
+    reduce_prompt_version: reduce_local_v3c
+    max_output_tokens: 1536
+    chunk_max_output_tokens: 768
+    timeouts: {analyze_s: 55, repair_s: 30, chunk_s: 45}
+    chunk: {single_max_tokens: 6000, chunk_target_tokens: 3000, overlap_tokens: 150, max_chunks: 8}
+    decoding: {decoding_schema_version: ds-3}
+judges:
+  judge-kanana-8b: {name: judge-kanana-8b, model: kanana-1.5-8b-instruct-q4km}
+  judge-qwen25-7b: {name: judge-qwen25-7b, model: qwen2.5-7b-instruct-q4km}

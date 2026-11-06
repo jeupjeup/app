@@ -1,0 +1,128 @@
+{
+  "protected_paths_diff": "empty",
+  "protected_paths": [
+    "src/jupjup/api",
+    "src/jupjup/storage",
+    "src/jupjup/domain",
+    "src/jupjup/ingest/service.py",
+    "src/jupjup/ingest/jobs.py",
+    "src/jupjup/ingest/worker.py",
+    "src/jupjup/search",
+    "src/jupjup/query",
+    "src/jupjup/demo",
+    "data/recordings/embeddings",
+    "data/baselines",
+    "data/golden",
+    "src/jupjup/ingest/schemas.py",
+    "src/jupjup/ingest/validation.py"
+  ],
+  "recording_unique_keys": "passed per file",
+  "raw_prompt_fields": "absent",
+  "failure_sidecars": "code/retryable only",
+  "lfs_required": false,
+  "model_weights_in_changes": false,
+  "recordings": [
+    {
+      "path": "data/recordings/llm/analyze.kanana-1.5-2.1b-instruct-q4km_at_5baf76ee0939_dec_6cada2e1.failures.jsonl",
+      "rows": 1,
+      "bytes": 389,
+      "sha256": "f33159cc2772bf9fbe8e61670856c71472ef39dc88c91ae2104bd3e1f382288b"
+    },
+    {
+      "path": "data/recordings/llm/analyze.kanana-1.5-2.1b-instruct-q4km_at_5baf76ee0939_dec_6cada2e1.jsonl",
+      "rows": 221,
+      "bytes": 471026,
+      "sha256": "dd3dbfe72bdf9145aafcbb2deafd62bb2ac94b1b0a982eb098187afb6cc2a0b4"
+    },
+    {
+      "path": "data/recordings/llm/analyze.kanana-1.5-2.1b-instruct-q4km_at_5baf76ee0939_dec_f0ac549d.failures.jsonl",
+      "rows": 1,
+      "bytes": 389,
+      "sha256": "7906d935d91dff3de67f5213484d4ec553b50762d1e7efdb5abdeda34b49f907"
+    },
+    {
+      "path": "data/recordings/llm/analyze.kanana-1.5-2.1b-instruct-q4km_at_5baf76ee0939_dec_f0ac549d.jsonl",
+      "rows": 98,
+      "bytes": 192928,
+      "sha256": "db533454bddcbc65f7f81a602e18c55cbb34e97586e55d40ee0ee03754167a9f"
+    },
+    {
+      "path": "data/recordings/llm/analyze.kanana-1.5-8b-instruct-q4km_at_fbe5103bfe68_dec_6cada2e1.failures.jsonl",
+      "rows": 22,
+      "bytes": 8504,
+      "sha256": "a68216074335584e9e417d220fddf964119fa8b8a0320295c41a12a8c8c9e2bb"
+    },
+    {
+      "path": "data/recordings/llm/analyze.kanana-1.5-8b-instruct-q4km_at_fbe5103bfe68_dec_6cada2e1.jsonl",
+      "rows": 164,
+      "bytes": 363001,
+      "sha256": "9838181007ed7dfe19f16b647ed6650ed2d7ccfc4c14cd664090063d90a95614"
+    },
+    {
+      "path": "data/recordings/llm/analyze.kanana-1.5-8b-instruct-q4km_at_fbe5103bfe68_dec_f0ac549d.failures.jsonl",
+      "rows": 7,
+      "bytes": 2704,
+      "sha256": "85de848163a1c0aa2cdd2409dc884a206aa770b7594350f7841b85855cfb3e3a"
+    },
+    {
+      "path": "data/recordings/llm/analyze.kanana-1.5-8b-instruct-q4km_at_fbe5103bfe68_dec_f0ac549d.jsonl",
+      "rows": 74,
+      "bytes": 158356,
+      "sha256": "61d405ae46d4fecafdc1408049b7daee44492bfb96949f8f4e1be28204a8f2e1"
+    },
+    {
+      "path": "data/recordings/llm/analyze.qwen2.5-7b-instruct-q4km_at_dfce12e3862a_dec_6cada2e1.failures.jsonl",
+      "rows": 12,
+      "bytes": 4608,
+      "sha256": "07404073472e293ad4d68689ee98042b2c24cba57a9672c1e131d258e2c18d7a"
+    },
+    {
+      "path": "data/recordings/llm/analyze.qwen2.5-7b-instruct-q4km_at_dfce12e3862a_dec_6cada2e1.jsonl",
+      "rows": 179,
+      "bytes": 352276,
+      "sha256": "4bbf9ec45f2c4a09849647478f8e52fb4a3202fd5a875cd08a871ec84f093acf"
+    },
+    {
+      "path": "data/recordings/llm/analyze.qwen2.5-7b-instruct-q4km_at_dfce12e3862a_dec_f0ac549d.failures.jsonl",
+      "rows": 5,
+      "bytes": 1915,
+      "sha256": "47c374ca510b4bf54184748256a100f062b86586446edce63eac2a90e5a4f9f3"
+    },
+    {
+      "path": "data/recordings/llm/analyze.qwen2.5-7b-instruct-q4km_at_dfce12e3862a_dec_f0ac549d.jsonl",
+      "rows": 452,
+      "bytes": 643140,
+      "sha256": "ea3f6a197cbaa0f38f3b751785e00870d851b0d1a650da3ef33ee06e72748c95"
+    },
+    {
+      "path": "data/recordings/llm/analyze.qwen3-4b-instruct-2507-q4km_at_f51854d09631_dec_6cada2e1.failures.jsonl",
+      "rows": 31,
+      "bytes": 11978,
+      "sha256": "28219b0311478e80e135575cfed2f6b375a5945f8e4a5a6324dbf666017a9049"
+    },
+    {
+      "path": "data/recordings/llm/analyze.qwen3-4b-instruct-2507-q4km_at_f51854d09631_dec_6cada2e1.jsonl",
+      "rows": 198,
+      "bytes": 469625,
+      "sha256": "8229036693cbb850906e407bd2e69974ed6b36abaa28733572658ecc2267d148"
+    },
+    {
+      "path": "data/recordings/llm/analyze.qwen3-4b-instruct-2507-q4km_at_f51854d09631_dec_f0ac549d.failures.jsonl",
+      "rows": 3,
+      "bytes": 1161,
+      "sha256": "e422bdcb01db1c0957c4e8455e97271cda04d2cc5da0af077ae7ad29bc9601fb"
+    },
+    {
+      "path": "data/recordings/llm/analyze.qwen3-4b-instruct-2507-q4km_at_f51854d09631_dec_f0ac549d.jsonl",
+      "rows": 95,
+      "bytes": 216978,
+      "sha256": "a19a368155b1fd90c2cb2e4a7cd9d1217b704cc8ff85c013102bf60e224bf36f"
+    }
+  ],
+  "offline_repeat_bytes": {
+    "tuning-qwen25-7b": "identical JSON and Markdown, misses0",
+    "tuning-kanana-8b": "identical JSON and Markdown, misses0"
+  },
+  "final_bench": "not executed: disk guard stop",
+  "final_linkage": "not executed: disk guard stop"
+}

@@ -1,0 +1,387 @@
+[
+  {
+    "path": "specs/artifacts/t25t/checks/check-0.log",
+    "bytes": 3092,
+    "sha256": "6a6be9cc1d02b3c3169ba933416ab26498f419ce10246e03d19bfc267cfb6ad6"
+  },
+  {
+    "path": "specs/artifacts/t25t/checks/check-1.log",
+    "bytes": 19,
+    "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+  },
+  {
+    "path": "specs/artifacts/t25t/checks/check-2.log",
+    "bytes": 45,
+    "sha256": "617cf8721073cc56bb19755ea6d9726d11b044fd5fe38060da7b2fe164d29396"
+  },
+  {
+    "path": "specs/artifacts/t25t/checks/check-3.log",
+    "bytes": 624,
+    "sha256": "e7cacf781154b1bf5b2cfe1eb01bfdc185bff0fc6c362ec0af6a55531926cc32"
+  },
+  {
+    "path": "specs/artifacts/t25t/checks/check-4.log",
+    "bytes": 1423,
+    "sha256": "b97fc9067397024dee81e273265083430dd352222d1b4ef937658d467bc51857"
+  },
+  {
+    "path": "specs/artifacts/t25t/checks/check-5.log",
+    "bytes": 1425,
+    "sha256": "94a2f0499bcf443f73e48567dd0b71c738f398e31345a16fc5d56c8da76d7991"
+  },
+  {
+    "path": "specs/artifacts/t25t/checks/check-6.log",
+    "bytes": 1438,
+    "sha256": "759c7f7e189f0ffd8d446caa92862d432aea0989064b30fb521d2cefd91021c2"
+  },
+  {
+    "path": "specs/artifacts/t25t/checks/check-7.log",
+    "bytes": 1443,
+    "sha256": "4471262430923d93a7bad620796ef576841419421cc9e8d0009966c3ed143a18"
+  },
+  {
+    "path": "specs/artifacts/t25t/checks/check-8.log",
+    "bytes": 461,
+    "sha256": "9347b83c3d235d768b249d60944bea559ac93050b4bb4dfb47d541b1cec1d87f"
+  },
+  {
+    "path": "specs/artifacts/t25t/checks/check-9.log",
+    "bytes": 461,
+    "sha256": "317dd3015f8c7c364fa3c3fc84b80f8a0a043fa89056b7b1deb9ea2906bc7f82"
+  },
+  {
+    "path": "specs/artifacts/t25t/checks/commands.json",
+    "bytes": 2601,
+    "sha256": "ae364f3c1cd9fe1d48aa57df5d923ddeb29ad76d9f6ea81970f97c7682168388"
+  },
+  {
+    "path": "specs/artifacts/t25t/checks/mock-byte-hashes.json",
+    "bytes": 201,
+    "sha256": "f857d1964e290534c8dd636e52614aa82eca876a530228050f0190f16151dcbf"
+  },
+  {
+    "path": "specs/artifacts/t25t/commands.jsonl",
+    "bytes": 6392,
+    "sha256": "6f003a9ae0add335d1ada2399803aedca0e3996c45be2a6cd15dfa0c313fee7a"
+  },
+  {
+    "path": "specs/artifacts/t25t/configs/final-config-tuning-kanana-2b.json",
+    "bytes": 2804,
+    "sha256": "8a14d5f0cad029a9dd8d67cb20bd30342beea1397c0b3e96fa842981aa4b7f22"
+  },
+  {
+    "path": "specs/artifacts/t25t/configs/final-config-tuning-kanana-8b.json",
+    "bytes": 2794,
+    "sha256": "3d71cb18902bffcb6fbcc722f7444358eff2c9072b41a3e6fca5488f6384f522"
+  },
+  {
+    "path": "specs/artifacts/t25t/configs/final-config-tuning-qwen25-7b.json",
+    "bytes": 3040,
+    "sha256": "8f20dd34e4407df7bebd3dd1bfa68ebef63ce3a0ea76ca56003e997d79357645"
+  },
+  {
+    "path": "specs/artifacts/t25t/configs/final-config-tuning-qwen3-4b.json",
+    "bytes": 2778,
+    "sha256": "0a0d83ff840b7dfcfa5500a62646e44904afd86ce3857f5a332ce6cef2a1de7a"
+  },
+  {
+    "path": "specs/artifacts/t25t/configs/r1-config-tuning-kanana-2b.json",
+    "bytes": 2278,
+    "sha256": "2f98db5ab3100c9401c70d85d550c4e75625b4e06d9f632097df89be7904930a"
+  },
+  {
+    "path": "specs/artifacts/t25t/configs/r1-config-tuning-kanana-8b.json",
+    "bytes": 2268,
+    "sha256": "d683d0216c2ba1c41500952d06f3849e1ea25abb3d40a9659f454f1ab6f4cd7f"
+  },
+  {
+    "path": "specs/artifacts/t25t/configs/r1-config-tuning-qwen25-7b.json",
+    "bytes": 2514,
+    "sha256": "6e0b6ed943b2e965c3cf2819cec9e34795193d7f5b83cc52218f7badcebae3ca"
+  },
+  {
+    "path": "specs/artifacts/t25t/configs/r1-config-tuning-qwen3-4b.json",
+    "bytes": 2252,
+    "sha256": "acd9ad284a57d5279722ebaf2e9a11f9d6eaf438d1cfae1f92ef3b7f2733e0ed"
+  },
+  {
+    "path": "specs/artifacts/t25t/configs/r2-config-tuning-kanana-2b.json",
+    "bytes": 2278,
+    "sha256": "f1707eafe2fc3001217cff615d1ea378c784c0615c6817be895408db554538cb"
+  },
+  {
+    "path": "specs/artifacts/t25t/configs/r2-config-tuning-qwen3-4b.json",
+    "bytes": 2252,
+    "sha256": "fc3fe5e47bb48138d960ba30b99d90370b65f5dff3dff940bbefd1f184647d92"
+  },
+  {
+    "path": "specs/artifacts/t25t/configs/v3b-config-tuning-kanana-2b.json",
+    "bytes": 2286,
+    "sha256": "79386502d5dc50a3b0191ce26f293a96aa3f47f518cd1ba63ac60f324f8b2952"
+  },
+  {
+    "path": "specs/artifacts/t25t/configs/v3b-config-tuning-kanana-8b.json",
+    "bytes": 2276,
+    "sha256": "b8d7b6c665f723e35675c6ea9b1c24dc89fd3ebc01f7db28fba7ecf76c027deb"
+  },
+  {
+    "path": "specs/artifacts/t25t/configs/v3b-config-tuning-qwen25-7b.json",
+    "bytes": 2522,
+    "sha256": "f772360bb371e305d24da299ea0aeb61039dd5e68864a1d80be3d2a1df1f5273"
+  },
+  {
+    "path": "specs/artifacts/t25t/configs/v3b-config-tuning-qwen3-4b.json",
+    "bytes": 2260,
+    "sha256": "d55a0a407ff1b3c0933bda13670774bf9bb4be50289a3f959b0068213b0b7e52"
+  },
+  {
+    "path": "specs/artifacts/t25t/dev-final-selection.json",
+    "bytes": 5042,
+    "sha256": "dc15ea012e7518d5b2591f23da30ba64a0f03ec4d78c98e70d23a2fac3160159"
+  },
+  {
+    "path": "specs/artifacts/t25t/disk-stop.json",
+    "bytes": 608,
+    "sha256": "f202c81cef86d4e98252d90d37aef7bbbb373a5da44e864dd5539ca0c7784b4d"
+  },
+  {
+    "path": "specs/artifacts/t25t/ds3-runtime-fix.json",
+    "bytes": 448,
+    "sha256": "7e41a28936ba9225b8bd9431f715fb8e1c73d66492f8de200d564ddfd9dbbfbc"
+  },
+  {
+    "path": "specs/artifacts/t25t/final-audit.json",
+    "bytes": 4905,
+    "sha256": "c2c5be85ab6b2616f5a05ef6d64b7ef049dd988e0322eb5a51e9783903304aa9"
+  },
+  {
+    "path": "specs/artifacts/t25t/final-dev/tuning-qwen25-7b/eval_ingest_live_dev.json",
+    "bytes": 43118,
+    "sha256": "7ad9f5df54272f1fa04ff2620ed68972b2ad77f4f1886b90824aba6a55140af7"
+  },
+  {
+    "path": "specs/artifacts/t25t/final-dev/tuning-qwen25-7b/eval_ingest_live_dev.md",
+    "bytes": 7383,
+    "sha256": "d29befe89d199664f6d5288b28dad0e96319d50fb43aa74f3cbf197af1abbc08"
+  },
+  {
+    "path": "specs/artifacts/t25t/final-driver-stop.log",
+    "bytes": 748,
+    "sha256": "f7ac3887e65da65e62e5aa954680caeabba4bcd07f7e2db7147e00470dd9ecaf"
+  },
+  {
+    "path": "specs/artifacts/t25t/kanana-hf-metadata.json",
+    "bytes": 265,
+    "sha256": "555139413d5b2d9bc34225ae07f72030378faf0b8df733bec52e91bc2bda2c95"
+  },
+  {
+    "path": "specs/artifacts/t25t/model-provenance.json",
+    "bytes": 1166,
+    "sha256": "61ed5d88d8a80b11127562c2da97b0fd6e6a49d9ccc83fd7cdbb5df00d515179"
+  },
+  {
+    "path": "specs/artifacts/t25t/offline-recorded-commands.json",
+    "bytes": 1735,
+    "sha256": "b7d8d49076b46af6123880cca31c93a12f1047ea52441eb859be795868a39558"
+  },
+  {
+    "path": "specs/artifacts/t25t/r0/kanana/eval_ingest_recorded_dev.json",
+    "bytes": 41053,
+    "sha256": "abeb7b9592a363237e90ecde464d59f57a58c58766f3646b48ca225c09cb9594"
+  },
+  {
+    "path": "specs/artifacts/t25t/r0/kanana/eval_ingest_recorded_dev.md",
+    "bytes": 8534,
+    "sha256": "62c59515d43eb52641952c21808ea938acc0b347fd29cfbf3f0793c1f1fe5e34"
+  },
+  {
+    "path": "specs/artifacts/t25t/r0/qwen/eval_ingest_recorded_dev.json",
+    "bytes": 41305,
+    "sha256": "64241ca2af64931d7f6de1a8a723fade1d295aae6e129af4b00414e489649de8"
+  },
+  {
+    "path": "specs/artifacts/t25t/r0/qwen/eval_ingest_recorded_dev.md",
+    "bytes": 7818,
+    "sha256": "f74b2ea6d8c40a66c88a107bf1381cade4ca6c91140ed7a3b47104e6eb80d6d0"
+  },
+  {
+    "path": "specs/artifacts/t25t/r1/tuning-kanana-2b/eval_ingest_live_dev.json",
+    "bytes": 36268,
+    "sha256": "b2778cd550485f2de1fade614afb2d6e9b751806afb31d304cff1f1f593a5eec"
+  },
+  {
+    "path": "specs/artifacts/t25t/r1/tuning-kanana-2b/eval_ingest_live_dev.md",
+    "bytes": 7310,
+    "sha256": "24022c11cc4ba818d93d279164e88a06854f0e1a1e92782e649bffe3035bc321"
+  },
+  {
+    "path": "specs/artifacts/t25t/r1/tuning-kanana-8b/eval_ingest_live_dev.json",
+    "bytes": 37615,
+    "sha256": "ca034fe0886a1db9c81c791268e92403a70524f9383d5154f92d423b923b85d9"
+  },
+  {
+    "path": "specs/artifacts/t25t/r1/tuning-kanana-8b/eval_ingest_live_dev.md",
+    "bytes": 7938,
+    "sha256": "92da0134e8f1efecc2bb48eeb3130c4b480823276b46a3f0e0225c33821fecf9"
+  },
+  {
+    "path": "specs/artifacts/t25t/r1/tuning-qwen25-7b/eval_ingest_live_dev.json",
+    "bytes": 42315,
+    "sha256": "f00f2e72cc7fb6413bd253c2745c72b640fe460eb1e579ec70fa1eb7f3a8d59d"
+  },
+  {
+    "path": "specs/artifacts/t25t/r1/tuning-qwen25-7b/eval_ingest_live_dev.md",
+    "bytes": 6964,
+    "sha256": "316a324232ec6588e549f0f1b0610b79d56ff9a14d80b467a9f4a844d1432742"
+  },
+  {
+    "path": "specs/artifacts/t25t/r1/tuning-qwen3-4b/eval_ingest_live_dev.json",
+    "bytes": 36518,
+    "sha256": "0242051ec9f36c1607719ab261a2e2defcf4a51cba2d64cb5132bd8ffb3e7d43"
+  },
+  {
+    "path": "specs/artifacts/t25t/r1/tuning-qwen3-4b/eval_ingest_live_dev.md",
+    "bytes": 8195,
+    "sha256": "0d6732577019b1520948f632a50aee44d95a039bba82033aba9b85527a631e27"
+  },
+  {
+    "path": "specs/artifacts/t25t/r2/tuning-kanana-2b/eval_ingest_live_dev.json",
+    "bytes": 38902,
+    "sha256": "54678d518c93b040befce279a0388a009d923d1f2425eb323c85aed9149c272a"
+  },
+  {
+    "path": "specs/artifacts/t25t/r2/tuning-kanana-2b/eval_ingest_live_dev.md",
+    "bytes": 7794,
+    "sha256": "cd42378bc1692ccaebd6c180671f818f92cd4e1baabd44ef543462d27f2f4468"
+  },
+  {
+    "path": "specs/artifacts/t25t/r2/tuning-qwen3-4b/eval_ingest_live_dev.json",
+    "bytes": 40715,
+    "sha256": "4bb7ee3a7d32458e49d813f6f7b42a8fdec0fbfe401a87d66edb5eafb532f44a"
+  },
+  {
+    "path": "specs/artifacts/t25t/r2/tuning-qwen3-4b/eval_ingest_live_dev.md",
+    "bytes": 8005,
+    "sha256": "d379a3af9189680791daf18f0e12122588410c0d5742888a587dfbb8bef01654"
+  },
+  {
+    "path": "specs/artifacts/t25t/recorded-dev/tuning-kanana-8b/eval_ingest_recorded_dev.json",
+    "bytes": 41572,
+    "sha256": "b6316a13cc81592a2d8684d2b0e73a242a59d370cd4994f5404c2a93291f7f11"
+  },
+  {
+    "path": "specs/artifacts/t25t/recorded-dev/tuning-kanana-8b/eval_ingest_recorded_dev.md",
+    "bytes": 7921,
+    "sha256": "6287f255402a3e8ffab6824b7df42c2b39e11e837831341d094926667892b314"
+  },
+  {
+    "path": "specs/artifacts/t25t/recorded-dev/tuning-qwen25-7b/eval_ingest_recorded_dev.json",
+    "bytes": 43120,
+    "sha256": "b7b6b0e370ca1fdc71a8fc2b4bedd0a2d255f3e21782e56d0521f06a0386b506"
+  },
+  {
+    "path": "specs/artifacts/t25t/recorded-dev/tuning-qwen25-7b/eval_ingest_recorded_dev.md",
+    "bytes": 7411,
+    "sha256": "ca9f32cc2cf4f7b00f36a0d151380c05a7d8aac65f6bb99ace918171302320b8"
+  },
+  {
+    "path": "specs/artifacts/t25t/v3b/tuning-kanana-2b/eval_ingest_live_dev.json",
+    "bytes": 42195,
+    "sha256": "2df2d0896090541f9ae0a98c280841d83d6403176f39d595d8ea8160cb25c8ab"
+  },
+  {
+    "path": "specs/artifacts/t25t/v3b/tuning-kanana-2b/eval_ingest_live_dev.md",
+    "bytes": 7894,
+    "sha256": "828e3ef3c15880938e4d609ecf6b07a5f25be74950028e55b6aefb39f6fabf3f"
+  },
+  {
+    "path": "specs/artifacts/t25t/v3b/tuning-kanana-8b/eval_ingest_live_dev.json",
+    "bytes": 40963,
+    "sha256": "9677b11a85bd8ee43f1d00d7d9d476497b72630e4d02071e62ecd35320cfd866"
+  },
+  {
+    "path": "specs/artifacts/t25t/v3b/tuning-kanana-8b/eval_ingest_live_dev.md",
+    "bytes": 7836,
+    "sha256": "5df75adc74e707c9aaa8115d30d4467265ae70cd428d5a183d95420d419cfb3c"
+  },
+  {
+    "path": "specs/artifacts/t25t/v3b/tuning-qwen25-7b/eval_ingest_live_dev.json",
+    "bytes": 40621,
+    "sha256": "4bd321a6c67c08edabd5d7f2aa039b7a8ee3163ffcecfca53901aa362a843d60"
+  },
+  {
+    "path": "specs/artifacts/t25t/v3b/tuning-qwen25-7b/eval_ingest_live_dev.md",
+    "bytes": 7833,
+    "sha256": "c0161fb955643ca172ca011eef4031975a26e8ff677b4419a52c7eec1d43f9ed"
+  },
+  {
+    "path": "specs/artifacts/t25t/v3b/tuning-qwen3-4b/eval_ingest_live_dev.json",
+    "bytes": 38475,
+    "sha256": "76366db6608549709e7e9e2c0c3624b34a722f9c44d81e43ebd85a64cd7e8f49"
+  },
+  {
+    "path": "specs/artifacts/t25t/v3b/tuning-qwen3-4b/eval_ingest_live_dev.md",
+    "bytes": 8028,
+    "sha256": "912d047602599d3f34444bc5914d923d2d8b06395aa2845de154ad84b7830c00"
+  },
+  {
+    "path": "specs/artifacts/t25t/v3b-kanana2b-diagnostics.json",
+    "bytes": 6062,
+    "sha256": "dbb32b7db26c3f45b6d18a4678420f9f169c72c48befda4a11cae7a341435fc7"
+  },
+  {
+    "path": "specs/artifacts/t25t/v3b-synthetic-examples.json",
+    "bytes": 4153,
+    "sha256": "55483b9324f433ce7a566ba9f0f146ff1de78343ec5c48aed8386dc716682e62"
+  },
+  {
+    "path": "specs/artifacts/t25t/v3c/tuning-kanana-2b/eval_ingest_live_dev.json",
+    "bytes": 40181,
+    "sha256": "12cae727369142ce33acd8a325dd19e65fd4d8859565c6173588732c5ccd3ec9"
+  },
+  {
+    "path": "specs/artifacts/t25t/v3c/tuning-kanana-2b/eval_ingest_live_dev.md",
+    "bytes": 7835,
+    "sha256": "a0fc1110458fe0633c0b989e5b9c10420b2c4679608866f832af47c0c832202b"
+  },
+  {
+    "path": "specs/artifacts/t25t/v3c/tuning-kanana-8b/eval_ingest_live_dev.json",
+    "bytes": 41571,
+    "sha256": "8afd294bae475edacf6c073679766eae269b79bcc72dc1bb616e53c402839580"
+  },
+  {
+    "path": "specs/artifacts/t25t/v3c/tuning-kanana-8b/eval_ingest_live_dev.md",
+    "bytes": 7889,
+    "sha256": "53d55e400fc6176132e3c9c0b6d97283edb51f7fe43882fc762f194ecc4742b1"
+  },
+  {
+    "path": "specs/artifacts/t25t/v3c/tuning-qwen25-7b/eval_ingest_live_dev.json",
+    "bytes": 42722,
+    "sha256": "3faea290d194c655b7a5ca8e68e64286098c1ace757327cd8fd525562fdd4f11"
+  },
+  {
+    "path": "specs/artifacts/t25t/v3c/tuning-qwen25-7b/eval_ingest_live_dev.md",
+    "bytes": 7419,
+    "sha256": "1f85f55d852902b1e57bdca8a2494999bd7b99614a4141728d1f8664ce4a9fbe"
+  },
+  {
+    "path": "specs/artifacts/t25t/v3c/tuning-qwen3-4b/eval_ingest_live_dev.json",
+    "bytes": 39679,
+    "sha256": "07396976bd7908e14749277b36322ac3dcf61d6e2136e66dca5f58c5943c1c35"
+  },
+  {
+    "path": "specs/artifacts/t25t/v3c/tuning-qwen3-4b/eval_ingest_live_dev.md",
+    "bytes": 7863,
+    "sha256": "67f95a4d529a9e99964c8e0d2798ea12842f536ca5af859dd3703397b45e0f6a"
+  },
+  {
+    "path": "specs/artifacts/t25t/v3c-kanana2b-diagnostics.json",
+    "bytes": 4859,
+    "sha256": "7d913ee144a348e9f315a53accad43953faf995d1bf7fb7b98a219fe9cd33f95"
+  },
+  {
+    "path": "specs/artifacts/t25t/v3c-synthetic-examples.json",
+    "bytes": 6088,
+    "sha256": "04fd86b1fda52afa700ef4bda7f870eb7f2f9f3d1443a7108af1ec04a77612d0"
+  }
+]

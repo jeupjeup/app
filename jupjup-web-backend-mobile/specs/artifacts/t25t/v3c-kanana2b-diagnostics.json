@@ -1,0 +1,295 @@
+{
+  "profile": "tuning-kanana-2b",
+  "split": "dev",
+  "validator_issues": {
+    "fixable:tag_normalized": 165,
+    "fixable:tag_forbidden": 3,
+    "retry:summary_sentence_count": 34,
+    "fixable:entity_ungrounded": 26,
+    "retry:json_parse": 4
+  },
+  "category_confusion": [
+    {
+      "gold": "study_research",
+      "pred": "study_research",
+      "n": 7
+    },
+    {
+      "gold": "howto_recipe",
+      "pred": "howto_recipe",
+      "n": 3
+    },
+    {
+      "gold": "health_fitness",
+      "pred": "health_fitness",
+      "n": 3
+    },
+    {
+      "gold": "culture_media",
+      "pred": "place_travel",
+      "n": 2
+    },
+    {
+      "gold": "place_travel",
+      "pred": "place_travel",
+      "n": 2
+    },
+    {
+      "gold": "food_drink",
+      "pred": "place_travel",
+      "n": 2
+    },
+    {
+      "gold": "work",
+      "pred": "work",
+      "n": 2
+    },
+    {
+      "gold": "health_fitness",
+      "pred": "place_travel",
+      "n": 1
+    },
+    {
+      "gold": "shopping",
+      "pred": "food_drink",
+      "n": 1
+    },
+    {
+      "gold": "shopping",
+      "pred": "place_travel",
+      "n": 1
+    },
+    {
+      "gold": "finance",
+      "pred": "life_tip",
+      "n": 1
+    },
+    {
+      "gold": "tech",
+      "pred": "tech",
+      "n": 1
+    },
+    {
+      "gold": "shopping",
+      "pred": "howto_recipe",
+      "n": 1
+    },
+    {
+      "gold": "culture_media",
+      "pred": "howto_recipe",
+      "n": 1
+    },
+    {
+      "gold": "health_fitness",
+      "pred": "howto_recipe",
+      "n": 1
+    },
+    {
+      "gold": "other",
+      "pred": "news_issue",
+      "n": 1
+    },
+    {
+      "gold": "tech",
+      "pred": "study_research",
+      "n": 1
+    },
+    {
+      "gold": "life_tip",
+      "pred": "life_tip",
+      "n": 1
+    },
+    {
+      "gold": "life_tip",
+      "pred": "news_issue",
+      "n": 1
+    },
+    {
+      "gold": "howto_recipe",
+      "pred": "study_research",
+      "n": 1
+    },
+    {
+      "gold": "finance",
+      "pred": "shopping",
+      "n": 1
+    },
+    {
+      "gold": "food_drink",
+      "pred": "food_drink",
+      "n": 1
+    }
+  ],
+  "intent_confusion": [
+    {
+      "gold": "정보보관",
+      "pred": "방문예정",
+      "n": 5
+    },
+    {
+      "gold": "공부자료",
+      "pred": "공부자료",
+      "n": 4
+    },
+    {
+      "gold": "방문예정",
+      "pred": "방문예정",
+      "n": 3
+    },
+    {
+      "gold": "업무참고",
+      "pred": "공부자료",
+      "n": 3
+    },
+    {
+      "gold": "여행계획",
+      "pred": "여행계획",
+      "n": 2
+    },
+    {
+      "gold": "방문예정",
+      "pred": "여행계획",
+      "n": 2
+    },
+    {
+      "gold": "레시피",
+      "pred": "레시피",
+      "n": 2
+    },
+    {
+      "gold": "구매검토",
+      "pred": "방문예정",
+      "n": 1
+    },
+    {
+      "gold": "레시피",
+      "pred": "레시피+공부자료",
+      "n": 1
+    },
+    {
+      "gold": "정보보관",
+      "pred": "공부자료",
+      "n": 1
+    },
+    {
+      "gold": "정보보관",
+      "pred": "영감+선물아이디어",
+      "n": 1
+    },
+    {
+      "gold": "구매검토",
+      "pred": "레시피",
+      "n": 1
+    },
+    {
+      "gold": "영감",
+      "pred": "레시피",
+      "n": 1
+    },
+    {
+      "gold": "정보보관",
+      "pred": "레시피",
+      "n": 1
+    },
+    {
+      "gold": "정보보관",
+      "pred": "선물아이디어",
+      "n": 1
+    },
+    {
+      "gold": "나중에읽기",
+      "pred": "공부자료",
+      "n": 1
+    },
+    {
+      "gold": "공부자료",
+      "pred": "공부자료+과제",
+      "n": 1
+    },
+    {
+      "gold": "과제",
+      "pred": "공부자료",
+      "n": 1
+    },
+    {
+      "gold": "업무참고",
+      "pred": "업무참고",
+      "n": 1
+    },
+    {
+      "gold": "정보보관",
+      "pred": "과제+방문예정",
+      "n": 1
+    },
+    {
+      "gold": "정보보관",
+      "pred": "정보보관",
+      "n": 1
+    },
+    {
+      "gold": "레시피",
+      "pred": "공부자료",
+      "n": 1
+    }
+  ],
+  "entity_by_type": {
+    "organization": {
+      "tp": 5,
+      "fp": 8,
+      "fn": 13
+    },
+    "place": {
+      "tp": 6,
+      "fp": 1,
+      "fn": 22
+    },
+    "brand": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 1
+    },
+    "person": {
+      "tp": 2,
+      "fp": 2,
+      "fn": 22
+    },
+    "work": {
+      "tp": 1,
+      "fp": 2,
+      "fn": 3
+    },
+    "product": {
+      "tp": 4,
+      "fp": 27,
+      "fn": 5
+    },
+    "event": {
+      "tp": 0,
+      "fp": 1,
+      "fn": 1
+    },
+    "other": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 2
+    }
+  },
+  "entity_type_mismatch": [
+    {
+      "gold": "place",
+      "pred": "product",
+      "n": 1
+    },
+    {
+      "gold": "place",
+      "pred": "organization",
+      "n": 1
+    }
+  ],
+  "tag_count_histogram": {
+    "5": 24,
+    "4": 7,
+    "3": 5
+  },
+  "misses": 0
+}

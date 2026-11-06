@@ -1,0 +1,70 @@
+{
+  "frozen_config_sha256": "87f609fe408be49616c9b2476da88d96a11ad0813ddd3e82ee0799a153ba42ff",
+  "format": 2,
+  "profile": {
+    "name": "tuning-kanana-2b",
+    "engine": "local",
+    "model": "kanana-1.5-2.1b-instruct-q4km",
+    "chunk_model": null,
+    "prompt_version": "analyze_local_v3",
+    "chunk_prompt_version": "chunk_notes_local_v3",
+    "repair_prompt_version": "repair_local_v3",
+    "reduce_prompt_version": "reduce_local_v3",
+    "max_output_tokens": 1536,
+    "chunk_max_output_tokens": 768,
+    "max_repairs": 2,
+    "timeouts": {
+      "analyze_s": 30.0,
+      "chunk_s": 30.0,
+      "repair_s": 12.0
+    },
+    "chunk": {
+      "single_max_tokens": 6000,
+      "chunk_target_tokens": 3000,
+      "overlap_tokens": 150,
+      "max_chunks": 8
+    },
+    "decoding": {
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0,
+      "min_p": 0.0,
+      "repeat_penalty": 1.0,
+      "seed": 20261102,
+      "n_batch": 512,
+      "n_ubatch": 512,
+      "n_threads": 4,
+      "constrained": "json_schema",
+      "decoding_schema_version": "ds-2"
+    },
+    "routes": [],
+    "effort": null
+  },
+  "prompts": {
+    "analyze_local_v3": "ef029a15de2bbbce6afe158989742b895c830bfbfd3666e2bb724157a142fef8",
+    "chunk_notes_local_v3": "98163fd1bc34beb755b9e7dff5cdefd882d4eae5d8d96075e82fac52e5f66766",
+    "reduce_local_v3": "4a6b0c6eb0b1c510e7ef29f10eab2a502e8a197e2f839a25c5d562771f9669a5",
+    "repair_local_v3": "576efa1761b009a83d9def082bdff7671367fc73b0249283d83a547c03c99bbf"
+  },
+  "decoding_policy": {
+    "ds-2": "4aa4a94fbff6d8fed9f4159876edbe443e9a64b1ff3e1da7095103483d534de0"
+  },
+  "models": {
+    "kanana-1.5-2.1b-instruct-q4km": {
+      "model_id": "kanana-1.5-2.1b-instruct-q4km",
+      "repo": "kakaocorp/kanana-1.5-2.1b-instruct-2505",
+      "revision": "7df4bc35ccd610e451809d7106e1c3cf82bfd44c",
+      "filename": "kanana-1.5-2.1b-instruct-2505-Q4_K_M.gguf",
+      "sha256": "5baf76ee093908cdb37b20b116c8a74aebcb6e8d2e097fb9c0980d6b7584ea60",
+      "extra_files": [],
+      "source": "local_convert",
+      "n_ctx": 16384,
+      "chat_template": "gguf",
+      "license": "apache-2.0",
+      "license_commercial_ok": true,
+      "file_sha256s": [
+        "5baf76ee093908cdb37b20b116c8a74aebcb6e8d2e097fb9c0980d6b7584ea60"
+      ]
+    }
+  }
+}

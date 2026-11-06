@@ -1,0 +1,201 @@
+[
+  {
+    "source": "도담시 수풀동 음식점 아침숲은 메밀 팬케이크를 판다. 한 접시는 9500원이다. 매주 목요일은 쉰다. 포장은 받지 않는다.",
+    "note": "",
+    "output": {
+      "language": "ko",
+      "title_suggestion": "아침숲 메밀 팬케이크 안내",
+      "evidence": [
+        {
+          "source_span": "도담시 수풀동 음식점 아침숲은 메밀 팬케이크를 판다.",
+          "claim": "판매 메뉴와 위치"
+        },
+        {
+          "source_span": "한 접시는 9500원이다.",
+          "claim": "가격"
+        },
+        {
+          "source_span": "매주 목요일은 쉰다. 포장은 받지 않는다.",
+          "claim": "휴무와 포장 제한"
+        }
+      ],
+      "summary": "도담시 수풀동 음식점 아침숲은 메밀 팬케이크를 판다. 한 접시는 9500원이다. 매주 목요일은 쉰다. 포장은 받지 않는다.",
+      "representative_tags": [
+        "메밀팬케이크",
+        "수풀동",
+        "아침숲",
+        "팬케이크"
+      ],
+      "detail_tags": {
+        "schema_version": 1,
+        "category": "food_drink",
+        "topics": [
+          "음식점",
+          "팬케이크"
+        ],
+        "keywords": [
+          "9500원",
+          "목요일 휴무",
+          "포장 불가"
+        ],
+        "locations": [
+          {
+            "name": "도담시",
+            "level": "city"
+          },
+          {
+            "name": "수풀동",
+            "level": "neighborhood"
+          },
+          {
+            "name": "아침숲",
+            "level": "venue"
+          }
+        ],
+        "entities": [
+          {
+            "type": "place",
+            "name": "아침숲"
+          },
+          {
+            "type": "product",
+            "name": "메밀 팬케이크"
+          }
+        ]
+      },
+      "save_intent": {
+        "labels": [
+          "방문예정"
+        ],
+        "confidence": 0.9,
+        "rationale": "음식점 위치와 메뉴를 방문에 참고하는 정보다."
+      }
+    }
+  },
+  {
+    "source": "제조사 새롬기기의 무선 키보드 돌담 K8은 무게 430g이다. 충전 단자는 USB-C이며 두 기기를 동시에 연결한다. 유선으로는 연결하지 못한다. 판매 가격은 68000원이다.",
+    "note": "",
+    "output": {
+      "language": "ko",
+      "title_suggestion": "돌담 K8 구매 후보 메모",
+      "evidence": [
+        {
+          "source_span": "제조사 새롬기기의 무선 키보드 돌담 K8은 무게 430g이다.",
+          "claim": "제품과 무게"
+        },
+        {
+          "source_span": "충전 단자는 USB-C이며 두 기기를 동시에 연결한다.",
+          "claim": "충전과 동시 연결"
+        },
+        {
+          "source_span": "유선으로는 연결하지 못한다. 판매 가격은 68000원이다.",
+          "claim": "유선 연결 제한과 가격"
+        }
+      ],
+      "summary": "제조사 새롬기기의 무선 키보드 돌담 K8은 무게 430g이다. 충전 단자는 USB-C이며 두 기기를 동시에 연결한다. 유선으로는 연결하지 못한다. 판매 가격은 68000원이다.",
+      "representative_tags": [
+        "무선키보드",
+        "돌담K8",
+        "USB-C",
+        "기기연결"
+      ],
+      "detail_tags": {
+        "schema_version": 1,
+        "category": "shopping",
+        "topics": [
+          "키보드",
+          "전자기기"
+        ],
+        "keywords": [
+          "430g",
+          "USB-C",
+          "두 기기 연결",
+          "유선 연결 불가",
+          "68000원"
+        ],
+        "locations": [],
+        "entities": [
+          {
+            "type": "organization",
+            "name": "새롬기기"
+          },
+          {
+            "type": "product",
+            "name": "돌담 K8"
+          }
+        ]
+      },
+      "save_intent": {
+        "labels": [
+          "구매검토"
+        ],
+        "confidence": 0.9,
+        "rationale": "제품 가격과 연결 조건을 구매 전에 비교할 수 있다."
+      }
+    }
+  },
+  {
+    "source": "Researcher Mira Cho of Juniper Observatory published the paper Night Light Survey. The study observed 60 stars. Measurements were taken on June 18. No audio was recorded.",
+    "note": "",
+    "output": {
+      "language": "en",
+      "title_suggestion": "Night Light Survey 별 관측 연구",
+      "evidence": [
+        {
+          "source_span": "Researcher Mira Cho of Juniper Observatory published the paper Night Light Survey.",
+          "claim": "연구자와 기관 및 논문"
+        },
+        {
+          "source_span": "The study observed 60 stars. Measurements were taken on June 18.",
+          "claim": "관측 대상과 측정일"
+        },
+        {
+          "source_span": "No audio was recorded.",
+          "claim": "오디오 미기록"
+        }
+      ],
+      "summary": "Juniper Observatory의 Mira Cho가 Night Light Survey 논문을 발표했다. 연구에서는 별 60개를 관측했다. 측정일은 6월 18일이다. 오디오는 기록하지 않았다.",
+      "representative_tags": [
+        "천문학",
+        "별관측",
+        "관측연구",
+        "NightLightSurvey"
+      ],
+      "detail_tags": {
+        "schema_version": 1,
+        "category": "study_research",
+        "topics": [
+          "천문학",
+          "관측 연구"
+        ],
+        "keywords": [
+          "별 60개",
+          "6월 18일",
+          "오디오 미기록"
+        ],
+        "locations": [],
+        "entities": [
+          {
+            "type": "person",
+            "name": "Mira Cho"
+          },
+          {
+            "type": "organization",
+            "name": "Juniper Observatory"
+          },
+          {
+            "type": "work",
+            "name": "Night Light Survey"
+          }
+        ]
+      },
+      "save_intent": {
+        "labels": [
+          "공부자료"
+        ],
+        "confidence": 0.7,
+        "rationale": "연구의 관측 대상과 조건을 학습하는 자료다."
+      }
+    }
+  }
+]

@@ -1,0 +1,10 @@
+# OAuth canonical origin fix
+
+- Role: Codex-Primary. Scope: OAuth start navigation only; archive/settings UI unchanged.
+- Root cause: starting on `localhost` set the host-only `oauth_browser` cookie there, while provider callbacks reached `127.0.0.1`, causing `OAUTH_STATE_INVALID` before state consumption.
+- `frontend/src/shared/config/env.ts` adds `VITE_OAUTH_PUBLIC_ORIGIN`, defaulting to `http://127.0.0.1:5177`. It trims surrounding whitespace and normalizes the origin, rejects malformed URLs, credentials, paths, queries, fragments, backslashes and embedded whitespace, and permits HTTP only for localhost/127.0.0.1 (matching backend policy).
+- `frontend/src/shared/auth/session.ts` navigates both providers to the explicit canonical origin plus `/api/api/auth/oauth/{provider}/start`. Existing proxy/mount routing and return paths remain intact. Ordinary API calls still use `VITE_API_BASE_URL` with its relative `/api` default.
+- Deployment: set frontend build-time `VITE_OAUTH_PUBLIC_ORIGIN` to exactly the backend `OAUTH_PUBLIC_ORIGIN`, use HTTPS outside local development, and register the matching provider callback URLs. Rebuild the frontend after changing this value. Example configuration is in `frontend/.env.example`; invalid explicit configuration fails fast.
+- Tests: `session.test.ts` covers a localhost page starting Google/Naver on canonical 127.0.0.1 and both providers using a production HTTPS override independently of the API base. New `env.test.ts` covers defaults and malformed/unsafe configuration.
+- Validation: targeted Vitest run across session, config, API client, auth page and callback page: **5 files / 45 tests passed**. `npm run typecheck` and `npm run build`: **passed**. Initial test attempt lacked installed Vitest; `npm ci` installed locked dependencies and the rerun passed.
+- Design deviation: the user-requested canonical start navigation supersedes the old relative OAuth start URL described in `social_oauth_report.md`; backend interfaces are unchanged. No live provider authentication was performed in this worker session.

@@ -1,0 +1,17 @@
+{
+  "device": "mps",
+  "repeat": 3,
+  "queries": 158,
+  "rerank_p50_ms": 118.6,
+  "rerank_p95_ms": 147.8,
+  "rerank_max_ms": 164.4,
+  "search_p50_ms": 142.8,
+  "search_p95_ms": 174.4,
+  "search_max_ms": 286.4,
+  "baseline_search_p95_ms": 27.2,
+  "rerank_budget_ms": 150.0,
+  "search_budget_ms": 300.0,
+  "skip_rate": 0.0,
+  "rss_increase_mb": 295.7,
+  "cpu_enabled": false
+}

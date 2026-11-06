@@ -1,0 +1,14 @@
+{
+  "status": "stopped by user disk threshold",
+  "free_bytes_at_stop": 377753600,
+  "threshold_bytes": 15000000000,
+  "observed_after_stop_free_bytes": 34688081920,
+  "observed_at": "2026-11-04T19:54:16.943494+09:00",
+  "interrupted_stage": "seeds-tuning-qwen25-7b",
+  "child_exit_code": null,
+  "exit_note": "original guard raised before command manifest append; driver traceback preserved",
+  "linkage_recordings_created": false,
+  "independent_bench_completed": false,
+  "external_disk_usage_cause": "not identified; no user files/cache deleted by this task",
+  "inference_restarted_after_stop": false
+}

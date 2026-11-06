@@ -1,0 +1,132 @@
+{
+ "model_id": "kanana-1.5-2.1b-instruct-q4km",
+ "item": "syn-06-news",
+ "rows": [
+  {
+   "round": 0,
+   "cond": "reused",
+   "latency_s": 12.7,
+   "tokens": 407,
+   "tok_per_s": 32.0
+  },
+  {
+   "round": 0,
+   "cond": "fresh",
+   "latency_s": 12.38,
+   "tokens": 407,
+   "tok_per_s": 32.9
+  },
+  {
+   "round": 0,
+   "cond": "none",
+   "latency_s": 18.93,
+   "tokens": 962,
+   "tok_per_s": 50.8
+  },
+  {
+   "round": 1,
+   "cond": "reused",
+   "latency_s": 12.34,
+   "tokens": 407,
+   "tok_per_s": 33.0
+  },
+  {
+   "round": 1,
+   "cond": "fresh",
+   "latency_s": 11.5,
+   "tokens": 407,
+   "tok_per_s": 35.4
+  },
+  {
+   "round": 1,
+   "cond": "none",
+   "latency_s": 18.68,
+   "tokens": 962,
+   "tok_per_s": 51.5
+  },
+  {
+   "round": 2,
+   "cond": "reused",
+   "latency_s": 11.61,
+   "tokens": 407,
+   "tok_per_s": 35.1
+  },
+  {
+   "round": 2,
+   "cond": "fresh",
+   "latency_s": 11.98,
+   "tokens": 407,
+   "tok_per_s": 34.0
+  },
+  {
+   "round": 2,
+   "cond": "none",
+   "latency_s": 18.59,
+   "tokens": 962,
+   "tok_per_s": 51.7
+  },
+  {
+   "round": 3,
+   "cond": "reused",
+   "latency_s": 11.69,
+   "tokens": 407,
+   "tok_per_s": 34.8
+  },
+  {
+   "round": 3,
+   "cond": "fresh",
+   "latency_s": 11.72,
+   "tokens": 407,
+   "tok_per_s": 34.7
+  },
+  {
+   "round": 3,
+   "cond": "none",
+   "latency_s": 18.85,
+   "tokens": 962,
+   "tok_per_s": 51.0
+  },
+  {
+   "round": 4,
+   "cond": "reused",
+   "latency_s": 11.74,
+   "tokens": 407,
+   "tok_per_s": 34.7
+  },
+  {
+   "round": 4,
+   "cond": "fresh",
+   "latency_s": 11.62,
+   "tokens": 407,
+   "tok_per_s": 35.0
+  },
+  {
+   "round": 4,
+   "cond": "none",
+   "latency_s": 19.43,
+   "tokens": 962,
+   "tok_per_s": 49.5
+  },
+  {
+   "round": 5,
+   "cond": "reused",
+   "latency_s": 12.15,
+   "tokens": 407,
+   "tok_per_s": 33.5
+  },
+  {
+   "round": 5,
+   "cond": "fresh",
+   "latency_s": 12.28,
+   "tokens": 407,
+   "tok_per_s": 33.2
+  },
+  {
+   "round": 5,
+   "cond": "none",
+   "latency_s": 19.16,
+   "tokens": 962,
+   "tok_per_s": 50.2
+  }
+ ]
+}

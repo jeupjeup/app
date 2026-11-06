@@ -1,0 +1,150 @@
+[
+  {
+    "argv": [
+      "uv",
+      "run",
+      "pytest"
+    ],
+    "exit_code": 0,
+    "log": "reports/t25t/final-checks/check-0.log"
+  },
+  {
+    "argv": [
+      "uv",
+      "run",
+      "ruff",
+      "check",
+      "src",
+      "tests"
+    ],
+    "exit_code": 0,
+    "log": "reports/t25t/final-checks/check-1.log"
+  },
+  {
+    "argv": [
+      "uv",
+      "run",
+      "mypy",
+      "src"
+    ],
+    "exit_code": 0,
+    "log": "reports/t25t/final-checks/check-2.log"
+  },
+  {
+    "argv": [
+      "uv",
+      "run",
+      "jupjup",
+      "eval",
+      "validate"
+    ],
+    "exit_code": 0,
+    "log": "reports/t25t/final-checks/check-3.log"
+  },
+  {
+    "argv": [
+      "uv",
+      "run",
+      "jupjup",
+      "eval",
+      "run",
+      "--mode",
+      "mock",
+      "--split",
+      "dev",
+      "--baseline",
+      "data/baselines/mock.json",
+      "--out",
+      "reports/t25t/final-checks/search-mock-dev"
+    ],
+    "exit_code": 0,
+    "log": "reports/t25t/final-checks/check-4.log"
+  },
+  {
+    "argv": [
+      "uv",
+      "run",
+      "jupjup",
+      "eval",
+      "run",
+      "--mode",
+      "mock",
+      "--split",
+      "test",
+      "--baseline",
+      "data/baselines/mock.json",
+      "--out",
+      "reports/t25t/final-checks/search-mock-test"
+    ],
+    "exit_code": 0,
+    "log": "reports/t25t/final-checks/check-5.log"
+  },
+  {
+    "argv": [
+      "uv",
+      "run",
+      "jupjup",
+      "eval",
+      "run",
+      "--mode",
+      "recorded",
+      "--split",
+      "dev",
+      "--baseline",
+      "data/baselines/recorded.json",
+      "--out",
+      "reports/t25t/final-checks/search-recorded-dev"
+    ],
+    "exit_code": 0,
+    "log": "reports/t25t/final-checks/check-6.log"
+  },
+  {
+    "argv": [
+      "uv",
+      "run",
+      "jupjup",
+      "eval",
+      "run",
+      "--mode",
+      "recorded",
+      "--split",
+      "test",
+      "--baseline",
+      "data/baselines/recorded.json",
+      "--out",
+      "reports/t25t/final-checks/search-recorded-test"
+    ],
+    "exit_code": 0,
+    "log": "reports/t25t/final-checks/check-7.log"
+  },
+  {
+    "argv": [
+      "uv",
+      "run",
+      "jupjup",
+      "eval",
+      "ingest",
+      "--mode",
+      "mock",
+      "--out",
+      "reports/t25t/final-checks/ingest-mock-1"
+    ],
+    "exit_code": 0,
+    "log": "reports/t25t/final-checks/check-8.log"
+  },
+  {
+    "argv": [
+      "uv",
+      "run",
+      "jupjup",
+      "eval",
+      "ingest",
+      "--mode",
+      "mock",
+      "--out",
+      "reports/t25t/final-checks/ingest-mock-2"
+    ],
+    "exit_code": 0,
+    "log": "reports/t25t/final-checks/check-9.log"
+  }
+]
