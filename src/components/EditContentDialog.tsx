@@ -25,7 +25,7 @@ export default function EditContentDialog({ item, onClose }: { item: SavedConten
     return <Dialog visible onClose={onClose} close>
         <Text>정보 수정</Text>
         <TextInput accessibilityLabel="제목" value={title} onChangeText={setTitle} maxLength={200} style={inputStyle} />
-        <TextInput accessibilityLabel="메모" value={memo} onChangeText={setMemo} maxLength={70} multiline style={inputStyle} />
+        <TextInput accessibilityLabel="메모" value={memo} onChangeText={setMemo} maxLength={70} multiline returnKeyType="done" submitBehavior="blurAndSubmit" style={inputStyle} />
         <Text>유형</Text>
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 4 }}>{types.map(value => choice(value, type === value, () => setType(value)))}</View>
         <Text>컬렉션</Text>

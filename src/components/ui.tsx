@@ -2,6 +2,7 @@ import { Image, type ImageStyle } from "expo-image";
 import { router } from "expo-router";
 import type { ReactNode } from "react";
 import {
+    Keyboard,
     KeyboardAvoidingView,
     Modal,
     Platform,
@@ -11,6 +12,7 @@ import {
     StyleSheet,
     Text as NativeText,
     TextInput,
+    TouchableWithoutFeedback,
     View,
     type StyleProp,
     type TextProps,
@@ -55,7 +57,10 @@ export function Button(props: ButtonProps) {
     return <Pressable
         accessibilityRole="button"
         disabled={disabled}
-        onPress={onPress}
+        onPress={() => {
+            Keyboard.dismiss();
+            onPress();
+        }}
         style={({ pressed }) => [
             styles.button,
             danger && { "backgroundColor": colors.danger },
@@ -105,7 +110,7 @@ type ScreenProps = {
 
 export function Screen(props: ScreenProps) {
     const { children, scroll = true, style, orange = false, line = true } = props;
-    const { data, loading, refresh } = useUserData();
+    const { data, refresh } = useUserData();
 
     return <SafeAreaView edges={["top"]} style={[styles.screen, orange && { "backgroundColor": colors.primary }]}>
         <StatusBar style="dark" />
@@ -113,14 +118,23 @@ export function Screen(props: ScreenProps) {
         <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === "ios" ? "padding" : undefined}>
             {scroll ? (
                 <ScrollView
-                    refreshControl={data.authenticated ? <RefreshControl refreshing={loading} onRefresh={() => { void refresh(); }} /> : undefined}
+                    refreshControl={data.authenticated ? <RefreshControl
+                        refreshing={false}
+                        onRefresh={() => { void refresh(); }}
+                        tintColor="transparent"
+                        colors={["transparent"]}
+                        progressBackgroundColor="transparent"
+                    /> : undefined}
                     keyboardShouldPersistTaps="handled"
+                    keyboardDismissMode="on-drag"
                     contentContainerStyle={[{ "flexGrow": 1, "backgroundColor": colors.background }, style]}
                 >
                     {children}
                 </ScrollView>
             ) : (
-                <View style={[styles.flex, { "backgroundColor": colors.background }, style]}>{children}</View>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                    <View style={[styles.flex, { "backgroundColor": colors.background }, style]}>{children}</View>
+                </TouchableWithoutFeedback>
             )}
         </KeyboardAvoidingView>
     </SafeAreaView>;
@@ -138,6 +152,10 @@ type SearchFieldProps = {
 
 export function SearchField(props: SearchFieldProps) {
     const { value, onChangeText, onSubmit, onFocus, onPress, archive = false, autoFocus = false } = props;
+    const submit = () => {
+        Keyboard.dismiss();
+        onSubmit?.();
+    };
     if (onPress)
         return <Pressable
             accessibilityRole="button"
@@ -158,11 +176,12 @@ export function SearchField(props: SearchFieldProps) {
             onChangeText={onChangeText}
             onFocus={onFocus}
             autoFocus={autoFocus}
-            onSubmitEditing={onSubmit}
+            onSubmitEditing={submit}
+            submitBehavior="blurAndSubmit"
             returnKeyType="search"
             style={styles.searchInput}
         />
-        <Pressable accessibilityRole="button" accessibilityLabel="검색" hitSlop={10} onPress={onSubmit}>
+        <Pressable accessibilityRole="button" accessibilityLabel="검색" hitSlop={10} onPress={submit}>
             <Icon name={archive ? "searchArchive" : "search"} width={20} />
         </Pressable>
     </View>;
@@ -197,29 +216,35 @@ type DialogProps = {
 
 export function Dialog(props: DialogProps) {
     const { visible, onClose, children, width = 270, style, close = false } = props;
+    const closeDialog = () => {
+        Keyboard.dismiss();
+        onClose();
+    };
 
-    return <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose} statusBarTranslucent>
+    return <Modal visible={visible} transparent animationType="fade" onRequestClose={closeDialog} statusBarTranslucent>
         <KeyboardAvoidingView style={styles.overlay} behavior={Platform.OS === "ios" ? "padding" : undefined}>
             <Pressable
                 style={StyleSheet.absoluteFill}
                 accessibilityRole="button"
                 accessibilityLabel="팝업 닫기"
-                onPress={onClose}
+                onPress={closeDialog}
             />
-            <View accessibilityViewIsModal style={[styles.dialog, { width, "maxWidth": "90%" }, style]}>
-                {close && (
-                    <Pressable
-                        accessibilityRole="button"
-                        accessibilityLabel="닫기"
-                        onPress={onClose}
-                        hitSlop={12}
-                        style={styles.close}
-                    >
-                        <Icon name="close" width={14} />
-                    </Pressable>
-                )}
-                {children}
-            </View>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                <View accessibilityViewIsModal style={[styles.dialog, { width, "maxWidth": "90%" }, style]}>
+                    {close && (
+                        <Pressable
+                            accessibilityRole="button"
+                            accessibilityLabel="닫기"
+                            onPress={closeDialog}
+                            hitSlop={12}
+                            style={styles.close}
+                        >
+                            <Icon name="close" width={14} />
+                        </Pressable>
+                    )}
+                    {children}
+                </View>
+            </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
     </Modal>;
 }

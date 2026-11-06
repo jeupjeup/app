@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from "expo-router";
 import { useMemo, useState } from "react";
-import { FlatList, Pressable, StyleSheet, View } from "react-native";
+import { FlatList, Pressable, RefreshControl, StyleSheet, View } from "react-native";
 import ContentCard from "@/components/ContentCard";
 import FilterSheet from "@/components/FilterSheet";
 import { collections } from "@/components/CollectionGrid";
@@ -26,7 +26,7 @@ type LibraryContentProps = {
 
 function LibraryContent(props: LibraryContentProps) {
     const { initialQuery, initialCollection } = props;
-    const { data, loading, refresh } = useUserData();
+    const { data, refresh } = useUserData();
     const [query, setQuery] = useState(initialQuery);
     const [search, setSearch] = useState(initialQuery);
     const [type, setType] = useState("전체");
@@ -75,10 +75,16 @@ function LibraryContent(props: LibraryContentProps) {
         <Screen orange line={false} scroll={false}>
             <FlatList
                 data={items}
-                refreshing={loading}
-                onRefresh={() => { void refresh(); }}
+                refreshControl={<RefreshControl
+                    refreshing={false}
+                    onRefresh={() => { void refresh(); }}
+                    tintColor="transparent"
+                    colors={["transparent"]}
+                    progressBackgroundColor="transparent"
+                />}
                 keyExtractor={(item) => item.id}
                 keyboardShouldPersistTaps="handled"
+                keyboardDismissMode="on-drag"
                 contentContainerStyle={{ "padding": 16, "gap": 20, "flexGrow": 1 }}
                 ListHeaderComponent={
                     <View style={{ "gap": 20 }}>

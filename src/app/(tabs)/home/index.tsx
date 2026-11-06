@@ -61,9 +61,6 @@ export default function Page() {
                         <Text style={{ "fontSize": 12 }}>URL · 텍스트 추가</Text>
                     </Pressable>
                 </View>
-                <View style={styles.banner}>
-                    <Text style={{ "fontSize": 12, "color": "#000000" }}>배너</Text>
-                </View>
                 {heading("최근 저장 목록")}
                 {items.length ? (
                     <View style={{ "flexDirection": "row", "gap": 20 }}>
@@ -136,13 +133,6 @@ const styles = StyleSheet.create({
         "alignItems": "center",
         "justifyContent": "space-between",
         "backgroundColor": colors.surface
-    },
-    "banner": {
-        "height": 160,
-        "borderRadius": 8,
-        "backgroundColor": colors.soft,
-        "justifyContent": "center",
-        "alignItems": "center"
     },
     "heading": {
         "minHeight": 44,

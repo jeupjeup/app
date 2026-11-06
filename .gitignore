@@ -40,6 +40,7 @@ example
 # generated native folders
 /ios
 /android
+/modules/social-login/android/build/
 
 .env
 

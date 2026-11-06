@@ -42,7 +42,7 @@ bun start       # Expo
 - 실기기: `EXPO_PUBLIC_API_URL=http://<MAC_LAN_IP>:8000/api`, `JUPJUP_API_HOST=0.0.0.0`
 - 운영: `EXPO_PUBLIC_API_URL=https://<DOMAIN>/api`와 HTTPS 리버스 프록시 필요
 
-환경변수 변경 후 앱을 Reload합니다. 미설정 개발 빌드에서는 플랫폼별 시뮬레이터 주소가 기본값입니다. 운영 빌드는 HTTPS 주소만 허용합니다. `plugins/with-local-api.js`는 iOS 로컬 네트워크 권한과 Android **debug 전용** HTTP 허용을 생성합니다. 네이티브 설정 변경은 개발 클라이언트를 재빌드해야 반영됩니다. 네이티브 HTTP에는 CORS 우회를 사용하지 않습니다.
+환경변수 변경 후 앱을 Reload합니다. 환경변수를 지정하지 않으면 개발·운영 빌드 모두 `https://jeupjeup-api.pro203s.kr/api`를 사용합니다. 로컬 API를 실행할 때는 위 주소 중 하나로 `EXPO_PUBLIC_API_URL`을 명시합니다. 운영 빌드는 HTTPS 주소만 허용합니다. `plugins/with-local-api.js`는 iOS 로컬 네트워크 권한과 Android **debug 전용** HTTP 허용을 생성합니다. 네이티브 설정 변경은 개발 클라이언트를 재빌드해야 반영됩니다. 네이티브 HTTP에는 CORS 우회를 사용하지 않습니다.
 
 웹 개발 프록시는 `/api`, `/v1`, `/healthz`를 접두사 변경 없이 API 서버로 전달합니다. 별도 API origin은 `JUPJUP_API_ORIGIN`, 배포 웹의 API origin은 `VITE_API_BASE_URL`로 지정하며 `/api`를 추가하지 않습니다. 기존 `/api/api` 주소는 사용하지 않습니다.
 

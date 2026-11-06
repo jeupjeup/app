@@ -68,6 +68,8 @@ export default function AddContentDialog(props: Props) {
                     autoCapitalize="none"
                     autoCorrect={false}
                     keyboardType="url"
+                    returnKeyType="done"
+                    submitBehavior="blurAndSubmit"
                     style={styles.url}
                     multiline
                 />
@@ -76,6 +78,8 @@ export default function AddContentDialog(props: Props) {
                     value={memo}
                     onChangeText={setMemo}
                     maxLength={70}
+                    returnKeyType="done"
+                    submitBehavior="blurAndSubmit"
                     placeholder="(선택) 정보의 쓰임새나 간단한 메모를 입력해주세요."
                     placeholderTextColor={colors.placeholder}
                     style={styles.memo}
